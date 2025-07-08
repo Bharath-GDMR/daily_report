@@ -7,3 +7,7 @@ command to update at github
 
 to generate report 
     python report.py
+
+
+to get gemini-cli help
+    npx https://github.com/google-gemini/gemini-cli
