@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-with open("daily_report.html", "r", encoding="utf-8") as file:
+with open("index.html", "r", encoding="utf-8") as file:
     soup = BeautifulSoup(file, "html.parser")
 
 report = "Daily Report\n\n"
