@@ -1,0 +1,75 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.tree ul {
+    position: relative;
+    padding-left: 30px;
+    list-style: none;
+}
+
+.tree li {
+    position: relative;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.tree li a {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #fff;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid #666;
+}
+
+.tree li a:hover {
+    background: #e8f4f8;
+    transform: scale(1.05);
+}
+
+/* Connector lines */
+.tree li::before, .tree li::after {
+    content: '';
+    position: absolute;
+    left: -20px;
+}
+
+.tree li::before {
+    border-top: 2px solid #666;
+    top: 27px;
+    width: 20px;
+    height: 0;
+}
+
+.tree li::after {
+    border-left: 2px solid #666;
+    height: 100%;
+    width: 0px;
+    top: -5px;
+}
+
+.tree ul > li:last-child::after {
+    height: 32px;
+}
+
+.tree > ul > li::before, .tree > ul > li::after {
+    display: none;
+}
+
+/* Toggle button styles */
+.toggle-btn {
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.hidden {
+    display: none;
+}
