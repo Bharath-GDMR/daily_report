@@ -56,6 +56,10 @@ strong {
 /* Section Styling */
 .section {
     margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .section-objective {
@@ -64,6 +68,25 @@ strong {
     border-left: 5px solid #0047AB;
     border-radius: 8px;
     margin: 20px 0;
+}
+
+/* Responsive Image Container */
+.section-image {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.section-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-image img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 /* Back Button */
@@ -85,6 +108,25 @@ strong {
     transform: translateY(-2px);
 }
 
+/* Footer Link */
+.footer-link {
+    display: inline-block;
+    margin: 10px 10px 0 0;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #3F80FF;
+    border: 1px solid #3F80FF;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.footer-link:hover {
+    background-color: #3F80FF;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -102,5 +144,9 @@ strong {
 
     p, li {
         font-size: 1rem;
+    }
+
+    .section {
+        padding: 15px;
     }
 }
