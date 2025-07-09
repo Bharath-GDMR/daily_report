@@ -23,7 +23,6 @@
       gap: 20px;
       justify-content: center;
     }
-
     .card {
       background: #fff;
       border-radius: 12px;
@@ -31,21 +30,9 @@
       width: 300px;
       overflow: hidden;
       transition: transform 0.2s ease;
-      cursor: pointer;
       display: flex;
       flex-direction: column;
     }
-
-    .card-body {
-      padding: 15px;
-      display: none;
-      animation: fadeIn 0.3s forwards;
-      flex: 1; /* Takes up available space to push button to bottom */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
     .card:hover {
       transform: translateY(-5px);
     }
@@ -55,8 +42,18 @@
       color: #fff;
       font-weight: bold;
       font-size: 1.2rem;
+      cursor: pointer;
     }
-
+    .card-body {
+      padding: 15px;
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-body.open {
+      display: flex;
+    }
     .card-body p {
       margin: 10px 0;
       line-height: 1.4;
@@ -67,21 +64,17 @@
     }
     .cta-button {
       display: inline-block;
-      background: #0047AB;
+      background: #3F80FF; /* lighter blue */
       color: #fff;
       padding: 10px 20px;
       border-radius: 6px;
-      margin: 15px;
+      margin: 15px auto 0 auto;
       text-align: center;
       text-decoration: none;
       transition: background 0.3s ease;
     }
     .cta-button:hover {
-      background: #003380;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      background: #2a5fcc;
     }
     @media (max-width: 768px) {
       .schedule-container {
@@ -99,64 +92,72 @@
   <h1>🗓️ 4-Day Training Schedule</h1>
   <div class="schedule-container">
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-header">Day 1: Introduction & Company Overview (Wed)</div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">Day 1: Introduction & Company Overview (Wed)</div>
       <div class="card-body">
-        <p><strong>Objective:</strong> Understand printing as an industry, your company, and clients.</p>
-        <p class="session-title">Morning:</p>
-        <p>Intro to Printing, types, materials, and applications.</p>
-        <p class="session-title">Mid-Morning:</p>
-        <p>Company history, mission, services, projects.</p>
-        <p class="session-title">Afternoon:</p>
-        <p>Client overview, work nature, importance of branding and deadlines.</p>
-        <p class="session-title">Activity:</p>
-        <p>Quiz/discussion on printing; identify nearby prints and materials.</p>
+        <div class="card-content">
+          <p><strong>Objective:</strong> Understand printing as an industry, your company, and clients.</p>
+          <p class="session-title">Morning:</p>
+          <p>Intro to Printing, types, materials, and applications.</p>
+          <p class="session-title">Mid-Morning:</p>
+          <p>Company history, mission, services, projects.</p>
+          <p class="session-title">Afternoon:</p>
+          <p>Client overview, work nature, importance of branding and deadlines.</p>
+          <p class="session-title">Activity:</p>
+          <p>Quiz/discussion on printing; identify nearby prints and materials.</p>
+        </div>
         <a href="#" class="cta-button">Explore Day 1</a>
       </div>
     </div>
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-header">Day 2: Systems & Vendor Familiarization (Thu)</div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">Day 2: Systems & Vendor Familiarization (Thu)</div>
       <div class="card-body">
-        <p><strong>Objective:</strong> Learn file organization, vendors, and zonal operations.</p>
-        <p class="session-title">Morning:</p>
-        <p>Drives overview, folder structures, file naming.</p>
-        <p class="session-title">Mid-Morning:</p>
-        <p>Vendor intro, turnaround, quality checks.</p>
-        <p class="session-title">Afternoon:</p>
-        <p>Zone-wise project management and case studies.</p>
-        <p class="session-title">Activity:</p>
-        <p>Find and present vendor files; share zonal job reflections.</p>
+        <div class="card-content">
+          <p><strong>Objective:</strong> Learn file organization, vendors, and zonal operations.</p>
+          <p class="session-title">Morning:</p>
+          <p>Drives overview, folder structures, file naming.</p>
+          <p class="session-title">Mid-Morning:</p>
+          <p>Vendor intro, turnaround, quality checks.</p>
+          <p class="session-title">Afternoon:</p>
+          <p>Zone-wise project management and case studies.</p>
+          <p class="session-title">Activity:</p>
+          <p>Find and present vendor files; share zonal job reflections.</p>
+        </div>
         <a href="#" class="cta-button">Explore Day 2</a>
       </div>
     </div>
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-header">Day 3: Costing & Retail Terms (Fri)</div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">Day 3: Costing & Retail Terms (Fri)</div>
       <div class="card-body">
-        <p><strong>Objective:</strong> Learn estimates, sq. ft. understanding, POs, and retail terms.</p>
-        <p class="session-title">Morning:</p>
-        <p>Sq. ft. costing, estimates, common pitfalls.</p>
-        <p class="session-title">Mid-Morning:</p>
-        <p>Client vs vendor POs, requisition workflows.</p>
-        <p class="session-title">Afternoon:</p>
-        <p>Retail/print terms, material types, branding elements.</p>
-        <p class="session-title">Activity:</p>
-        <p>Match terms with visuals; sample estimate worksheet.</p>
+        <div class="card-content">
+          <p><strong>Objective:</strong> Learn estimates, sq. ft. understanding, POs, and retail terms.</p>
+          <p class="session-title">Morning:</p>
+          <p>Sq. ft. costing, estimates, common pitfalls.</p>
+          <p class="session-title">Mid-Morning:</p>
+          <p>Client vs vendor POs, requisition workflows.</p>
+          <p class="session-title">Afternoon:</p>
+          <p>Retail/print terms, material types, branding elements.</p>
+          <p class="session-title">Activity:</p>
+          <p>Match terms with visuals; sample estimate worksheet.</p>
+        </div>
         <a href="#" class="cta-button">Explore Day 3</a>
       </div>
     </div>
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-header">Day 4: Presentation & Print Visit (Sat)</div>
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">Day 4: Presentation & Print Visit (Sat)</div>
       <div class="card-body">
-        <p><strong>Objective:</strong> Apply learning via proposal prep and real-world printing exposure.</p>
-        <p class="session-title">Morning:</p>
-        <p>Prepare client PPT proposal with visual zones, costs, materials.</p>
-        <p class="session-title">Afternoon:</p>
-        <p>Visit print unit, see machines, QC, vendor interactions.</p>
-        <p class="session-title">Evening Debrief:</p>
-        <p>Reflections: learnings, surprises, process improvements.</p>
+        <div class="card-content">
+          <p><strong>Objective:</strong> Apply learning via proposal prep and real-world printing exposure.</p>
+          <p class="session-title">Morning:</p>
+          <p>Prepare client PPT proposal with visual zones, costs, materials.</p>
+          <p class="session-title">Afternoon:</p>
+          <p>Visit print unit, see machines, QC, vendor interactions.</p>
+          <p class="session-title">Evening Debrief:</p>
+          <p>Reflections: learnings, surprises, process improvements.</p>
+        </div>
         <a href="#" class="cta-button">Explore Day 4</a>
       </div>
     </div>
@@ -164,9 +165,9 @@
   </div>
 
   <script>
-    function toggleCard(card) {
-      const body = card.querySelector('.card-body');
-      body.style.display = body.style.display === 'block' ? 'none' : 'block';
+    function toggleCard(header) {
+      const body = header.nextElementSibling;
+      body.classList.toggle('open');
     }
   </script>
 </body>
