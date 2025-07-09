@@ -23,6 +23,7 @@
       gap: 20px;
       justify-content: center;
     }
+
     .card {
       background: #fff;
       border-radius: 12px;
@@ -31,7 +32,20 @@
       overflow: hidden;
       transition: transform 0.2s ease;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
     }
+
+    .card-body {
+      padding: 15px;
+      display: none;
+      animation: fadeIn 0.3s forwards;
+      flex: 1; /* Takes up available space to push button to bottom */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
     .card:hover {
       transform: translateY(-5px);
     }
@@ -42,11 +56,7 @@
       font-weight: bold;
       font-size: 1.2rem;
     }
-    .card-body {
-      padding: 15px;
-      display: none;
-      animation: fadeIn 0.3s forwards;
-    }
+
     .card-body p {
       margin: 10px 0;
       line-height: 1.4;
@@ -54,6 +64,20 @@
     .session-title {
       font-weight: bold;
       margin-top: 15px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #0047AB;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin: 15px;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .cta-button:hover {
+      background: #003380;
     }
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -87,6 +111,7 @@
         <p>Client overview, work nature, importance of branding and deadlines.</p>
         <p class="session-title">Activity:</p>
         <p>Quiz/discussion on printing; identify nearby prints and materials.</p>
+        <a href="#" class="cta-button">Explore Day 1</a>
       </div>
     </div>
 
@@ -102,6 +127,7 @@
         <p>Zone-wise project management and case studies.</p>
         <p class="session-title">Activity:</p>
         <p>Find and present vendor files; share zonal job reflections.</p>
+        <a href="#" class="cta-button">Explore Day 2</a>
       </div>
     </div>
 
@@ -117,6 +143,7 @@
         <p>Retail/print terms, material types, branding elements.</p>
         <p class="session-title">Activity:</p>
         <p>Match terms with visuals; sample estimate worksheet.</p>
+        <a href="#" class="cta-button">Explore Day 3</a>
       </div>
     </div>
 
@@ -130,6 +157,7 @@
         <p>Visit print unit, see machines, QC, vendor interactions.</p>
         <p class="session-title">Evening Debrief:</p>
         <p>Reflections: learnings, surprises, process improvements.</p>
+        <a href="#" class="cta-button">Explore Day 4</a>
       </div>
     </div>
 
