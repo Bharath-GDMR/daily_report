@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>4-Day Training Schedule</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1a1a1a;
+    }
+    .schedule-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 300px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card-header {
+      padding: 20px;
+      background: #0047AB;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .card-body {
+      padding: 15px;
+      display: none;
+      animation: fadeIn 0.3s forwards;
+    }
+    .card-body p {
+      margin: 10px 0;
+      line-height: 1.4;
+    }
+    .session-title {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (max-width: 768px) {
+      .schedule-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🗓️ 4-Day Training Schedule</h1>
+  <div class="schedule-container">
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">Day 1: Introduction & Company Overview (Wed)</div>
+      <div class="card-body">
+        <p><strong>Objective:</strong> Understand printing as an industry, your company, and clients.</p>
+        <p class="session-title">Morning:</p>
+        <p>Intro to Printing, types, materials, and applications.</p>
+        <p class="session-title">Mid-Morning:</p>
+        <p>Company history, mission, services, projects.</p>
+        <p class="session-title">Afternoon:</p>
+        <p>Client overview, work nature, importance of branding and deadlines.</p>
+        <p class="session-title">Activity:</p>
+        <p>Quiz/discussion on printing; identify nearby prints and materials.</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">Day 2: Systems & Vendor Familiarization (Thu)</div>
+      <div class="card-body">
+        <p><strong>Objective:</strong> Learn file organization, vendors, and zonal operations.</p>
+        <p class="session-title">Morning:</p>
+        <p>Drives overview, folder structures, file naming.</p>
+        <p class="session-title">Mid-Morning:</p>
+        <p>Vendor intro, turnaround, quality checks.</p>
+        <p class="session-title">Afternoon:</p>
+        <p>Zone-wise project management and case studies.</p>
+        <p class="session-title">Activity:</p>
+        <p>Find and present vendor files; share zonal job reflections.</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">Day 3: Costing & Retail Terms (Fri)</div>
+      <div class="card-body">
+        <p><strong>Objective:</strong> Learn estimates, sq. ft. understanding, POs, and retail terms.</p>
+        <p class="session-title">Morning:</p>
+        <p>Sq. ft. costing, estimates, common pitfalls.</p>
+        <p class="session-title">Mid-Morning:</p>
+        <p>Client vs vendor POs, requisition workflows.</p>
+        <p class="session-title">Afternoon:</p>
+        <p>Retail/print terms, material types, branding elements.</p>
+        <p class="session-title">Activity:</p>
+        <p>Match terms with visuals; sample estimate worksheet.</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">Day 4: Presentation & Print Visit (Sat)</div>
+      <div class="card-body">
+        <p><strong>Objective:</strong> Apply learning via proposal prep and real-world printing exposure.</p>
+        <p class="session-title">Morning:</p>
+        <p>Prepare client PPT proposal with visual zones, costs, materials.</p>
+        <p class="session-title">Afternoon:</p>
+        <p>Visit print unit, see machines, QC, vendor interactions.</p>
+        <p class="session-title">Evening Debrief:</p>
+        <p>Reflections: learnings, surprises, process improvements.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleCard(card) {
+      const body = card.querySelector('.card-body');
+      body.style.display = body.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
