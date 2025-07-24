@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Builder Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --bg-color: #ffffff;
+            --surface-color: #f8fafc;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 350px;
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 80px);
+        }
+
+        .timeline-viewport {
+            flex: 1;
+            padding: 2rem;
+            background: var(--bg-color);
+            overflow: auto;
+            position: relative;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* Timeline Styles */
+        .timeline-container {
+            position: relative;
+            min-height: 400px;
+            background: var(--surface-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+
+        .timeline-events {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 300px;
+            padding: 0 50px;
+        }
+
+        .timeline-event {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event:hover {
+            transform: translateY(-5px);
+        }
+
+        .event-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 4px solid var(--surface-color);
+            box-shadow: var(--shadow);
+            position: relative;
+            margin: 0 auto 1rem;
+        }
+
+        .event-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            min-width: 200px;
+            max-width: 250px;
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .event-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .event-media {
+            margin-top: 0.75rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .event-media img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--border-color);
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .theme-option {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .theme-option.active {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .theme-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Export Controls */
+        .export-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: none;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .timeline-viewport {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header-controls {
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-event {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* Drag and Drop Styles */
+        .dragging {
+            opacity: 0.8;
+            transform: rotate(5deg);
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* Empty State */
+        .empty-timeline {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-timeline h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .empty-timeline p {
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">Timeline Builder Pro</div>
+            <div class="header-controls">
+                <button class="btn btn-secondary" onclick="saveTimeline()">💾 Save</button>
+                <button class="btn btn-secondary" onclick="loadTimeline()">📁 Load</button>
+                <button class="btn btn-secondary" onclick="showExportModal()">📤 Export</button>
+                <button class="btn btn-primary" onclick="showThemeModal()">🎨 Themes</button>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h2 style="margin-bottom: 1.5rem;">Add New Event</h2>
+                
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-input" id="eventTitle" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date *</label>
+                        <input type="date" class="form-input" id="eventDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input form-textarea" id="eventDescription" placeholder="Describe your event..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="eventLocation" placeholder="Event location">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">External Link</label>
+                        <input type="url" class="form-input" id="eventLink" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <input type="text" class="form-input" id="eventTags" placeholder="Separate with commas">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Media</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" class="file-input" id="eventMedia" accept="image/*,video/*">
+                            <label for="eventMedia" class="file-input-label">
+                                📎 Choose Image/Video
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        ➕ Add Event
+                    </button>
+                </form>
+
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                    <h3 style="margin-bottom: 1rem;">Timeline Settings</h3>
+                    <div class="form-group">
+                        <label class="form-label">Timeline Title</label>
+                        <input type="text" class="form-input" id="timelineTitle" placeholder="My Amazing Timeline">
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Timeline Viewport -->
+            <main class="timeline-viewport">
+                <div class="timeline-container" id="timelineContainer">
+                    <div class="empty-timeline" id="emptyState">
+                        <h3>Your Timeline Awaits</h3>
+                        <p>Add your first event to get started building your interactive timeline.</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('eventTitle').focus()">
+                            🚀 Create First Event
+                        </button>
+                    </div>
+                    <div class="timeline-line" id="timelineLine" style="display: none;"></div>
+                    <div class="timeline-events" id="timelineEvents"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Theme Modal -->
+    <div class="modal" id="themeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Choose Theme</h2>
+                <button class="modal-close" onclick="closeModal('themeModal')">&times;</button>
+            </div>
+            <div class="theme-selector">
+                <div class="theme-option active" data-theme="minimal">
+                    <div>📄</div>
+                    <div>Minimal</div>
+                </div>
+                <div class="theme-option" data-theme="cards">
+                    <div>🗃️</div>
+                    <div>Cards</div>
+                </div>
+                <div class="theme-option" data-theme="storybook">
+                    <div>📖</div>
+                    <div>Storybook</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Export Timeline</h2>
+                <button class="modal-close" onclick="closeModal('exportModal')">&times;</button>
+            </div>
+            <div class="export-controls">
+                <button class="btn btn-primary" onclick="exportAsImage()">🖼️ Export PNG</button>
+                <button class="btn btn-primary" onclick="exportAsSVG()">📊 Export SVG</button>
+                <button class="btn btn-secondary" onclick="generateEmbed()">🔗 Get Embed Code</button>
+                <button class="btn btn-secondary" onclick="shareTimeline()">📤 Share Link</button>
+            </div>
+            <div id="embedCode" style="margin-top: 1rem; display: none;">
+                <label class="form-label">Embed Code:</label>
+                <textarea class="form-input" readonly style="min-height: 100px;" id="embedTextarea"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let timelineEvents = [];
+        let currentTheme = 'minimal';
+        let isDarkMode = false;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            updateTimeline();
+            
+            // Form submission
+            document.getElementById('eventForm').addEventListener('submit', handleAddEvent);
+            
+            // Theme options
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectTheme(this.dataset.theme);
+                });
+            });
+
+            // File input handler
+            document.getElementById('eventMedia').addEventListener('change', handleMediaUpload);
+        });
+
+        // Event Management
+        function handleAddEvent(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const description = document.getElementById('eventDescription').value;
+            const location = document.getElementById('eventLocation').value;
+            const link = document.getElementById('eventLink').value;
+            const tags = document.getElementById('eventTags').value;
+            
+            const event = {
+                id: generateId(),
+                title,
+                date,
+                description,
+                location,
+                link,
+                tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                media: null,
+                mediaType: null
+            };
+
+            // Handle media if uploaded
+            const mediaFile = document.getElementById('eventMedia').files[0];
+            if (mediaFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    event.media = e.target.result;
+                    event.mediaType = mediaFile.type.startsWith('image/') ? 'image' : 'video';
+                    timelineEvents.push(event);
+                    updateTimeline();
+                    resetForm();
+                    saveToStorage();
+                };
+                reader.readAsDataURL(mediaFile);
+            } else {
+                timelineEvents.push(event);
+                updateTimeline();
+                resetForm();
+                saveToStorage();
+            }
+        }
+
+        function handleMediaUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const label = e.target.nextElementSibling;
+                label.textContent = `📎 ${file.name}`;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('eventForm').reset();
+            const mediaLabel = document.querySelector('.file-input-label');
+            mediaLabel.textContent = '📎 Choose Image/Video';
+        }
+
+        function deleteEvent(eventId) {
+            timelineEvents = timelineEvents.filter(event => event.id !== eventId);
+            updateTimeline();
+            saveToStorage();
+        }
+
+        // Timeline Rendering
+        function updateTimeline() {
+            const container = document.getElementById('timelineEvents');
+            const emptyState = document.getElementById('emptyState');
+            const timelineLine = document.getElementById('timelineLine');
+
+            if (timelineEvents.length === 0) {
+                emptyState.style.display = 'block';
+                timelineLine.style.display = 'none';
+                container.innerHTML = '';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            timelineLine.style.display = 'block';
+
+            // Sort events by date
+            const sortedEvents = [...timelineEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            container.innerHTML = '';
+
+            sortedEvents.forEach((event, index) => {
+                const eventElement = createEventElement(event, index, sortedEvents.length);
+                container.appendChild(eventElement);
+            });
+        }
+
+        function createEventElement(event, index, total) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'timeline-event';
+            eventDiv.style.left = `${(index / (total - 1 || 1)) * 100}%`;
+            eventDiv.style.transform = 'translateX(-50%)';
+
+            const isAlternate = index % 2 === 1;
+            eventDiv.style.top = isAlternate ? '60%' : '20%';
+
+            eventDiv.innerHTML = `
+                <div class="event-marker"></div>
+                <div class="event-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="event-title">${escapeHTML(event.title)}</div>
+                        <button onclick="deleteEvent('${event.id}')" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0;">×</button>
+                    </div>
+                    <div class="event-date">${formatDate(event.date)}</div>
+                    ${event.description ? `<div class="event-description">${escapeHTML(event.description)}</div>` : ''}
+                    ${event.location ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">📍 ${escapeHTML(event.location)}</div>` : ''}
+                    ${event.tags.length > 0 ? `<div style="margin-top: 0.5rem;">${event.tags.map(tag => `<span style="background: var(--primary-color); color: white; padding: 0.125rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; margin-right: 0.25rem;">${escapeHTML(tag)}</span>`).join('')}</div>` : ''}
+                    ${event.media ? `<div class="event-media">
+                        ${event.mediaType === 'image' ? 
+                            `<img src="${escapeHTML(event.media)}" alt="${escapeHTML(event.title)}">` :
+                            `<video controls style="width: 100%;"><source src="${escapeHTML(event.media)}"></video>`
+                        }
+                    </div>` : ''}
+                    ${event.link ? `<div style="margin-top: 0.5rem;"><a href="${escapeHTML(event.link)}" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.875rem;">🔗 Learn more</a></div>` : ''}
+                </div>
+            `;
+
+            // Add click handler for event details
+            eventDiv.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+                    showEventDetails(event);
+                }
+            });
+
+            return eventDiv;
+        }
+
+        function showEventDetails(event) {
+            // Create a detailed modal for the event
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">${escapeHTML(event.title)}</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div>
+                        <p><strong>Date:</strong> ${formatDate(event.date)}</p>
+                        ${event.location ? `<p><strong>Location:</strong> ${escapeHTML(event.location)}</p>` : ''}
+                        ${event.description ? `<p><strong>Description:</strong> ${escapeHTML(event.description)}</p>` : ''}
+                        ${event.tags.length > 0 ? `<p><strong>Tags:</strong> ${escapeHTML(event.tags.join(', '))}</p>` : ''}
+                        ${event.link ? `<p><strong>Link:</strong> <a href="${escapeHTML(event.link)}" target="_blank">${escapeHTML(event.link)}</a></p>` : ''}
+                        ${event.media ? `<div style="margin-top: 1rem;">
+                            ${event.mediaType === 'image' ? 
+                                `<img src="${escapeHTML(event.media)}" style="width: 100%; border-radius: 0.5rem;" alt="${escapeHTML(event.title)}">` :
+                                `<video controls style="width: 100%; border-radius: 0.5rem;"><source src="${escapeHTML(event.media)}"></video>`
+                            }
+                        </div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            document.querySelector('.theme-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+            saveToStorage();
+        }
+
+        function showThemeModal() {
+            document.getElementById('themeModal').classList.add('active');
+        }
+
+        function selectTheme(theme) {
+            currentTheme = theme;
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+            applyTheme(theme);
+            saveToStorage();
+        }
+
+        function applyTheme(theme) {
+            const container = document.getElementById('timelineContainer');
+            container.className = `timeline-container theme-${theme}`;
+        }
+
+        // Export Functions
+        function showExportModal() {
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function exportAsImage() {
+            // Fallback implementation - open timeline in new window for manual screenshot/print
+            const timeline = document.getElementById('timelineContainer');
+            const newWindow = window.open('', '_blank', 'width=1200,height=800');
+            
+            const timelineTitle = escapeHTML(document.getElementById('timelineTitle').value || 'My Timeline');
+            
+            newWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Timeline Export - ${timelineTitle}</title>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body { 
+                                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+                                background: #ffffff; 
+                                color: #1e293b; 
+                                padding: 20px;
+                            }
+                            ${getAllStyles()}
+                            .timeline-container { 
+                                box-shadow: none; 
+                                border: 1px solid #e2e8f0; 
+                                background: #f8fafc;
+                            }
+                            @media print {
+                                body { padding: 0; }
+                                .timeline-container { border: none; box-shadow: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1 style="margin-bottom: 20px; text-align: center;">${timelineTitle}</h1>
+                        ${timeline.outerHTML}
+                        <div style="margin-top: 20px; text-align: center; color: #64748b; font-size: 0.875rem;">
+                            Created with Timeline Builder Pro
+                        </div>
+                    </body>
+                </html>
+            `);
+            
+            newWindow.document.close();
+            
+            // Auto-print after a short delay
+            setTimeout(() => {
+                newWindow.print();
+            }, 1000);
+        }
+
+        function exportAsSVG() {
+            // Create a simplified SVG export
+            const events = timelineEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const timelineTitle = document.getElementById('timelineTitle').value || 'My Timeline';
+            
+            let svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            .title { font: bold 16px sans-serif; fill: #1e293b; }
+            .event-title { font: bold 12px sans-serif; fill: #1e293b; }
+            .event-date { font: 10px sans-serif; fill: #64748b; }
+            .timeline-line { stroke: #6366f1; stroke-width: 3; }
+            .event-marker { fill: #6366f1; stroke: #ffffff; stroke-width: 3; }
+        </style>
+    </defs>
+    
+    <!-- Title -->
+    <text x="400" y="30" text-anchor="middle" class="title">${escapeHTML(timelineTitle)}</text>
+    
+    <!-- Timeline Line -->
+    <line x1="50" y1="200" x2="750" y2="200" class="timeline-line"/>`;
+
+            // Add events
+            events.forEach((event, index) => {
+                const x = 50 + (index / (events.length - 1 || 1)) * 700;
+                const isTop = index % 2 === 0;
+                const y = isTop ? 120 : 280;
+                
+                // Event marker
+                svgContent += `
+    <circle cx="${x}" cy="200" r="8" class="event-marker"/>
+    
+    <!-- Event card background -->
+    <rect x="${x - 75}" y="${y - 40}" width="150" height="60" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    
+    <!-- Event title -->
+    <text x="${x}" y="${y - 20}" text-anchor="middle" class="event-title">${escapeHTML(event.title.substring(0, 20))}${event.title.length > 20 ? '...' : ''}</text>
+    
+    <!-- Event date -->
+    <text x="${x}" y="${y - 5}" text-anchor="middle" class="event-date">${formatDate(event.date)}</text>
+    
+    <!-- Connection line -->
+    <line x1="${x}" y1="200" x2="${x}" y2="${y - 40}" stroke="#6366f1" stroke-width="1"/>`;
+            });
+
+            svgContent += `
+</svg>`;
+
+            // Download SVG
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'timeline.svg';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateEmbed() {
+            const embedCode = `<iframe src="data:text/html;charset=utf-8,${encodeURIComponent(generateEmbedHTML())}" width="100%" height="400" frameborder="0"></iframe>`;
+            
+            document.getElementById('embedCode').style.display = 'block';
+            document.getElementById('embedTextarea').value = embedCode;
+        }
+
+        function generateEmbedHTML() {
+            const timelineTitle = escapeHTML(document.getElementById('timelineTitle').value || 'My Timeline');
+            let timelineContent = '';
+
+            if (timelineEvents.length === 0) {
+                timelineContent = `
+                    <div class="empty-timeline">
+                        <h3>Your Timeline Awaits</h3>
+                        <p>Add your first event to get started building your interactive timeline.</p>
+                    </div>
+                `;
+            } else {
+                timelineContent += `<div class="timeline-line"></div>`;
+                timelineContent += `<div class="timeline-events">`;
+
+                const sortedEvents = [...timelineEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                sortedEvents.forEach((event, index) => {
+                    const x = 50 + (index / (sortedEvents.length - 1 || 1)) * 700;
+                    const isAlternate = index % 2 === 1;
+                    const y = isAlternate ? 60 : 20; 
+
+                    timelineContent += `
+                        <div class="timeline-event" style="left: ${x}px; top: ${y}%;">
+                            <div class="event-marker"></div>
+                            <div class="event-card">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                    <div class="event-title">${escapeHTML(event.title)}</div>
+                                </div>
+                                <div class="event-date">${formatDate(event.date)}</div>
+                                ${event.description ? `<div class="event-description">${escapeHTML(event.description)}</div>` : ''}
+                                ${event.location ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">📍 ${escapeHTML(event.location)}</div>` : ''}
+                                ${event.tags.length > 0 ? `<div style="margin-top: 0.5rem;">${event.tags.map(tag => `<span style="background: var(--primary-color); color: white; padding: 0.125rem 0.5rem; border-radius: 1rem; font-size: 0.75rem; margin-right: 0.25rem;">${escapeHTML(tag)}</span>`).join('')}</div>` : ''}
+                                ${event.media ? `<div class="event-media">
+                                    ${event.mediaType === 'image' ? 
+                                        `<img src="${escapeHTML(event.media)}" alt="${escapeHTML(event.title)}">` :
+                                        `<video controls style="width: 100%;"><source src="${escapeHTML(event.media)}"></video>`
+                                    }
+                                </div>` : ''}
+                                ${event.link ? `<div style="margin-top: 0.5rem;"><a href="${escapeHTML(event.link)}" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.875rem;">🔗 Learn more</a></div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                timelineContent += `</div>`; 
+            }
+            
+            return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${timelineTitle}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: #ffffff; 
+            color: #1e293b; 
+            padding: 10px;
+        }
+        .timeline-container { 
+            position: relative; 
+            min-height: 400px; 
+            background: #f8fafc; 
+            border-radius: 1rem; 
+            padding: 2rem; 
+            border: 1px solid #e2e8f0;
+        }
+        .timeline-line { 
+            position: absolute; 
+            top: 50%; 
+            left: 50px; 
+            right: 50px; 
+            height: 3px; 
+            background: linear-gradient(90deg, #6366f1, #06b6d4); 
+            border-radius: 2px; 
+            transform: translateY(-50%); 
+        }
+        .timeline-events { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            min-height: 300px; 
+            padding: 0 50px; 
+        }
+        .timeline-event { 
+            position: absolute; 
+            z-index: 10; 
+        }
+        .event-marker { 
+            width: 20px; 
+            height: 20px; 
+            border-radius: 50%; 
+            background: #6366f1; 
+            border: 4px solid #f8fafc; 
+            margin: 0 auto 1rem; 
+        }
+        .event-card { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 0.75rem; 
+            padding: 1rem; 
+            min-width: 200px; 
+            max-width: 250px; 
+            margin-top: 1rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .event-title { 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+            color: #1e293b; 
+        }
+        .event-date { 
+            font-size: 0.75rem; 
+            color: #64748b; 
+            margin-bottom: 0.5rem; 
+        }
+        .event-description { 
+            font-size: 0.875rem; 
+            color: #64748b; 
+            line-height: 1.4; 
+        }
+        .event-media { 
+            margin-top: 0.75rem; 
+            border-radius: 0.5rem; 
+            overflow: hidden; 
+        }
+        .event-media img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+        }
+        .empty-timeline { 
+            text-align: center; 
+            padding: 4rem 2rem; 
+            color: #64748b; 
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        ${timelineContent}
+    </div>
+</body>
+</html>`;
+        }
+
+        function shareTimeline() {
+            const timelineData = {
+                events: timelineEvents,
+                theme: currentTheme,
+                darkMode: isDarkMode,
+                title: document.getElementById('timelineTitle').value || 'My Timeline'
+            };
+            
+            const shareableData = btoa(unescape(encodeURIComponent(JSON.stringify(timelineData))));
+            const shareUrl = `${window.location.origin}${window.location.pathname}?timeline=${shareableData}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out my timeline!',
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Timeline link copied to clipboard!');
+                }).catch(() => {
+                    prompt('Copy this link to share your timeline:', shareUrl);
+                });
+            }
+        }
+
+        // Storage Functions
+        function saveTimeline() {
+            const timelineData = {
+                events: timelineEvents,
+                theme: currentTheme,
+                darkMode: isDarkMode,
+                title: document.getElementById('timelineTitle').value || 'My Timeline',
+                lastSaved: new Date().toISOString()
+            };
+            
+            // Create download
+            const dataStr = JSON.stringify(timelineData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `timeline-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            // Also save to storage
+            saveToStorage();
+        }
+
+        function loadTimeline() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const timelineData = JSON.parse(e.target.result);
+                            
+                            timelineEvents = timelineData.events || [];
+                            currentTheme = timelineData.theme || 'minimal';
+                            isDarkMode = timelineData.darkMode || false;
+                            
+                            document.getElementById('timelineTitle').value = timelineData.title || '';
+                            
+                            // Apply loaded settings
+                            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+                            document.querySelector('.theme-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+                            selectTheme(currentTheme);
+                            updateTimeline();
+                            saveToStorage();
+                            
+                            alert('Timeline loaded successfully!');
+                        } catch (error) {
+                            alert('Error loading timeline file. Please check the file format.');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        function saveToStorage() {
+            const data = {
+                events: timelineEvents,
+                theme: currentTheme,
+                darkMode: isDarkMode,
+                title: document.getElementById('timelineTitle').value || ''
+            };
+            
+            // Note: Using a simple object store since localStorage isn't available
+            window.timelineData = data;
+        }
+
+        function loadFromStorage() {
+            // Check for shared timeline in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedTimeline = urlParams.get('timeline');
+            
+            if (sharedTimeline) {
+                try {
+                    const timelineData = JSON.parse(decodeURIComponent(escape(atob(sharedTimeline))));
+                    timelineEvents = timelineData.events || [];
+                    currentTheme = timelineData.theme || 'minimal';
+                    isDarkMode = timelineData.darkMode || false;
+                    document.getElementById('timelineTitle').value = timelineData.title || '';
+                    
+                    // Apply loaded settings
+                    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+                    document.querySelector('.theme-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+                    selectTheme(currentTheme);
+                    return;
+                } catch (error) {
+                    console.log('Invalid shared timeline data');
+                }
+            }
+            
+            // Load from window storage if available
+            if (window.timelineData) {
+                const data = window.timelineData;
+                timelineEvents = data.events || [];
+                currentTheme = data.theme || 'minimal';
+                isDarkMode = data.darkMode || false;
+                document.getElementById('timelineTitle').value = data.title || '';
+                
+                document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+                document.querySelector('.theme-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+                selectTheme(currentTheme);
+            }
+        }
+
+        // Utility Functions
+        function generateId() {
+            return 'event_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function getAllStyles() {
+            // Return the embedded CSS styles as a string
+            const styleSheets = document.styleSheets;
+            let styles = '';
+            
+            try {
+                // Get styles from the first stylesheet (our embedded styles)
+                if (styleSheets.length > 0) {
+                    const rules = styleSheets[0].cssRules || styleSheets[0].rules;
+                    if (rules) {
+                        for (let i = 0; i < rules.length; i++) {
+                            styles += rules[i].cssText + '\n';
+                        }
+                    }
+                }
+            } catch (e) {
+                // If we can't access stylesheets, return basic styles
+                styles = `
+                    .timeline-container { position: relative; min-height: 400px; background: #f8fafc; border-radius: 1rem; padding: 2rem; }
+                    .timeline-line { position: absolute; top: 50%; left: 50px; right: 50px; height: 3px; background: linear-gradient(90deg, #6366f1, #06b6d4); border-radius: 2px; transform: translateY(-50%); }
+                    .timeline-events { position: relative; display: flex; align-items: center; min-height: 300px; padding: 0 50px; }
+                    .timeline-event { position: absolute; cursor: pointer; z-index: 10; }
+                    .event-marker { width: 20px; height: 20px; border-radius: 50%; background: #6366f1; border: 4px solid #f8fafc; margin: 0 auto 1rem; }
+                    .event-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; min-width: 200px; max-width: 250px; margin-top: 1rem; }
+                    .event-title { font-weight: 600; margin-bottom: 0.5rem; color: #1e293b; }
+                    .event-date { font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem; }
+                    .event-description { font-size: 0.875rem; color: #64748b; line-height: 1.4; }
+                    .event-media { margin-top: 0.75rem; border-radius: 0.5rem; overflow: hidden; }
+                    .event-media img { width: 100%; height: auto; display: block; }
+                `;
+            }
+            
+            return styles;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveTimeline();
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        loadTimeline();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        showExportModal();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+
+        // Drag and Drop Functionality (Basic Implementation)
+        let draggedEvent = null;
+
+        function enableDragAndDrop() {
+            const events = document.querySelectorAll('.timeline-event');
+            
+            events.forEach(event => {
+                event.draggable = true;
+                
+                event.addEventListener('dragstart', function(e) {
+                    draggedEvent = this;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                
+                event.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedEvent = null;
+                });
+                
+                event.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+                
+                event.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    if (draggedEvent && draggedEvent !== this) {
+                        // Swap positions logic would go here
+                        console.log('Reordering events...');
+                    }
+                });
+            });
+        }
+
+        // Auto-save functionality
+        setInterval(saveToStorage, 30000); // Auto-save every 30 seconds
+
+        // Add some sample events for demonstration
+        function addSampleEvents() {
+            if (timelineEvents.length === 0) {
+                const sampleEvents = [
+                    {
+                        id: generateId(),
+                        title: "Project Launch",
+                        date: "2024-01-15",
+                        description: "Officially launched our new product to the market.",
+                        location: "San Francisco, CA",
+                        tags: ["milestone", "product"],
+                        media: null,
+                        mediaType: null,
+                        link: ""
+                    },
+                    {
+                        id: generateId(),
+                        title: "Team Expansion",
+                        date: "2024-03-20",
+                        description: "Doubled our engineering team with amazing new hires.",
+                        location: "Remote",
+                        tags: ["hiring", "growth"],
+                        media: null,
+                        mediaType: null,
+                        link: ""
+                    },
+                    {
+                        id: generateId(),
+                        title: "Major Update",
+                        date: "2024-06-10",
+                        description: "Released version 2.0 with exciting new features.",
+                        location: "Online",
+                        tags: ["release", "update"],
+                        media: null,
+                        mediaType: null,
+                        link: ""
+                    }
+                ];
+                
+                // Uncomment the line below to add sample events on first load
+                // timelineEvents = sampleEvents;
+            }
+        }
+
+        // Initialize sample events
+        // addSampleEvents();
+
+        // Advanced Features (Premium)
+        class PremiumFeatures {
+            static initMultiLane() {
+                // Multi-lane timeline implementation
+                console.log('Multi-lane feature activated');
+            }
+            
+            static initMapIntegration() {
+                // Map integration with timeline events
+                console.log('Map integration activated');
+            }
+            
+            static initAnimations() {
+                // Scroll-triggered animations
+                console.log('Animations activated');
+            }
+            
+            static enableCloudSync() {
+                // Cloud save functionality
+                console.log('Cloud sync activated');
+            }
+        }
+
+        // Timeline Analytics
+        function getTimelineStats() {
+            return {
+                totalEvents: timelineEvents.length,
+                dateRange: timelineEvents.length > 0 ? {
+                    start: Math.min(...timelineEvents.map(e => new Date(e.date))),
+                    end: Math.max(...timelineEvents.map(e => new Date(e.date)))
+                } : null,
+                tagsUsed: [...new Set(timelineEvents.flatMap(e => e.tags))],
+                eventsWithMedia: timelineEvents.filter(e => e.media).length
+            };
+        }
+
+        // Print-friendly export
+        function printTimeline() {
+            const printContent = `
+                <html>
+                <head>
+                    <title>Timeline - ${escapeHTML(document.getElementById('timelineTitle').value || 'My Timeline')}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .event { margin-bottom: 20px; padding: 15px; border-left: 3px solid #6366f1; }
+                        .event-title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
+                        .event-date { color: #666; margin-bottom: 10px; }
+                        .event-description { line-height: 1.4; }
+                        .event-tags { margin-top: 10px; }
+                        .tag { background: #6366f1; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; margin-right: 5px; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>${escapeHTML(document.getElementById('timelineTitle').value || 'My Timeline')}</h1>
+                    ${timelineEvents.sort((a, b) => new Date(a.date) - new Date(b.date)).map(event => `
+                        <div class="event">
+                            <div class="event-title">${escapeHTML(event.title)}</div>
+                            <div class="event-date">${formatDate(event.date)}</div>
+                            ${event.description ? `<div class="event-description">${escapeHTML(event.description)}</div>` : ''}
+                            ${event.location ? `<div style="margin-top: 5px;"><strong>Location:</strong> ${escapeHTML(event.location)}</div>` : ''}
+                            ${event.tags.length > 0 ? `<div class="event-tags">${event.tags.map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </body>
+                </html>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Add print button to header
+        document.querySelector('.header-controls').insertAdjacentHTML('beforeend', 
+            '<button class="btn btn-secondary" onclick="printTimeline()">🖨️ Print</button>'
+        );
+
+        console.log('Timeline Builder Pro initialized successfully!');
+    </script>
+    <script>
+        function escapeHTML(str) {
+            if (str === null || str === undefined) {
+                return '';
+            }
+            return str.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
+</body>
+</html>
