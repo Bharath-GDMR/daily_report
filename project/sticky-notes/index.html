@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes Whiteboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-note-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .add-note-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .canvas {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sticky-note {
+            position: absolute;
+            min-width: 200px;
+            min-height: 150px;
+            max-width: 400px;
+            max-height: 300px;
+            background: #ffeb3b;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: move;
+            user-select: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sticky-note:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sticky-note.dragging {
+            transform: rotate(3deg) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .emoji-display {
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .emoji-display:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .note-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .color-picker {
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+        }
+
+        .note-content {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            width: 100%;
+            min-height: 100px;
+        }
+
+        .resize-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(-45deg, transparent 30%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.3) 35%, transparent 35%, transparent 65%, rgba(0, 0, 0, 0.3) 65%, rgba(0, 0, 0, 0.3) 70%, transparent 70%);
+            cursor: nw-resize;
+            border-radius: 0 0 8px 0;
+        }
+
+        .emoji-picker {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1001;
+            max-width: 200px;
+        }
+
+        .emoji-picker.show {
+            display: block;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+
+        .emoji-option {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .emoji-option:hover {
+            background: #f0f0f0;
+        }
+
+        .format-toolbar {
+            display: flex;
+            gap: 4px;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .format-btn {
+            padding: 4px 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .format-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .format-btn.active {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .color-palette {
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1001;
+        }
+
+        .color-palette.show {
+            display: block;
+        }
+
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s ease;
+        }
+
+        .color-option:hover {
+            border-color: #333;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+            max-width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button class="add-note-btn" onclick="createNote()">+</button>
+        <span style="font-size: 14px; color: #666;">Double-click canvas to add note</span>
+    </div>
+
+    <div class="canvas" id="canvas"></div>
+
+    <div class="instructions">
+        <strong>Controls:</strong><br>
+        • Click + or double-click to add notes<br>
+        • Drag to move, resize from corner<br>
+        • Click emoji/color to customize<br>
+        • Rich text formatting available
+    </div>
+
+    <script>
+        let noteCounter = 0;
+        let activeNote = null;
+        let isDragging = false;
+        let isResizing = false;
+        let dragStartX, dragStartY, dragOffsetX, dragOffsetY;
+        let resizeStartX, resizeStartY, resizeStartWidth, resizeStartHeight;
+
+        const colors = [
+            '#ffeb3b', '#ff9800', '#f44336', '#e91e63',
+            '#9c27b0', '#673ab7', '#3f51b5', '#2196f3',
+            '#03a9f4', '#00bcd4', '#009688', '#4caf50',
+            '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107'
+        ];
+
+        const emojis = ['📌', '💡', '✅', '❗', '📝', '🎯', '💭', '⭐', '🔥', '📊', '📅', '🎨'];
+
+        function createNote(x = null, y = null) {
+            const canvas = document.getElementById('canvas');
+            const note = document.createElement('div');
+            note.className = 'sticky-note';
+            note.id = `note-${++noteCounter}`;
+            
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            note.style.backgroundColor = randomColor;
+            
+            // Position the note
+            const noteX = x || Math.random() * (window.innerWidth - 250);
+            const noteY = y || Math.random() * (window.innerHeight - 200);
+            note.style.left = noteX + 'px';
+            note.style.top = noteY + 'px';
+            note.style.width = '200px';
+            note.style.height = '150px';
+
+            note.innerHTML = `
+                <div class="note-header">
+                    <div class="emoji-display" onclick="toggleEmojiPicker(this)">📌</div>
+                    <div class="note-controls">
+                        <input type="color" class="color-picker" value="${randomColor}" onchange="changeNoteColor(this)" onclick="event.stopPropagation()">
+                        <button class="delete-btn" onclick="deleteNote(this)">×</button>
+                    </div>
+                    <div class="emoji-picker">
+                        <div class="emoji-grid">
+                            ${emojis.map(emoji => `<div class="emoji-option" onclick="selectEmoji(this, '${emoji}')">${emoji}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="note-body" style="flex: 1; display: flex; flex-direction: column; padding: 8px;">
+                    <div class="format-toolbar">
+                        <button class="format-btn" onclick="formatText('bold')"><b>B</b></button>
+                        <button class="format-btn" onclick="formatText('italic')"><i>I</i></button>
+                        <button class="format-btn" onclick="formatText('underline')"><u>U</u></button>
+                    </div>
+                    <div class="note-content" contenteditable="true" onblur="saveNotes()" onkeyup="saveNotes()">Click to edit...</div>
+                </div>
+                <div class="resize-handle"></div>
+            `;
+
+            canvas.appendChild(note);
+            setupNoteEvents(note);
+            saveNotes();
+            
+            // Focus the content for immediate editing
+            setTimeout(() => {
+                const content = note.querySelector('.note-content');
+                content.focus();
+                if (content.textContent === 'Click to edit...') {
+                    content.textContent = '';
+                }
+            }, 100);
+        }
+
+        function setupNoteEvents(note) {
+            const header = note.querySelector('.note-header');
+            const resizeHandle = note.querySelector('.resize-handle');
+            const content = note.querySelector('.note-content');
+
+            // Make note active when clicked
+            note.addEventListener('mousedown', (e) => {
+                if (e.target === resizeHandle) return;
+                activeNote = note;
+                bringToFront(note);
+            });
+
+            // Drag functionality
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.note-controls') || e.target.closest('.emoji-picker')) return;
+                
+                isDragging = true;
+                note.classList.add('dragging');
+                
+                const rect = note.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                
+                e.preventDefault();
+            });
+
+            // Resize functionality
+            resizeHandle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                activeNote = note;
+                
+                resizeStartX = e.clientX;
+                resizeStartY = e.clientY;
+                resizeStartWidth = parseInt(window.getComputedStyle(note).width);
+                resizeStartHeight = parseInt(window.getComputedStyle(note).height);
+                
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        }
+
+        // Global mouse events
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && activeNote) {
+                const x = e.clientX - dragOffsetX;
+                const y = e.clientY - dragOffsetY;
+                
+                // Constrain to viewport
+                const maxX = window.innerWidth - activeNote.offsetWidth;
+                const maxY = window.innerHeight - activeNote.offsetHeight;
+                
+                activeNote.style.left = Math.max(0, Math.min(maxX, x)) + 'px';
+                activeNote.style.top = Math.max(0, Math.min(maxY, y)) + 'px';
+            }
+            
+            if (isResizing && activeNote) {
+                const deltaX = e.clientX - resizeStartX;
+                const deltaY = e.clientY - resizeStartY;
+                
+                const newWidth = Math.max(200, Math.min(400, resizeStartWidth + deltaX));
+                const newHeight = Math.max(150, Math.min(300, resizeStartHeight + deltaY));
+                
+                activeNote.style.width = newWidth + 'px';
+                activeNote.style.height = newHeight + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                activeNote?.classList.remove('dragging');
+                isDragging = false;
+                saveNotes();
+            }
+            if (isResizing) {
+                isResizing = false;
+                saveNotes();
+            }
+        });
+
+        // Double-click to create note
+        document.getElementById('canvas').addEventListener('dblclick', (e) => {
+            if (e.target.id === 'canvas') {
+                createNote(e.clientX - 100, e.clientY - 75);
+            }
+        });
+
+        function bringToFront(note) {
+            const notes = document.querySelectorAll('.sticky-note');
+            notes.forEach((n, index) => {
+                n.style.zIndex = index;
+            });
+            note.style.zIndex = notes.length + 1;
+        }
+
+        function deleteNote(btn) {
+            const note = btn.closest('.sticky-note');
+            note.remove();
+            saveNotes();
+        }
+
+        function changeNoteColor(colorPicker) {
+            const note = colorPicker.closest('.sticky-note');
+            note.style.backgroundColor = colorPicker.value;
+            saveNotes();
+        }
+
+        function toggleEmojiPicker(emojiDisplay) {
+            const picker = emojiDisplay.parentNode.querySelector('.emoji-picker');
+            const isVisible = picker.classList.contains('show');
+            
+            // Hide all emoji pickers
+            document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('show'));
+            
+            if (!isVisible) {
+                picker.classList.add('show');
+            }
+        }
+
+        function selectEmoji(option, emoji) {
+            const note = option.closest('.sticky-note');
+            const emojiDisplay = note.querySelector('.emoji-display');
+            emojiDisplay.textContent = emoji;
+            option.closest('.emoji-picker').classList.remove('show');
+            saveNotes();
+        }
+
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            saveNotes();
+        }
+
+        // Click outside to close pickers
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.emoji-display') && !e.target.closest('.emoji-picker')) {
+                document.querySelectorAll('.emoji-picker').forEach(p => p.classList.remove('show'));
+            }
+        });
+
+        function saveNotes() {
+            const notes = [];
+            document.querySelectorAll('.sticky-note').forEach(note => {
+                const noteData = {
+                    id: note.id,
+                    x: parseInt(note.style.left),
+                    y: parseInt(note.style.top),
+                    width: parseInt(note.style.width),
+                    height: parseInt(note.style.height),
+                    backgroundColor: note.style.backgroundColor,
+                    emoji: note.querySelector('.emoji-display').textContent,
+                    content: note.querySelector('.note-content').innerHTML,
+                    zIndex: note.style.zIndex || 1
+                };
+                notes.push(noteData);
+            });
+            
+            // Note: localStorage would be used here in a normal environment
+            // For demo purposes, we'll store in a global variable
+            window.notesData = notes;
+        }
+
+        function loadNotes() {
+            // Note: In a normal environment, this would load from localStorage
+            const notesData = window.notesData || [];
+            
+            notesData.forEach(noteData => {
+                const canvas = document.getElementById('canvas');
+                const note = document.createElement('div');
+                note.className = 'sticky-note';
+                note.id = noteData.id;
+                note.style.left = noteData.x + 'px';
+                note.style.top = noteData.y + 'px';
+                note.style.width = noteData.width + 'px';
+                note.style.height = noteData.height + 'px';
+                note.style.backgroundColor = noteData.backgroundColor;
+                note.style.zIndex = noteData.zIndex;
+
+                note.innerHTML = `
+                    <div class="note-header">
+                        <div class="emoji-display" onclick="toggleEmojiPicker(this)">${noteData.emoji}</div>
+                        <div class="note-controls">
+                            <input type="color" class="color-picker" value="${noteData.backgroundColor}" onchange="changeNoteColor(this)" onclick="event.stopPropagation()">
+                            <button class="delete-btn" onclick="deleteNote(this)">×</button>
+                        </div>
+                        <div class="emoji-picker">
+                            <div class="emoji-grid">
+                                ${emojis.map(emoji => `<div class="emoji-option" onclick="selectEmoji(this, '${emoji}')">${emoji}</div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="note-body" style="flex: 1; display: flex; flex-direction: column; padding: 8px;">
+                        <div class="format-toolbar">
+                            <button class="format-btn" onclick="formatText('bold')"><b>B</b></button>
+                            <button class="format-btn" onclick="formatText('italic')"><i>I</i></button>
+                            <button class="format-btn" onclick="formatText('underline')"><u>U</u></button>
+                        </div>
+                        <div class="note-content" contenteditable="true" onblur="saveNotes()" onkeyup="saveNotes()">${noteData.content}</div>
+                    </div>
+                    <div class="resize-handle"></div>
+                `;
+
+                canvas.appendChild(note);
+                setupNoteEvents(note);
+                
+                // Update counter to avoid ID conflicts
+                const noteNum = parseInt(noteData.id.split('-')[1]);
+                if (noteNum >= noteCounter) {
+                    noteCounter = noteNum;
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
+            
+            // Create a welcome note if no notes exist
+            if (document.querySelectorAll('.sticky-note').length === 0) {
+                createNote(100, 100);
+                const welcomeNote = document.querySelector('.sticky-note .note-content');
+                welcomeNote.innerHTML = '<b>Welcome!</b><br>This is your interactive whiteboard.<br><br><i>Try dragging me around, resizing, or changing my color!</i>';
+            }
+        });
+    </script>
+</body>
+</html>
