@@ -1,0 +1,19 @@
+#app-container {
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#flipbook-container {
+    width: 800px; /* Adjust as needed */
+    height: 600px; /* Adjust as needed */
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Styles for page-turning animation (using a library like Turn.js) */
+.flipbook .page {
+    /* Styles for individual pages, will be handled by the library */
+}

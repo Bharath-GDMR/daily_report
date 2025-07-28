@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Flipbook Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    </head>
+<body>
+    <div id="app-container">
+        <h1>PDF Flipbook Viewer</h1>
+
+        <div class="controls">
+            <input type="file" id="pdf-upload" accept="application/pdf">
+            <button id="load-uploaded-pdf">Load Uploaded PDF</button>
+            <label for="demo-pdf-select">Select Demo PDF:</label>
+            <select id="demo-pdf-select">
+                <option value="demo-pdf-1.pdf">Demo PDF 1</option>
+                <option value="demo-pdf-2.pdf">Demo PDF 2</option>
+            </select>
+            <button id="load-demo-pdf">Load Demo PDF</button>
+        </div>
+
+        <div id="flipbook-container">
+            </div>
+
+        <audio id="page-flip-sound" src="page-flip.mp3" preload="auto"></audio>
+    </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+    <script src="script.js"></script>
+    </body>
+</html>
