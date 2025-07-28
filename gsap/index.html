@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSAP Mastery - Complete Learning Module</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MorphSVGPlugin.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(88, 28, 135, 0.3) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-box {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            opacity: 0.6;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 15, 35, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 0 2rem;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .demo-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            margin: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .demo-box:hover {
+            transform: scale(1.05);
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            color: #4ecdc4;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .timeline-demo {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .morph-demo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .text-demo {
+            font-size: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-demo {
+            height: 300px;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 2rem 1rem;
+            }
+            
+            .nav-container {
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .demo-container {
+                padding: 1rem;
+            }
+            
+            .timeline-demo {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            z-index: 1000;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .floating-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.7;
+            mix-blend-mode: difference;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-cursor"></div>
+    <div class="progress-bar"></div>
+
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="floating-box" style="top: 20%; left: 10%;"></div>
+            <div class="floating-box" style="top: 60%; right: 15%;"></div>
+            <div class="floating-box" style="bottom: 30%; left: 20%;"></div>
+            <div class="floating-box" style="top: 40%; right: 30%;"></div>
+        </div>
+        <div class="hero-content">
+            <h1>GSAP MASTERY</h1>
+            <p>Master the GreenSock Animation Platform</p>
+            <button class="btn" onclick="scrollToSection('basics')">Start Learning</button>
+        </div>
+    </section>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-item" onclick="scrollToSection('basics')">Basics</div>
+            <div class="nav-item" onclick="scrollToSection('timeline')">Timeline</div>
+            <div class="nav-item" onclick="scrollToSection('scrolltrigger')">ScrollTrigger</div>
+            <div class="nav-item" onclick="scrollToSection('text')">Text Animations</div>
+            <div class="nav-item" onclick="scrollToSection('morphing')">Morphing</div>
+            <div class="nav-item" onclick="scrollToSection('stagger')">Stagger</div>
+            <div class="nav-item" onclick="scrollToSection('advanced')">Advanced</div>
+        </div>
+    </nav>
+
+    <section id="basics" class="section">
+        <h2>GSAP Basics</h2>
+        <p>GSAP (GreenSock Animation Platform) is the most robust high-performance JavaScript animation library. Let's start with the fundamentals of tweening elements.</p>
+        
+        <div class="demo-container">
+            <h3>Basic Tween Methods</h3>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+                <div class="demo-box" id="tween1">gsap.to()</div>
+                <div class="demo-box" id="tween2">gsap.from()</div>
+                <div class="demo-box" id="tween3">gsap.fromTo()</div>
+                <div class="demo-box" id="tween4">gsap.set()</div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="runBasicAnimations()">Run Animations</button>
+                <button class="btn" onclick="resetBasicAnimations()">Reset</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// Basic GSAP methods
+gsap.to("#element", {duration: 2, x: 100, rotation: 360, scale: 1.5});
+gsap.from("#element", {duration: 2, opacity: 0, y: -50});
+gsap.fromTo("#element", {x: -100}, {x: 100, duration: 2});
+gsap.set("#element", {x: 0, y: 0, rotation: 0});</pre>
+        </div>
+    </section>
+
+    <section id="timeline" class="section">
+        <h2>Timeline Animations</h2>
+        <p>Timelines allow you to create complex sequences of animations with precise control over timing and sequencing.</p>
+        
+        <div class="demo-container">
+            <h3>Timeline Demo</h3>
+            <div class="timeline-demo">
+                <div class="demo-box" id="tl1">1</div>
+                <div class="demo-box" id="tl2">2</div>
+                <div class="demo-box" id="tl3">3</div>
+                <div class="demo-box" id="tl4">4</div>
+                <div class="demo-box" id="tl5">5</div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="runTimelineAnimation()">Play Timeline</button>
+                <button class="btn" onclick="pauseTimeline()">Pause</button>
+                <button class="btn" onclick="reverseTimeline()">Reverse</button>
+                <button class="btn" onclick="restartTimeline()">Restart</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// Timeline with different timing methods
+let tl = gsap.timeline();
+tl.to("#box1", {x: 100, duration: 1})
+  .to("#box2", {x: 100, duration: 1}, "-=0.5") // overlap by 0.5s
+  .to("#box3", {x: 100, duration: 1}, "+=0.2") // delay by 0.2s
+  .to("#box4", {x: 100, duration: 1}, 2)       // absolute time
+  .to("#box5", {x: 100, duration: 1}, "start+=1"); // label offset</pre>
+        </div>
+    </section>
+
+    <section id="scrolltrigger" class="section">
+        <h2>ScrollTrigger</h2>
+        <p>ScrollTrigger allows you to create animations that are triggered and controlled by the scroll position.</p>
+        
+        <div class="demo-container">
+            <h3>Scroll-Activated Animation</h3>
+            <div class="scroll-demo" id="scrollDemo">
+                Scroll to see me animate!
+            </div>
+            <p>This element will animate when it comes into view. Try scrolling up and down!</p>
+        </div>
+
+        <div class="code-block">
+            <pre>// ScrollTrigger basic setup
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.to("#scrollElement", {
+  x: 100,
+  rotation: 360,
+  duration: 2,
+  scrollTrigger: {
+    trigger: "#scrollElement",
+    start: "top 80%",
+    end: "bottom 20%",
+    scrub: 1,        // smooth scrubbing
+    pin: true,       // pin the element
+    toggleActions: "play pause resume reverse"
+  }
+});</pre>
+        </div>
+    </section>
+
+    <section id="text" class="section">
+        <h2>Text Animations</h2>
+        <p>GSAP provides powerful text animation capabilities, from simple fades to complex character-by-character effects.</p>
+        
+        <div class="demo-container">
+            <h3>Text Effects Demo</h3>
+            <div class="text-demo" id="textDemo">Watch this text transform!</div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="runTextAnimation()">Typewriter Effect</button>
+                <button class="btn" onclick="runSplitTextAnimation()">Split Text</button>
+                <button class="btn" onclick="runGlitchEffect()">Glitch Effect</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// Text animations
+// Typewriter effect
+gsap.to("#text", {duration: 2, text: "New text content!"});
+
+// Character animation (requires SplitText plugin)
+gsap.from(".char", {
+  duration: 0.8,
+  opacity: 0,
+  scale: 0,
+  y: 80,
+  rotationX: 180,
+  transformOrigin: "0% 50% -50",
+  ease: "back",
+  stagger: 0.01
+});</pre>
+        </div>
+    </section>
+
+    <section id="morphing" class="section">
+        <h2>SVG Morphing</h2>
+        <p>Transform SVG shapes smoothly from one form to another with GSAP's morphing capabilities.</p>
+        
+        <div class="demo-container">
+            <h3>Shape Morphing Demo</h3>
+            <div class="morph-demo">
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <path id="morphPath" d="M100,20 L180,180 L20,180 Z" fill="url(#gradient)" stroke="#fff" stroke-width="2"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff6b6b"/>
+                            <stop offset="100%" style="stop-color:#4ecdc4"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="morphToCircle()">Circle</button>
+                <button class="btn" onclick="morphToSquare()">Square</button>
+                <button class="btn" onclick="morphToStar()">Star</button>
+                <button class="btn" onclick="morphToTriangle()">Triangle</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// SVG Morphing (requires MorphSVG plugin)
+gsap.to("#morphPath", {
+  duration: 1,
+  morphSVG: "M100,100 m-80,0 a80,80 0 1,0 160,0 a80,80 0 1,0 -160,0",
+  ease: "power2.inOut"
+});</pre>
+        </div>
+    </section>
+
+    <section id="stagger" class="section">
+        <h2>Stagger Animations</h2>
+        <p>Create beautiful cascading effects by staggering animations across multiple elements.</p>
+        
+        <div class="demo-container">
+            <h3>Stagger Effects</h3>
+            <div class="grid-demo" id="staggerGrid">
+                <div class="grid-item">1</div>
+                <div class="grid-item">2</div>
+                <div class="grid-item">3</div>
+                <div class="grid-item">4</div>
+                <div class="grid-item">5</div>
+                <div class="grid-item">6</div>
+                <div class="grid-item">7</div>
+                <div class="grid-item">8</div>
+                <div class="grid-item">9</div>
+                <div class="grid-item">10</div>
+                <div class="grid-item">11</div>
+                <div class="grid-item">12</div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="runStaggerAnimation()">Wave Effect</button>
+                <button class="btn" onclick="runRandomStagger()">Random</button>
+                <button class="btn" onclick="runFromCenterStagger()">From Center</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// Stagger animations
+gsap.from(".grid-item", {
+  duration: 0.6,
+  scale: 0,
+  rotation: 180,
+  opacity: 0,
+  stagger: {
+    amount: 1.5,
+    grid: [4, 3],
+    from: "center"
+  }
+});
+
+// Advanced stagger with function
+gsap.to(".item", {
+  y: -100,
+  stagger: {
+    each: 0.1,
+    from: "random",
+    ease: "power2.inOut"
+  }
+});</pre>
+        </div>
+    </section>
+
+    <section id="advanced" class="section">
+        <h2>Advanced Techniques</h2>
+        <p>Explore advanced GSAP features including custom eases, physics-based animations, and performance optimization.</p>
+        
+        <div class="demo-container">
+            <h3>Advanced Features</h3>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+                <div class="demo-box" id="physics">Physics</div>
+                <div class="demo-box" id="elastic">Elastic</div>
+                <div class="demo-box" id="custom">Custom</div>
+                <div class="demo-box" id="motionpath">Path</div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="runAdvancedAnimations()">Run Advanced</button>
+                <button class="btn" onclick="resetAdvanced()">Reset</button>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre>// Advanced GSAP techniques
+// Custom ease
+gsap.to("#element", {
+  x: 300,
+  duration: 2,
+  ease: "elastic.out(1, 0.3)"
+});
+
+// Motion path
+gsap.to("#element", {
+  duration: 3,
+  motionPath: {
+    path: "M0,0 Q50,-50 100,0 T200,0",
+    autoRotate: true
+  }
+});
+
+// Performance optimization
+gsap.set("#element", {force3D: true, transformPerspective: 1000});</pre>
+        </div>
+
+        <div style="margin-top: 3rem; text-align: center;">
+            <h3>🎉 Congratulations!</h3>
+            <p>You've completed the GSAP mastery module. You now have the knowledge to create stunning animations!</p>
+            <button class="btn" onclick="runFinalAnimation()">Celebration Animation</button>
+        </div>
+    </section>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+        // Global timeline variable
+        let mainTimeline;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initAnimations();
+            setupScrollProgress();
+            setupCustomCursor();
+        });
+
+        function initAnimations() {
+            // Hero animation
+            gsap.from(".hero h1", {duration: 2, y: 100, opacity: 0, ease: "power3.out"});
+            gsap.from(".hero p", {duration: 2, y: 50, opacity: 0, delay: 0.5, ease: "power3.out"});
+            gsap.from(".hero .btn", {duration: 1, scale: 0, delay: 1, ease: "back.out(1.7)"});
+
+            // Floating elements
+            gsap.to(".floating-box", {
+                y: "random(-100, 100)",
+                x: "random(-100, 100)",
+                rotation: "random(-180, 180)",
+                duration: "random(3, 6)",
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                stagger: 0.5
+            });
+
+            // Hero background gradient animation
+            gsap.to(".hero h1", {
+                backgroundPosition: "400% 0%",
+                duration: 8,
+                repeat: -1,
+                ease: "none"
+            });
+
+            // Section reveal animations
+            gsap.utils.toArray(".section").forEach(section => {
+                gsap.from(section, {
+                    y: 100,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+
+            // ScrollTrigger demo
+            gsap.to("#scrollDemo", {
+                x: 100,
+                rotation: 360,
+                scale: 1.2,
+                scrollTrigger: {
+                    trigger: "#scrollDemo",
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    scrub: 1,
+                    toggleActions: "play pause resume reverse"
+                }
+            });
+        }
+
+        function setupScrollProgress() {
+            gsap.to(".progress-bar", {
+                width: "100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: true
+                }
+            });
+        }
+
+        function setupCustomCursor() {
+            const cursor = document.querySelector('.floating-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX - 10,
+                    y: e.clientY - 10,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        function scrollToSection(sectionId) {
+            gsap.to(window, {
+                duration: 1.5,
+                scrollTo: "#" + sectionId,
+                ease: "power2.inOut"
+            });
+        }
+
+        // Basic animations
+        function runBasicAnimations() {
+            gsap.to("#tween1", {duration: 1, x: 200, rotation: 360, scale: 1.2, ease: "power2.out"});
+            gsap.from("#tween2", {duration: 1, opacity: 0, y: -100, scale: 0, delay: 0.2});
+            gsap.fromTo("#tween3", {x: -100, opacity: 0}, {x: 100, opacity: 1, duration: 1, delay: 0.4});
+            gsap.set("#tween4", {x: 50, y: -50, rotation: 45, delay: 0.6});
+        }
+
+        function resetBasicAnimations() {
+            gsap.set(["#tween1", "#tween2", "#tween3", "#tween4"], {x: 0, y: 0, rotation: 0, scale: 1, opacity: 1});
+        }
+
+        // Timeline animations
+        function runTimelineAnimation() {
+            mainTimeline = gsap.timeline();
+            mainTimeline
+                .to("#tl1", {x: 100, duration: 0.5, ease: "power2.out"})
+                .to("#tl2", {x: 100, duration: 0.5, ease: "power2.out"}, "-=0.3")
+                .to("#tl3", {x: 100, duration: 0.5, ease: "power2.out"}, "-=0.3")
+                .to("#tl4", {x: 100, duration: 0.5, ease: "power2.out"}, "-=0.3")
+                .to("#tl5", {x: 100, duration: 0.5, ease: "power2.out"}, "-=0.3")
+                .to([".timeline-demo .demo-box"], {rotation: 360, scale: 1.2, duration: 1}, "-=0.5");
+        }
+
+        function pauseTimeline() {
+            if (mainTimeline) mainTimeline.pause();
+        }
+
+        function reverseTimeline() {
+            if (mainTimeline) mainTimeline.reverse();
+        }
+
+        function restartTimeline() {
+            gsap.set([".timeline-demo .demo-box"], {x: 0, rotation: 0, scale: 1});
+            if (mainTimeline) mainTimeline.restart();
+        }
+
+        // Text animations
+        function runTextAnimation() {
+            gsap.to("#textDemo", {
+                duration: 3,
+                text: "This text is being typed out character by character!",
+                ease: "none"
+            });
+        }
+
+        function runSplitTextAnimation() {
+            const text = "AMAZING SPLIT TEXT EFFECT!";
+            document.getElementById('textDemo').innerHTML = text.split('').map(char => 
+                `<span style="display: inline-block;">${char === ' ' ? '&nbsp;' : char}</span>`
+            ).join('');
+            
+            gsap.from("#textDemo span", {
+                duration: 0.8,
+                opacity: 0,
+                scale: 0,
+                y: 80,
+                rotationX: 180,
+                transformOrigin: "0% 50% -50",
+                ease: "back.out(1.7)",
+                stagger: 0.05
+            });
+        }
+
+        function runGlitchEffect() {
+            const originalText = "GLITCH EFFECT ACTIVATED!";
+            const glitchChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let glitchText = originalText;
+            
+            // Initial glitch
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    glitchText = originalText.split('').map(char => 
+                        Math.random() < 0.3 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : char
+                    ).join('');
+                    document.getElementById('textDemo').textContent = glitchText;
+                }, i * 100);
+            }
+            
+            // Reveal original text
+            setTimeout(() => {
+                document.getElementById('textDemo').textContent = originalText;
+                gsap.fromTo("#textDemo", 
+                    {scale: 1.2, filter: "blur(5px)"}, 
+                    {scale: 1, filter: "blur(0px)", duration: 0.5}
+                );
+            }, 500);
+        }
+
+        // SVG Morphing functions
+        const shapes = {
+            triangle: "M100,20 L180,180 L20,180 Z",
+            circle: "M100,100 m-80,0 a80,80 0 1,0 160,0 a80,80 0 1,0 -160,0",
+            square: "M40,40 L160,40 L160,160 L40,160 Z",
+            star: "M100,20 L120,80 L180,80 L135,120 L155,180 L100,145 L45,180 L65,120 L20,80 L80,80 Z"
+        };
+
+        function morphToCircle() {
+            gsap.to("#morphPath", {duration: 1, attr: {d: shapes.circle}, ease: "power2.inOut"});
+        }
+
+        function morphToSquare() {
+            gsap.to("#morphPath", {duration: 1, attr: {d: shapes.square}, ease: "power2.inOut"});
+        }
+
+        function morphToStar() {
+            gsap.to("#morphPath", {duration: 1, attr: {d: shapes.star}, ease: "power2.inOut"});
+        }
+
+        function morphToTriangle() {
+            gsap.to("#morphPath", {duration: 1, attr: {d: shapes.triangle}, ease: "power2.inOut"});
+        }
+
+        // Stagger animations
+        function runStaggerAnimation() {
+            gsap.fromTo("#staggerGrid .grid-item", 
+                {scale: 0, rotation: 180, opacity: 0},
+                {
+                    duration: 0.6,
+                    scale: 1,
+                    rotation: 0,
+                    opacity: 1,
+                    stagger: {
+                        amount: 1.5,
+                        grid: [4, 3],
+                        from: "start"
+                    },
+                    ease: "back.out(1.7)"
+                }
+            );
+        }
+
+        function runRandomStagger() {
+            gsap.fromTo("#staggerGrid .grid-item",
+                {y: -100, opacity: 0},
+                {
+                    duration: 0.8,
+                    y: 0,
+                    opacity: 1,
+                    stagger: {
+                        amount: 2,
+                        from: "random"
+                    },
+                    ease: "bounce.out"
+                }
+            );
+        }
+
+        function runFromCenterStagger() {
+            gsap.fromTo("#staggerGrid .grid-item",
+                {scale: 0, rotation: 360},
+                {
+                    duration: 0.7,
+                    scale: 1,
+                    rotation: 0,
+                    stagger: {
+                        amount: 1.2,
+                        grid: [4, 3],
+                        from: "center"
+                    },
+                    ease: "elastic.out(1, 0.5)"
+                }
+            );
+        }
+
+        // Advanced animations
+        function runAdvancedAnimations() {
+            // Physics simulation
+            gsap.to("#physics", {
+                duration: 2,
+                x: 200,
+                y: -100,
+                rotation: 720,
+                ease: "bounce.out"
+            });
+
+            // Elastic effect
+            gsap.to("#elastic", {
+                duration: 3,
+                x: 200,
+                scale: 1.5,
+                ease: "elastic.out(1, 0.3)"
+            });
+
+            // Custom cubic-bezier ease
+            gsap.to("#custom", {
+                duration: 2,
+                x: 200,
+                rotation: 180,
+                ease: "power4.inOut"
+            });
+
+            // Simulated motion path
+            gsap.to("#motionpath", {
+                duration: 3,
+                x: 200,
+                y: -50,
+                rotation: 360,
+                ease: "sine.inOut",
+                transformOrigin: "center center"
+            });
+        }
+
+        function resetAdvanced() {
+            gsap.set(["#physics", "#elastic", "#custom", "#motionpath"], {
+                x: 0, y: 0, rotation: 0, scale: 1
+            });
+        }
+
+        // Final celebration animation
+        function runFinalAnimation() {
+            // Create confetti effect
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                document.body.appendChild(confetti);
+
+                gsap.to(confetti, {
+                    duration: 3,
+                    y: window.innerHeight + 100,
+                    x: `+=${Math.random() * 200 - 100}`,
+                    rotation: 360 * 3,
+                    ease: "power2.out",
+                    onComplete: () => confetti.remove()
+                });
+            }
+
+            // Animate section title
+            gsap.to("#advanced h2", {
+                duration: 2,
+                scale: 1.2,
+                color: "#ff6b6b",
+                textShadow: "0 0 20px #ff6b6b",
+                ease: "elastic.out(1, 0.3)",
+                yoyo: true,
+                repeat: 1
+            });
+
+            // Final message
+            setTimeout(() => {
+                alert("🎉 Congratulations! You've mastered GSAP! Keep creating amazing animations!");
+            }, 1000);
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Add active state animation
+                gsap.to(this, {
+                    duration: 0.2,
+                    scale: 0.95,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power2.out"
+                });
+            });
+        });
+
+        // Add hover effects to demo boxes
+        document.querySelectorAll('.demo-box').forEach(box => {
+            box.addEventListener('mouseenter', function() {
+                gsap.to(this, {
+                    duration: 0.3,
+                    scale: 1.1,
+                    rotationY: 15,
+                    z: 50,
+                    ease: "power2.out"
+                });
+            });
+
+            box.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    duration: 0.3,
+                    scale: 1,
+                    rotationY: 0,
+                    z: 0,
+                    ease: "power2.out"
+                });
+            });
+        });
+
+        // Add parallax effect to sections
+        gsap.utils.toArray('.section h2').forEach(heading => {
+            gsap.to(heading, {
+                yPercent: -50,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: heading,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+
+        // Interactive background elements
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            gsap.to('.floating-box', {
+                duration: 2,
+                x: `+=${(mouseX - 0.5) * 50}`,
+                y: `+=${(mouseY - 0.5) * 50}`,
+                ease: "power2.out",
+                stagger: 0.1
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            gsap.from('body', {
+                duration: 1,
+                opacity: 0,
+                ease: 'power2.out'
+            });
+        });
+
+        // Mobile touch interactions
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.demo-box').forEach(box => {
+                box.addEventListener('touchstart', function() {
+                    gsap.to(this, {
+                        duration: 0.1,
+                        scale: 0.95,
+                        ease: "power2.out"
+                    });
+                });
+
+                box.addEventListener('touchend', function() {
+                    gsap.to(this, {
+                        duration: 0.2,
+                        scale: 1,
+                        ease: "back.out(1.7)"
+                    });
+                });
+            });
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const sections = ['basics', 'timeline', 'scrolltrigger', 'text', 'morphing', 'stagger', 'advanced'];
+            let currentIndex = 0;
+
+            // Find current section
+            sections.forEach((section, index) => {
+                const element = document.getElementById(section);
+                const rect = element.getBoundingClientRect();
+                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                    currentIndex = index;
+                }
+            });
+
+            if (e.key === 'ArrowDown' && currentIndex < sections.length - 1) {
+                scrollToSection(sections[currentIndex + 1]);
+            } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+                scrollToSection(sections[currentIndex - 1]);
+            }
+        });
+
+    </script>
+</body>
+</html>

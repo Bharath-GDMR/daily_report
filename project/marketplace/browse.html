@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Assets - APEX3D</title>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ff1493;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff1493;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            display: flex;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            width: 300px;
+            background: #111;
+            border-right: 1px solid #333;
+            padding: 2rem;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: #ff1493;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            background: #222;
+            border: 2px solid #333;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        /* Category Filters */
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .category-item:hover {
+            color: #ff1493;
+        }
+
+        .category-checkbox {
+            margin-right: 0.75rem;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #666;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .category-checkbox:checked {
+            background: #ff1493;
+            border-color: #ff1493;
+        }
+
+        .category-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Price Range */
+        .price-range {
+            margin: 1rem 0;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 0.5rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .range-slider {
+            width: 100%;
+            margin: 1rem 0;
+            appearance: none;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ff1493;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Sort Options */
+        .sort-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: #ff1493;
+        }
+
+        /* Rating Filter */
+        .rating-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+
+        .stars {
+            color: #ffd700;
+            margin-right: 0.5rem;
+        }
+
+        /* Products Area */
+        .products-area {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #ff1493;
+            text-decoration: none;
+        }
+
+        /* Results Header */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: #ff1493;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .product-card {
+            background: #111;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff1493;
+            box-shadow: 0 20px 40px rgba(255, 20, 147, 0.2);
+        }
+
+        .product-card.list-view {
+            display: flex;
+            height: 200px;
+        }
+
+        .product-viewer {
+            height: 250px;
+            background: #000;
+            position: relative;
+            border-bottom: 1px solid #333;
+        }
+
+        .product-card.list-view .product-viewer {
+            width: 300px;
+            height: 100%;
+            border-bottom: none;
+            border-right: 1px solid #333;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .product-card.list-view .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .product-category {
+            color: #ff1493;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .product-description {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            align-items: center;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-stars {
+            color: #ffd700;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 20, 147, 0.9);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .add-to-cart {
+            opacity: 1;
+        }
+
+        .add-to-cart:hover {
+            background: #ff1493;
+            transform: scale(1.1);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-btn {
+            padding: 0.75rem 1rem;
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: #ff1493;
+            border-color: #ff1493;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #ff1493;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top: 3px solid #ff1493;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .products-grid.grid-view {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-card.list-view {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .product-card.list-view .product-viewer {
+                width: 100%;
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">APEX3D</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#browse" class="active">Browse</a></li>
+                <li><a href="#sell">Sell</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#cart">Cart (<span id="cartCount">0</span>)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <!-- Search -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search 3D assets..." id="searchInput">
+            </div>
+
+            <!-- Categories -->
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <ul class="category-list" id="categoryList">
+                    <!-- Will be populated dynamically -->
+                </ul>
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-section">
+                <h3>Price Range</h3>
+                <div class="price-inputs">
+                    <input type="number" class="price-input" placeholder="Min" id="minPrice">
+                    <span>-</span>
+                    <input type="number" class="price-input" placeholder="Max" id="maxPrice">
+                </div>
+                <input type="range" class="range-slider" min="0" max="200" value="200" id="priceRange">
+            </div>
+
+            <!-- Rating -->
+            <div class="filter-section">
+                <h3>Rating</h3>
+                <div class="rating-filter" id="ratingFilter">
+                    <label class="rating-option">
+                        <input type="checkbox" class="category-checkbox" data-rating="5">
+                        <span class="stars">★★★★★</span>
+                        <span>5 Stars</span>
+                    </label>
+                    <label class="rating-option">
+                        <input type="checkbox" class="category-checkbox" data-rating="4">
+                        <span class="stars">★★★★☆</span>
+                        <span>4+ Stars</span>
+                    </label>
+                    <label class="rating-option">
+                        <input type="checkbox" class="category-checkbox" data-rating="3">
+                        <span class="stars">★★★☆☆</span>
+                        <span>3+ Stars</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Sort -->
+            <div class="filter-section">
+                <h3>Sort By</h3>
+                <select class="sort-select" id="sortSelect">
+                    <option value="popularity">Most Popular</option>
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="downloads">Most Downloaded</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Products Area -->
+        <main class="products-area">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="#home">Home</a> / <span>Browse Assets</span>
+            </div>
+
+            <!-- Results Header -->
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">
+                    Showing 1-12 of 156 assets
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid">⊞ Grid</button>
+                    <button class="view-btn" data-view="list">☰ List</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid grid-view" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be generated here -->
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+
+        // Extended sample assets data
+        const allAssets = [
+            {
+                id: 1,
+                title: "Cyber Warrior Elite",
+                category: "characters",
+                price: 49.99,
+                views: 1247,
+                downloads: 89,
+                rating: 4.8,
+                description: "High-detailed cyberpunk warrior with advanced rigging and animations",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 2,
+                title: "Neon City Block",
+                category: "environments",
+                price: 79.99,
+                views: 892,
+                downloads: 45,
+                rating: 4.6,
+                description: "Futuristic city environment with neon lighting and modular pieces",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 3,
+                title: "Plasma Rifle X7",
+                category: "weapons",
+                price: 29.99,
+                views: 654,
+                downloads: 123,
+                rating: 4.9,
+                description: "Sci-fi energy weapon with glowing effects and animations",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 4,
+                title: "Ancient Dragon",
+                category: "characters",
+                price: 89.99,
+                views: 2341,
+                downloads: 156,
+                rating: 4.7,
+                description: "Majestic dragon with detailed scales and wing animations",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 5,
+                title: "Modern Interior Kit",
+                category: "environments",
+                price: 59.99,
+                views: 743,
+                downloads: 67,
+                rating: 4.4,
+                description: "Complete modern apartment interior with furniture and props",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 6,
+                title: "Holographic Display",
+                category: "props",
+                price: 39.99,
+                views: 456,
+                downloads: 34,
+                rating: 4.5,
+                description: "Interactive holographic interface with animated elements",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 7,
+                title: "Space Marine Armor",
+                category: "props",
+                price: 44.99,
+                views: 678,
+                downloads: 92,
+                rating: 4.6,
+                description: "Detailed power armor suit with modular components",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 8,
+                title: "Alien Spaceship",
+                category: "vehicles",
+                price: 69.99,
+                views: 934,
+                downloads: 78,
+                rating: 4.8,
+                description: "Sleek alien spacecraft with interior and landing animations",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 9,
+                title: "Crystal Cave",
+                category: "environments",
+                price: 54.99,
+                views: 567,
+                downloads: 43,
+                rating: 4.3,
+                description: "Mystical underground cave with glowing crystals",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 10,
+                title: "Robotic Companion",
+                category: "characters",
+                price: 38.99,
+                views: 789,
+                downloads: 65,
+                rating: 4.5,
+                description: "Friendly AI robot with expressive animations",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 11,
+                title: "Medieval Sword",
+                category: "weapons",
+                price: 24.99,
+                views: 445,
+                downloads: 87,
+                rating: 4.4,
+                description: "Beautifully crafted medieval longsword with ornate details",
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 12,
+                title: "Vintage Car",
+                category: "vehicles",
+                price: 64.99,
+                views: 823,
+                downloads: 56,
+                rating: 4.7,
+                description: "Classic 1960s muscle car with detailed interior",
+                glbUrl: null,
+                thumbnail: null
+            }
+        ];
+
+        let filteredAssets = [...allAssets];
+        let currentView = 'grid';
+        let currentPage = 1;
+        let itemsPerPage = 12;
+        let cartItems = [];
+
+        // Initialize the browse page
+        function init() {
+            setupCategories();
+            setupEventListeners();
+            renderProducts();
+            updateResultsCount();
+            setupPagination();
+        }
+
+        // Setup categories from assets
+        function setupCategories() {
+            const categories = [...new Set(allAssets.map(asset => asset.category))];
+            const categoryList = document.getElementById('categoryList');
+            
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label class="category-item">
+                        <input type="checkbox" class="category-checkbox" data-category="${category}">
+                        <span>${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                        <span style="margin-left: auto; color: #666;">(${allAssets.filter(a => a.category === category).length})</span>
+                    </label>
+                `;
+                categoryList.appendChild(li);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            
+            // Category checkboxes
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('category-checkbox')) {
+                    applyFilters();
+                }
+            });
+            
+            // Price inputs
+            document.getElementById('minPrice').addEventListener('input', applyFilters);
+            document.getElementById('maxPrice').addEventListener('input', applyFilters);
+            document.getElementById('priceRange').addEventListener('input', (e) => {
+                document.getElementById('maxPrice').value = e.target.value;
+                applyFilters();
+            });
+            
+            // Sort dropdown
+            document.getElementById('sortSelect').addEventListener('change', applyFilters);
+            
+            // View toggle
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentView = e.target.dataset.view;
+                    renderProducts();
+                });
+            });
+        }
+
+        // Apply all filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox[data-category]:checked'))
+                .map(cb => cb.dataset.category);
+            const selectedRatings = Array.from(document.querySelectorAll('.category-checkbox[data-rating]:checked'))
+                .map(cb => parseInt(cb.dataset.rating));
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+            const sortBy = document.getElementById('sortSelect').value;
+
+            filteredAssets = allAssets.filter(asset => {
+                // Search filter
+                const matchesSearch = asset.title.toLowerCase().includes(searchTerm) ||
+                                    asset.description.toLowerCase().includes(searchTerm) ||
+                                    asset.category.toLowerCase().includes(searchTerm);
+                
+                // Category filter
+                const matchesCategory = selectedCategories.length === 0 || 
+                                      selectedCategories.includes(asset.category);
+                
+                // Rating filter
+                const matchesRating = selectedRatings.length === 0 ||
+                                    selectedRatings.some(rating => asset.rating >= rating);
+                
+                // Price filter
+                const matchesPrice = asset.price >= minPrice && asset.price <= maxPrice;
+                
+                return matchesSearch && matchesCategory && matchesRating && matchesPrice;
+            });
+
+            // Sort assets
+            sortAssets(sortBy);
+            
+            currentPage = 1;
+            renderProducts();
+            updateResultsCount();
+            setupPagination();
+        }
+
+        // Sort assets
+        function sortAssets(sortBy) {
+            switch(sortBy) {
+                case 'popularity':
+                    filteredAssets.sort((a, b) => b.views - a.views);
+                    break;
+                case 'newest':
+                    filteredAssets.sort((a, b) => b.id - a.id);
+                    break;
+                case 'price-low':
+                    filteredAssets.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    filteredAssets.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    filteredAssets.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'downloads':
+                    filteredAssets.sort((a, b) => b.downloads - a.downloads);
+                    break;
+            }
+        }
+
+        // Render products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const assetsToShow = filteredAssets.slice(startIndex, endIndex);
+            
+            // Update grid class
+            grid.className = `products-grid ${currentView}-view`;
+            
+            grid.innerHTML = '';
+            
+            if (assetsToShow.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; color: #666; grid-column: 1/-1; padding: 3rem;">No assets found matching your criteria.</div>';
+                return;
+            }
+            
+            assetsToShow.forEach(asset => {
+                const card = createProductCard(asset);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create product card
+        function createProductCard(asset) {
+            const card = document.createElement('div');
+            card.className = `product-card ${currentView}-view`;
+            
+            const stars = '★'.repeat(Math.floor(asset.rating)) + '☆'.repeat(5 - Math.floor(asset.rating));
+            
+            card.innerHTML = `
+                <div class="product-viewer" id="viewer-${asset.id}">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${asset.category}</div>
+                    <h3 class="product-title">${asset.title}</h3>
+                    ${currentView === 'list' ? `<div class="product-description">${asset.description}</div>` : ''}
+                    <div class="product-price">$${asset.price}</div>
+                    <div class="product-stats">
+                        <div class="product-rating">
+                            <span class="rating-stars">${stars}</span>
+                            <span>(${asset.rating})</span>
+                        </div>
+                        <span>${asset.downloads} downloads</span>
+                    </div>
+                </div>
+                <button class="add-to-cart" onclick="addToCart(${asset.id})" title="Add to Cart">+</button>
+            `;
+
+            // Initialize 3D viewer
+            setTimeout(() => {
+                init3DViewer(`viewer-${asset.id}`, asset);
+            }, 100);
+
+            return card;
+        }
+
+        // Initialize 3D viewer
+        function init3DViewer(containerId, asset) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setClearColor(0x000000, 1);
+            container.appendChild(renderer.domElement);
+
+            // Create different geometry based on category
+            let geometry, material, mesh;
+            
+            switch(asset.category) {
+                case 'characters':
+                    geometry = new THREE.CapsuleGeometry ? new THREE.CapsuleGeometry(0.5, 1, 4, 8) : new THREE.CylinderGeometry(0.5, 0.5, 2, 8);
+                    material = new THREE.MeshPhongMaterial({ color: 0xff1493, shininess: 100 });
+                    break;
+                case 'weapons':
+                    geometry = new THREE.BoxGeometry(0.2, 2, 0.2);
+                    material = new THREE.MeshPhongMaterial({ color: 0x666666, metalness: 0.8 });
+                    break;
+                case 'vehicles':
+                    geometry = new THREE.BoxGeometry(2, 0.5, 1);
+                    material = new THREE.MeshPhongMaterial({ color: 0x0066ff, shininess: 100 });
+                    break;
+                case 'environments':
+                    geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+                    material = new THREE.MeshPhongMaterial({ color: 0x00ff66, transparent: true, opacity: 0.7 });
+                    break;
+                default:
+                    geometry = new THREE.SphereGeometry(0.8, 16, 16);
+                    material = new THREE.MeshPhongMaterial({ color: 0xff1493, shininess: 100 });

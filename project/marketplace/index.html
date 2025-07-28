@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX3D - Premium 3D Asset Marketplace</title>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #000 0%, #1a0a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, #ff1493 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, #ff1493 0%, transparent 50%);
+            opacity: 0.1;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff 30%, #ff1493 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #ff149350); }
+            to { filter: drop-shadow(0 0 40px #ff149380); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 20, 147, 0.5);
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ff1493;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff1493;
+        }
+
+        /* Products Section */
+        .products-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: #222;
+            border: 2px solid #333;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #ff1493;
+            border-color: #ff1493;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: #111;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff1493;
+            box-shadow: 0 20px 40px rgba(255, 20, 147, 0.2);
+        }
+
+        .product-viewer {
+            height: 250px;
+            background: #000;
+            position: relative;
+            border-bottom: 1px solid #333;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .product-category {
+            color: #ff1493;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Expand Button */
+        .expand-btn {
+            display: block;
+            margin: 2rem auto;
+            background: transparent;
+            border: 2px solid #ff1493;
+            color: #ff1493;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #ff1493;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #ff1493;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top: 3px solid #ff1493;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">APEX3D</a>
+            <ul class="nav-links">
+                <li><a href="#browse">Browse</a></li>
+                <li><a href="#sell">Sell</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#cart">Cart (0)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>APEX3D</h1>
+            <p>Premium 3D assets for creators who demand excellence</p>
+            <button class="cta-button" onclick="scrollToProducts()">Explore Assets</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="browse">
+        <div class="section-header">
+            <h2>Featured Assets</h2>
+            <p>Discover stunning 3D models from top creators worldwide</p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter" id="categoryFilter">
+            <button class="category-btn active" data-category="all">All</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+
+        <button class="expand-btn" id="expandBtn" onclick="loadMoreProducts()">
+            Load More Assets
+        </button>
+    </section>
+
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+
+        // Sample 3D assets data (replace with your JSON)
+        const sampleAssets = [
+            {
+                id: 1,
+                title: "Cyber Warrior",
+                category: "characters",
+                price: 49.99,
+                views: 1247,
+                downloads: 89,
+                glbUrl: null, // Will be replaced with actual GLB files
+                thumbnail: null
+            },
+            {
+                id: 2,
+                title: "Neon City Block",
+                category: "environments",
+                price: 79.99,
+                views: 892,
+                downloads: 45,
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 3,
+                title: "Sci-Fi Weapon",
+                category: "props",
+                price: 29.99,
+                views: 654,
+                downloads: 123,
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 4,
+                title: "Dragon Creature",
+                category: "characters",
+                price: 89.99,
+                views: 2341,
+                downloads: 156,
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 5,
+                title: "Modern Interior",
+                category: "environments",
+                price: 59.99,
+                views: 743,
+                downloads: 67,
+                glbUrl: null,
+                thumbnail: null
+            },
+            {
+                id: 6,
+                title: "Holographic Display",
+                category: "props",
+                price: 39.99,
+                views: 456,
+                downloads: 34,
+                glbUrl: null,
+                thumbnail: null
+            }
+        ];
+
+        let currentAssets = [];
+        let displayedCount = 6;
+        let selectedCategory = 'all';
+
+        // Initialize the marketplace
+        function init() {
+            currentAssets = [...sampleAssets];
+            setupCategories();
+            renderProducts();
+            setupCategoryFilter();
+        }
+
+        // Extract and setup categories from assets
+        function setupCategories() {
+            const categories = [...new Set(currentAssets.map(asset => asset.category))];
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            // Clear existing categories except "All"
+            const allBtn = categoryFilter.querySelector('[data-category="all"]');
+            categoryFilter.innerHTML = '';
+            categoryFilter.appendChild(allBtn);
+            
+            // Add category buttons
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.setAttribute('data-category', category);
+                btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                categoryFilter.appendChild(btn);
+            });
+        }
+
+        // Setup category filter functionality
+        function setupCategoryFilter() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedCategory = btn.getAttribute('data-category');
+                    displayedCount = 6;
+                    renderProducts();
+                });
+            });
+        }
+
+        // Render products based on current filters
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const expandBtn = document.getElementById('expandBtn');
+            
+            let filteredAssets = selectedCategory === 'all' 
+                ? currentAssets 
+                : currentAssets.filter(asset => asset.category === selectedCategory);
+            
+            const assetsToShow = filteredAssets.slice(0, displayedCount);
+            
+            grid.innerHTML = '';
+            
+            assetsToShow.forEach(asset => {
+                const card = createProductCard(asset);
+                grid.appendChild(card);
+            });
+
+            // Show/hide expand button
+            expandBtn.style.display = filteredAssets.length > displayedCount ? 'block' : 'none';
+        }
+
+        // Create individual product card
+        function createProductCard(asset) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            card.innerHTML = `
+                <div class="product-viewer" id="viewer-${asset.id}">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${asset.category}</div>
+                    <h3 class="product-title">${asset.title}</h3>
+                    <div class="product-price">$${asset.price}</div>
+                    <div class="product-stats">
+                        <span>${asset.views} views</span>
+                        <span>${asset.downloads} downloads</span>
+                    </div>
+                </div>
+            `;
+
+            // Initialize 3D viewer (placeholder for now)
+            setTimeout(() => {
+                initPlaceholder3DViewer(`viewer-${asset.id}`);
+            }, 100);
+
+            return card;
+        }
+
+        // Placeholder 3D viewer (replace with actual GLB loading)
+        function initPlaceholder3DViewer(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Clear loading spinner
+            container.innerHTML = '';
+
+            // Create scene
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setClearColor(0x000000, 1);
+            container.appendChild(renderer.domElement);
+
+            // Create placeholder geometry (colorful rotating cube)
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0xff1493,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.8
+            });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            camera.position.z = 3;
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle resize
+            const resizeObserver = new ResizeObserver(() => {
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+            });
+            resizeObserver.observe(container);
+        }
+
+        // Load more products
+        window.loadMoreProducts = function() {
+            displayedCount += 6;
+            renderProducts();
+        }
+
+        // Smooth scroll to products
+        window.scrollToProducts = function() {
+            document.getElementById('browse').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
