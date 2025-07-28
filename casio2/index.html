@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDMR AR Viewer</title>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            z-index: 100;
+            margin: 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            font-size: 2em;
+            text-align: center;
+        }
+        
+        model-viewer {
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            position: relative;
+        }
+        
+        .instructions {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            font-size: 14px;
+        }
+        
+        .toggle-instructions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 101;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .instructions.hidden {
+            display: none;
+        }
+        
+        .lighting-controls {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lighting-controls input[type="range"] {
+            width: 100px;
+            margin: 5px 0;
+        }
+        
+        .lighting-controls label {
+            font-size: 12px;
+            display: block;
+            margin: 5px 0;
+        }
+        
+        .ar-button {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,71,87,0.9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .ar-button:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255,71,87,0.6);
+            background: rgba(255,71,87,1);
+        }
+        
+        .note {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #fdcb6e;
+        }
+    </style>
+</head>
+<body>
+    <h1>GDMR AR Viewer</h1>
+    
+    <button class="toggle-instructions" onclick="toggleInstructions()">ℹ️</button>
+    
+    <!-- Model viewer with HDR environment and enhanced lighting -->
+    <model-viewer
+        src="./casio2.glb"
+        environment-image="https://modelviewer.dev/shared-assets/environments/whipple_creek_regional_park_04_1k.hdr"
+        skybox-image="https://modelviewer.dev/shared-assets/environments/whipple_creek_regional_park_04_1k.hdr"
+        alt="3D Pizza Model"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        shadow-intensity="1"
+        exposure="1.5"
+        shadow-softness="0.4"
+        tone-mapping="aces"
+        auto-rotate
+        auto-rotate-delay="2000"
+        field-of-view="45deg"
+        camera-orbit="0deg 75deg 4m"
+        min-camera-orbit="auto auto 20m"
+        max-camera-orbit="auto auto 600m"
+        camera-target="0m 0m 0m"
+        interaction-prompt="auto">
+        
+        <button class="ar-button" slot="ar-button">
+            📱 View in AR
+        </button>
+    </model-viewer>
+    
+    <div class="instructions" id="instructions">
+        <h3>🌟 Immersive AR</h3>
+        <p><strong>Environment:</strong> Whipple Creek Park HDR lighting</p>
+        <p><strong>Controls:</strong></p>
+        <ul>
+            <li>🖱️ <strong>Mouse/Touch:</strong> Rotate model</li>
+            <li>🔍 <strong>Scroll/Pinch:</strong> Zoom in/out</li>
+            <li>📱 <strong>AR Button:</strong> View in real world</li>
+            <li>🔆 <strong>Left Panel:</strong> Adjust lighting</li>
+        </ul>
+        
+        <div class="note">
+            <strong>💡 Environment Issues?</strong>
+            <ul>
+                <li>Click "Change Scene" to try different HDRs</li>
+                <li>Use "Toggle HDR" if environments are black</li>
+                <li>Adjust Exposure slider for brightness</li>
+                <li>Last option uses your local HDR file</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <strong>⚠️ Setup Required:</strong>
+            <ol>
+                <li>Replace model URL with your pizza GLB file</li>
+                <li>Place "whipple_creek_regional_park_1k_HDR.jpg" in same folder</li>
+                <li>Host both files on HTTPS server</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="lighting-controls">
+        <h4 style="margin: 0 0 10px 0; font-size: 14px;">🔆 Lighting</h4>
+        <label>Exposure: <span id="exposureValue">1.5</span></label>
+        <input type="range" id="exposure" min="0.1" max="4" step="0.1" value="1.5">
+        
+        <label>Shadow: <span id="shadowValue">1.0</span></label>
+        <input type="range" id="shadow" min="0" max="3" step="0.1" value="1">
+        
+        <label>Camera Distance: <span id="distanceValue">4.0m</span></label>
+        <input type="range" id="distance" min="20" max="600" step="10" value="20">
+        
+        <label>Field of View: <span id="fovValue">45°</span></label>
+        <input type="range" id="fov" min="20" max="80" step="5" value="45">
+        
+        <button onclick="toggleHDR()" style="margin-top: 10px; padding: 5px 10px; border: none; border-radius: 5px; background: #ff4757; color: white; cursor: pointer;">Toggle HDR</button>
+        
+        <button onclick="cycleEnvironments()" style="margin-top: 5px; padding: 5px 10px; border: none; border-radius: 5px; background: #3742fa; color: white; cursor: pointer;">Change Scene</button>
+    </div>
+
+    <script>
+        const modelViewer = document.querySelector('model-viewer');
+        let hdrEnabled = true;
+        let currentEnvIndex = 0;
+        
+        // Different environment options
+        const environments = [
+            {
+                name: "Whipple Creek Park",
+                url: "https://modelviewer.dev/shared-assets/environments/whipple_creek_regional_park_04_1k.hdr"
+            },
+            {
+                name: "Aircraft Hangar",
+                url: "https://modelviewer.dev/shared-assets/environments/aircraft_workshop_01_1k.hdr"
+            },
+            {
+                name: "Spruit Sunrise",
+                url: "https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+            },
+            {
+                name: "Moon Surface",
+                url: "https://modelviewer.dev/shared-assets/environments/moon_1k.hdr"
+            },
+            {
+                name: "Your Custom HDR",
+                url: "./whipple_creek_regional_park_1k_HDR.jpg"
+            }
+        ];
+        
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.classList.toggle('hidden');
+        }
+        
+        // Lighting controls
+        document.getElementById('exposure').addEventListener('input', (e) => {
+            const value = e.target.value;
+            modelViewer.exposure = value;
+            document.getElementById('exposureValue').textContent = value;
+        });
+        
+        document.getElementById('shadow').addEventListener('input', (e) => {
+            const value = e.target.value;
+            modelViewer.shadowIntensity = value;
+            document.getElementById('shadowValue').textContent = value;
+        });
+        
+        document.getElementById('fov').addEventListener('input', (e) => {
+            const value = e.target.value;
+            modelViewer.fieldOfView = value + 'deg';
+            document.getElementById('fovValue').textContent = value + '°';
+        });
+        
+        document.getElementById('distance').addEventListener('input', (e) => {
+            const value = e.target.value;
+            modelViewer.cameraOrbit = `0deg 75deg ${value}m`;
+            document.getElementById('distanceValue').textContent = value + 'm';
+        });
+        
+        function resetCamera() {
+            modelViewer.cameraOrbit = '0deg 75deg 4m';
+            modelViewer.fieldOfView = '45deg';
+            document.getElementById('distance').value = 4;
+            document.getElementById('fov').value = 45;
+            document.getElementById('distanceValue').textContent = '4.0m';
+            document.getElementById('fovValue').textContent = '45°';
+        }
+        
+        function toggleHDR() {
+            if (hdrEnabled) {
+                modelViewer.environmentImage = null;
+                modelViewer.skyboxImage = null;
+                hdrEnabled = false;
+            } else {
+                const currentEnv = environments[currentEnvIndex];
+                modelViewer.environmentImage = currentEnv.url;
+                modelViewer.skyboxImage = currentEnv.url;
+                hdrEnabled = true;
+            }
+        }
+        
+        function cycleEnvironments() {
+            currentEnvIndex = (currentEnvIndex + 1) % environments.length;
+            const currentEnv = environments[currentEnvIndex];
+            modelViewer.environmentImage = currentEnv.url;
+            modelViewer.skyboxImage = currentEnv.url;
+            console.log(`Switched to: ${currentEnv.name}`);
+        }
+        
+        // Auto-hide instructions after 10 seconds for immersion
+        setTimeout(() => {
+            document.getElementById('instructions').classList.add('hidden');
+        }, 10000);
+        
+        // Fallback: If HDR fails to load, try next environment
+        modelViewer.addEventListener('error', (e) => {
+            console.log('Environment failed to load, trying next...');
+            cycleEnvironments();
+        });
+        
+        // Set initial exposure
+        modelViewer.exposure = 1.5;
+    </script>
+</body>
+</html>
