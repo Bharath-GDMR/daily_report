@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDMR Events</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/utils/Draggable.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+        
+        svg {
+            overflow: visible;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #back {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 90%;
+            transform: translate(-50%, -50%);
+            font-family: arial;
+            color: rgba(0, 0, 0, 0.1);
+            font-size: 9vw;
+            text-align: center;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .main-circle {
+            cursor: grab;
+        }
+        
+        .main-circle:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body>
+    <div id="back">In the midst of chaos comes order</div>
+    <svg id="myLife" width="500px" height="500px" viewBox="0 0 500 500">
+        <g id="mainCircle" class="main-circle">
+            <circle cy="20" fill="rgba(0,0,0,0.2)" r="73"/>
+            <circle fill="#d50027" r="80"/>
+            <circle cy="-5" fill="#ff002f" r="75"/>
+            <text text-anchor="middle" font-family="Verdana" alignment-baseline="middle" font-size="16" fill="white" dy="0">
+                <tspan x="0" dy="-8">GDMR</tspan>
+                <tspan x="0" dy="20">Events</tspan>
+            </text>
+        </g>
+    </svg>
+
+    <script>
+        var C = 15, AX = [], AY = [];
+        var mainCircle = document.getElementById("mainCircle");
+        var svg = document.getElementById("myLife");
+        var svgNS = "http://www.w3.org/2000/svg";
+        
+        // Create random circles and lines
+        for (var i = 0; i < C; i++) {
+            var myCircle = document.createElementNS(svgNS, "circle");
+            var myLine = document.createElementNS(svgNS, "line");
+            var w = R(7, 15);
+            var x = R(10, 500);
+            var y = R(10, 500);
+            AY.push(y);
+            AX.push(x);
+            
+            svg.insertBefore(myCircle, mainCircle);
+            svg.insertBefore(myLine, mainCircle);
+            
+            TweenLite.set(myCircle, {
+                attr: {r: w},
+                x: x,
+                y: y,
+                fill: "silver",
+                opacity: 0.7,
+                stroke: "gray",
+                strokeWidth: 2
+            });
+            
+            TweenLite.set(myLine, {
+                attr: {x1: x, x2: x, y2: y, y1: y},
+                strokeWidth: w / 2,
+                strokeLinecap: "round",
+                className: "lines",
+                fill: "none",
+                stroke: "rgba(0,0,0,0.8)"
+            });
+        }
+        
+        // Position main circle at center of other circles
+        var y = Aa(AY);
+        var x = Aa(AX);
+        TweenLite.set(mainCircle, {y: y, x: x});
+        
+        // Make main circle draggable
+        Draggable.create(mainCircle, {
+            type: "x,y",
+            onDrag: updateLines,
+            onRelease: function() {
+                TweenLite.to(this.target, 1, {
+                    x: x,
+                    y: y,
+                    ease: Elastic.easeOut.config(1, 0.15),
+                    onUpdate: updateLines
+                });
+            }
+        });
+        
+        function updateLines() {
+            TweenMax.set(".lines", {
+                attr: {
+                    x2: mainCircle._gsTransform.x,
+                    y2: mainCircle._gsTransform.y
+                }
+            });
+        }
+        
+        updateLines();
+        
+        function R(min, max) {
+            return min + Math.floor(Math.random() * (max - min));
+        }
+        
+        function Aa(arr) {
+            return Math.min.apply(Math, arr) + (Math.max.apply(Math, arr) - Math.min.apply(Math, arr)) / 2;
+        }
+    </script>
+</body>
+</html>
