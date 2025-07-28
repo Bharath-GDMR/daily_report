@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Pizza Viewer</title>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        model-viewer {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .ar-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,71,87,0.4);
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+        
+        .ar-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255,71,87,0.6);
+        }
+        
+        .note {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #fdcb6e;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍕 AR Pizza Viewer</h1>
+    
+    <!-- This is where you'd put your pizza model -->
+    <model-viewer
+        src="./casio2.glb"
+        alt="3D Pizza Model"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        poster="https://via.placeholder.com/500x400/ff6b6b/ffffff?text=3D+Pizza+Model"
+        shadow-intensity="1"
+        auto-rotate
+        auto-rotate-delay="1000">
+        
+        <button class="ar-button" slot="ar-button">
+            📱 View in AR
+        </button>
+    </model-viewer>
+    
+    <div class="instructions">
+        <h3>How to use AR:</h3>
+        <p><strong>📱 On Mobile:</strong></p>
+        <ul>
+            <li><strong>iOS:</strong> Tap "View in AR" → Uses ARKit (iOS 12+)</li>
+            <li><strong>Android:</strong> Tap "View in AR" → Uses ARCore (Android 7+)</li>
+        </ul>
+        
+        <div class="note">
+            <strong>⚠️ Note:</strong> it works
+        </div>
+        
+        <h3>Steps to use your AR model:</h3>
+        <ol>
+            <li>do you see a clock above?</li>
+            <li>Ideally a casio watch to go here</li>
+            <li>optimized clock</li>
+            <li>connect with bharath with the feedback</li>
+        </ol>
+    </div>
+</body>
+</html>
