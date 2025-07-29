@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoConnect - Meeting Room</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="room-container">
+        <header class="room-header">
+            <div class="room-info">
+                <h2 id="roomTitle">Meeting Room</h2>
+                <span id="roomId" class="room-id"></span>
+            </div>
+            <div class="room-actions">
+                <button class="header-btn" id="copyRoomId" title="Copy Room ID">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="header-btn" id="toggleChat" title="Toggle Chat">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <button class="header-btn danger" id="leaveRoom" title="Leave Room">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="room-main">
+            <div class="video-section">
+                <div class="video-grid" id="videoGrid">
+                    <div class="video-container local" id="localVideoContainer">
+                        <video id="localVideo" autoplay muted playsinline></video>
+                        <div class="video-overlay">
+                            <span class="user-name">You</span>
+                            <div class="video-controls">
+                                <span class="audio-indicator" id="localAudioIndicator">
+                                    <i class="fas fa-microphone"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-bar">
+                    <div class="controls-group">
+                        <button class="control-btn" id="toggleAudio" title="Toggle Microphone">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="control-btn" id="toggleVideo" title="Toggle Camera">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="control-btn" id="shareScreen" title="Share Screen">
+                            <i class="fas fa-desktop"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="controls-group">
+                        <button class="control-btn danger" id="hangUp" title="Leave Meeting">
+                            <i class="fas fa-phone-slash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-section" id="chatSection">
+                <div class="chat-header">
+                    <h3>Chat</h3>
+                    <button class="close-chat" id="closeChat">&times;</button>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message system">
+                        <p>Welcome to the meeting! You can chat with other participants here.</p>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message..." maxlength="500">
+                    <button id="sendMessage" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="joinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Join Meeting</h3>
+            </div>
+            <div class="modal-body">
+                <div class="join-setup">
+                    <div class="preview-section">
+                        <video id="previewVideo" autoplay muted playsinline></video>
+                        <div class="preview-controls">
+                            <button class="control-btn" id="previewToggleAudio">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="control-btn" id="previewToggleVideo">
+                                <i class="fas fa-video"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="join-form">
+                        <input type="text" id="displayName" placeholder="Enter your name" class="input" maxlength="50">
+                        <button class="btn btn-primary" id="joinMeeting">
+                            <i class="fas fa-video"></i> Join Meeting
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="/room.js"></script>
+</body>
+</html>
