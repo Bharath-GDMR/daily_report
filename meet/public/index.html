@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoConnect - Professional Video Calling</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-video"></i>
+                <span>VideoConnect</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn">Features</button>
+                <button class="nav-btn">About</button>
+                <button class="nav-btn">Contact</button>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Connect Face-to-Face</h1>
+                    <p class="hero-subtitle">Professional video calling made simple. Create or join meetings instantly with crystal-clear audio and HD video.</p>
+                    
+                    <div class="action-cards">
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h3>Create Meeting</h3>
+                            <p>Start a new video call and invite others to join</p>
+                            <button class="btn btn-primary" id="createRoomBtn">
+                                <i class="fas fa-plus"></i> New Meeting
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <h3>Join Meeting</h3>
+                            <p>Enter a meeting ID to join an existing call</p>
+                            <div class="join-form">
+                                <input type="text" id="roomIdInput" placeholder="Enter meeting ID" class="input">
+                                <input type="text" id="userNameInput" placeholder="Your name" class="input">
+                                <button class="btn btn-secondary" id="joinRoomBtn">
+                                    <i class="fas fa-arrow-right"></i> Join
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <div class="video-preview">
+                        <div class="video-grid">
+                            <div class="video-tile active">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="video-tile">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="video-tile">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="video-tile">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <h2>Why Choose VideoConnect?</h2>
+                <div class="features-grid">
+                    <div class="feature">
+                        <i class="fas fa-hd-video"></i>
+                        <h3>HD Video Quality</h3>
+                        <p>Crystal clear video up to 1080p resolution</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Secure & Private</h3>
+                        <p>End-to-end encryption for all your calls</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-desktop"></i>
+                        <h3>Screen Sharing</h3>
+                        <p>Share your screen for presentations</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-comments"></i>
+                        <h3>Real-time Chat</h3>
+                        <p>Text chat during video calls</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Meeting</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Creating your meeting room...</p>
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>
