@@ -210,6 +210,29 @@
 
     <script>
         const modelViewer = document.querySelector('model-viewer');
+
+        // Force model to be opaque
+        modelViewer.addEventListener('load', () => {
+            const model = modelViewer.model;
+            if (model) {
+                model.traverse(node => {
+                    if (node.isMesh) {
+                        if (Array.isArray(node.material)) {
+                            node.material.forEach(material => {
+                                material.transparent = false;
+                                material.depthWrite = true;
+                                material.needsUpdate = true;
+                            });
+                        } else if (node.material) {
+                            node.material.transparent = false;
+                            node.material.depthWrite = true;
+                            node.material.needsUpdate = true;
+                        }
+                    }
+                });
+            }
+        });
+        
         let hdrEnabled = true;
         let currentEnvIndex = 0;
         
