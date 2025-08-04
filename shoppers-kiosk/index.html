@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoppers Stop Mall Pop Out - Project Manager</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Shoppers Stop Mall Pop Out</h1>
+            <div class="project-info">
+                <div class="info-card">
+                    <h3>Project Start</h3>
+                    <p id="project-start"></p>
+                </div>
+                <div class="info-card">
+                    <h3>Project End</h3>
+                    <p id="project-end"></p>
+                </div>
+                <div class="info-card">
+                    <h3>Total Budget</h3>
+                    <p>₹6,40,000</p>
+                </div>
+                <div class="info-card">
+                    <h3>Days Remaining</h3>
+                    <p id="days-remaining">9</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="design-brief">
+            <h2>Design Brief</h2>
+            <div class="brief-cards">
+                <div class="brief-card">
+                    <h3>Project Blueprint & Schematics</h3>
+                    <p>Detailed design specifications and plans.</p>
+                    <a href="design-details.html">View Details</a>
+                </div>
+                <div class="brief-card">
+                    <h3>Summary and Status</h3>
+                    <p>Summary of project status, progress, and key metrics.</p>
+                    <a href="summary.html">View Dashboard</a>
+                </div>
+                <div class="brief-card">
+                    <h3>Risk & Mitigation Log</h3>
+                    <p>Potential risks, challenges, and mitigation plans.</p>
+                    <a href="risk-log.html">View Log</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('overview')">📊 Overview</div>
+            <div class="tab" onclick="switchTab('wbs')">🗂️ Work Breakdown</div>
+            <div class="tab" onclick="switchTab('gantt')">📅 Gantt Chart</div>
+            <div class="tab" onclick="switchTab('resources')">👥 Resources</div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="progress-overview">
+                <div class="progress-card">
+                    <div class="progress-circle circle-overall">
+                        <span id="overall-progress">25%</span>
+                    </div>
+                    <h3>Overall Progress</h3>
+                    <p>Project completion status</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-ontrack">
+                        <span id="ontrack-tasks">18</span>
+                    </div>
+                    <h3>On Track Tasks</h3>
+                    <p>Tasks progressing as planned</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-delayed">
+                        <span id="delayed-tasks">2</span>
+                    </div>
+                    <h3>Delayed Tasks</h3>
+                    <p>Tasks requiring attention</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-completed">
+                        <span id="completed-tasks">5</span>
+                    </div>
+                    <h3>Completed Tasks</h3>
+                    <p>Successfully finished tasks</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="wbs" class="tab-content">
+            <div class="wbs-container" id="wbs-container">
+                <!-- WBS content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div id="gantt" class="tab-content">
+            <div class="gantt-container">
+                <table class="gantt-chart" id="gantt-chart">
+                    <!-- Gantt chart will be populated by JavaScript -->
+                </table>
+            </div>
+        </div>
+
+        <div id="resources" class="tab-content">
+            <div class="progress-overview">
+                <div class="progress-card">
+                    <div class="progress-circle circle-overall">
+                        <span>12</span>
+                    </div>
+                    <h3>Total Team Members</h3>
+                    <p>Active resources on project</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-ontrack">
+                        <span>5</span>
+                    </div>
+                    <h3>Carpenters</h3>
+                    <p>Fabrication & Installation</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-completed">
+                        <span>3</span>
+                    </div>
+                    <h3>Electricians</h3>
+                    <p>LED & Electrical Work</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle circle-delayed">
+                        <span>4</span>
+                    </div>
+                    <h3>Specialists</h3>
+                    <p>Vinyl, Finishing, Support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="add-task-btn" onclick="openAddTaskModal()">+</button>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Task</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskName">Task Name</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskPhase">Phase</label>
+                    <select id="taskPhase" required>
+                        <option value="planning">Planning & Procurement</option>
+                        <option value="construction">Construction & Setup</option>
+                        <option value="electrical">Electrical & LED</option>
+                        <option value="finishing">Finishing & Handover</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskDuration">Duration (days)</label>
+                    <input type="number" id="taskDuration" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">Assignee</label>
+                    <input type="text" id="taskAssignee" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3"></textarea>
+                </div>
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+
+</body>
+</html>

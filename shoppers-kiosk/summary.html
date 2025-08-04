@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Summary</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div class="container presentation-container">
+        <h1>Project Summary</h1>
+        <div class="details-text">
+            <p>This summary provides a real-time overview of the Shoppers Stop Mall Pop Out project. The dashboard below highlights the current progress, task distribution, and overall status of the project, offering a quick and easy way to stay informed.</p>
+        </div>
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <div id="progress-chart"></div>
+            </div>
+            <div class="cards-container">
+                <div class="dashboard-card">
+                    <h3>Overall Progress</h3>
+                    <p id="overall-progress"></p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>On Track Tasks</h3>
+                    <p id="on-track-tasks"></p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Completed Tasks</h3>
+                    <p id="completed-tasks"></p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Delayed Tasks</h3>
+                    <p id="delayed-tasks"></p>
+                </div>
+            </div>
+        </div>
+        <div class="summary-details">
+            <div class="summary-card">
+                <h3>Priority Items</h3>
+                <ul>
+                    <li>Finalize the design and get client approval.</li>
+                    <li>Ensure all materials are procured on time.</li>
+                    <li>Coordinate with the on-site team for a smooth installation.</li>
+                </ul>
+            </div>
+            <div class="summary-card">
+                <h3>Daily Stand-up</h3>
+                <ul>
+                    <li><strong>Yasir:</strong> Discuss the site survey and measurements.</li>
+                    <li><strong>Sardigi and Kalpak:</strong> Get an update on material procurement.</li>
+                    <li><strong>Kaviyaa, Diya & Divya:</strong> Review the design finalization.</li>
+                </ul>
+            </div>
+        </div>
+        <a href="index.html" class="btn btn-secondary">Back to Project Manager</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectStatus = JSON.parse(localStorage.getItem('projectStatus'));
+
+            if (projectStatus) {
+                document.getElementById('overall-progress').textContent = projectStatus.overallProgress + '%';
+                document.getElementById('on-track-tasks').textContent = projectStatus.onTrackTasks;
+                document.getElementById('completed-tasks').textContent = projectStatus.completedTasks;
+                document.getElementById('delayed-tasks').textContent = projectStatus.delayedTasks;
+
+                google.charts.load('current', {packages:['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    const data = google.visualization.arrayToDataTable([
+                        ['Task', 'Status'],
+                        ['Completed', projectStatus.completedTasks],
+                        ['On Track', projectStatus.onTrackTasks],
+                        ['Delayed', projectStatus.delayedTasks]
+                    ]);
+
+                    const options = {
+                        title: 'Task Status Breakdown',
+                        pieHole: 0.4,
+                        colors: ['#155724', '#0c5460', '#721c24']
+                    };
+
+                    const chart = new google.visualization.PieChart(document.getElementById('progress-chart'));
+                    chart.draw(data, options);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
