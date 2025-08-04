@@ -35,7 +35,7 @@
                             name: 'Design Finalization',
                             duration: 1,
                             startDate: '2025-08-05',
-                            assignee: 'Kaviyaa, Diya & Divya',
+                            assignee: 'Kaviyaa, Arshad, Diya & Divya',
                             status: 'completed',
                             description: 'Finalize all design elements and layouts'
                         },
@@ -44,7 +44,7 @@
                             name: 'Working Drawing',
                             duration: 1,
                             startDate: '2025-08-05',
-                            assignee: 'Bharath',
+                            assignee: 'Bharath and Akhil',
                             status: 'pending',
                             description: 'Working Drawings post Design Finalization'
                         }
