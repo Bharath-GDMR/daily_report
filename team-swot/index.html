@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Department - Team Dashboard</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>Projects Department</h1>
+        <p>Team Management Dashboard</p>
+    </div>
+
+    <div class="team-section">
+        <h2 class="section-title">Backend Team</h2>
+        <div class="team-grid backend-grid">
+            <!-- Arun Sai - Accounts -->
+            <div class="team-card backend">
+                <div class="member-header">
+                    <div class="avatar">AS</div>
+                    <div class="member-info">
+                        <h3>Arun Sai</h3>
+                        <div class="member-role">Accounts</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>More Senior to the System</li>
+                                    <li>Good Memory</li>
+                                    <li>Understand the Process better</li>
+                                    <li>Good Backup option</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>Personal Problems</li>
+                                    <li>Communication gaps</li>
+                                    <li>Technology adaptation</li>
+                                    <li>Time management</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Better Negotiation</li>
+                                    <li>Vendor Relationship</li>
+                                    <li>Rates Confirmation</li>
+                                    <li>Local Processes</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>Availability</li>
+                                    <li>No Daily Reports</li>
+                                    <li>Limited work scope</li>
+                                    <li>Technology disruption</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add performance metrics, goals, certifications, etc.</p>
+                </div>
+            </div>
+
+            <!-- Ajina - Documentation -->
+            <div class="team-card backend">
+                <div class="member-header">
+                    <div class="avatar">AJ</div>
+                    <div class="member-info">
+                        <h3>Ajina</h3>
+                        <div class="member-role">Documentation</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>Fast Learner</li>
+                                    <li>Good in follow-ups</li>
+                                    <li>Strict and gets things done</li>
+                                    <li>Accountability</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>Personal Commitments - like exams</li>
+                                    <li>Communication gaps</li>
+                                    <li>Get bored easily</li>
+                                    <li>Limited experience</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Can be trained to upskill</li>
+                                    <li>Groomed for further elevation</li>
+                                    <li>Interests in the field</li>
+                                    <li>Process standardization</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>Personal Commitments</li>
+                                    <li>Off season works</li>
+                                    <li>Resource constraints</li>
+                                    <li>Communication gaps</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add documentation metrics, tools used, project involvement, etc.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="team-section">
+        <h2 class="section-title">Frontend Team</h2>
+        <div class="team-grid frontend-grid">
+            <!-- Tushar - North -->
+            <div class="team-card frontend">
+                <div class="member-header">
+                    <div class="avatar">TU</div>
+                    <div class="member-info">
+                        <h3>Tushar</h3>
+                        <div class="member-role">North Region</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>Fast Learner</li>
+                                    <li>Smart</li>
+                                    <li>Sincere</li>
+                                    <li>Accountability</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>New to the field</li>
+                                    <li>Personal Commitments</li>
+                                    <li>Easily upsetable</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Client Meetings</li>
+                                    <li>Market expansion</li>
+                                    <li>Team mentoring</li>
+                                    <li>aligning the team</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>Technology changes</li>
+                                    <li>Competition</li>
+                                    <li>Resource allocation</li>
+                                    <li>Skill obsolescence</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add project assignments, client feedback, regional metrics, etc.</p>
+                </div>
+            </div>
+
+            <!-- Saheli - East -->
+            <div class="team-card frontend">
+                <div class="member-header">
+                    <div class="avatar">SA</div>
+                    <div class="member-info">
+                        <h3>Saheli</h3>
+                        <div class="member-role">East Region</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>Accountable</li>
+                                    <li>Sincere</li>
+                                    <li>Ready to Learn</li>
+                                    <li>Interested</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>New to field</li>
+                                    <li>Documentation</li>
+                                    <li>require more handholding</li>
+                                    <li>attention to detailing</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Vendor Development</li>
+                                    <li>New dimensions</li>
+                                    <li>Mould better for GDMR</li>
+                                    <li>Coachable</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>New to system</li>
+                                    <li>Attenion to details</li>
+                                    <li>missout things</li>
+                                    <li>Burnout risk</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add design portfolio, client projects, skill assessments, etc.</p>
+                </div>
+            </div>
+
+            <!-- Akarsh - South -->
+            <div class="team-card frontend">
+                <div class="member-header">
+                    <div class="avatar">AK</div>
+                    <div class="member-info">
+                        <h3>Akarsh</h3>
+                        <div class="member-role">South Region</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>Senior to the team</li>
+                                    <li>Knows to handle things</li>
+                                    <li>Knows work</li>
+                                    <li>Project planning</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>Communication</li>
+                                    <li>Attitude</li>
+                                    <li>Accountability</li>
+                                    <li>laidback in updates</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Vendor development</li>
+                                    <li>Backup option</li>
+                                    <li>Technical mentoring</li>
+                                    <li>Project planning</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>Attitude</li>
+                                    <li>Accountability</li>
+                                    <li>laidback in updates</li>
+                                    <li>Communication</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add code reviews, performance metrics, technical contributions, etc.</p>
+                </div>
+            </div>
+
+            <!-- Yasir - West -->
+            <div class="team-card frontend">
+                <div class="member-header">
+                    <div class="avatar">YA</div>
+                    <div class="member-info">
+                        <h3>Yasir</h3>
+                        <div class="member-role">West Region</div>
+                    </div>
+                </div>
+                
+                <div class="swot-container">
+                    <button class="swot-toggle" onclick="toggleSWOT(this)">
+                        View SWOT Analysis
+                    </button>
+                    <div class="swot-content">
+                        <div class="swot-grid">
+                            <div class="swot-item strengths">
+                                <h4>Strengths</h4>
+                                <ul>
+                                    <li>From Vendor background</li>
+                                    <li>Knows the deliverables</li>
+                                    <li>Interest in work</li>
+                                    <li>Gets what he wants</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item weaknesses">
+                                <h4>Weaknesses</h4>
+                                <ul>
+                                    <li>Language fluency</li>
+                                    <li>Can't sugarcoat things</li>
+                                    <li>Raw and rustic</li>
+                                    <li>Documentation habits</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item opportunities">
+                                <h4>Opportunities</h4>
+                                <ul>
+                                    <li>Vendor Developments</li>
+                                    <li>Can be used for sourcing and market research</li>
+                                    <li>On time deliveries and project planning</li>
+                                    <li>Clients delivery</li>
+                                </ul>
+                            </div>
+                            <div class="swot-item threats">
+                                <h4>Threats</h4>
+                                <ul>
+                                    <li>Language fluency</li>
+                                    <li>His Raw nature can be misunderstood</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-details">
+                    <h4>Additional Details</h4>
+                    <p class="details-placeholder">Add innovation projects, technology adoption, team initiatives, etc.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
