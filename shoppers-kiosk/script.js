@@ -18,7 +18,7 @@
                             duration: 1,
                             startDate: '2025-08-05',
                             assignee: 'Yasir',
-                            status: 'pending',
+                            status: 'completed',
                             description: 'Complete site survey and finalize measurements'
                         },
                         {
@@ -36,7 +36,7 @@
                             duration: 1,
                             startDate: '2025-08-05',
                             assignee: 'Kaviyaa, Diya & Divya',
-                            status: 'pending',
+                            status: 'completed',
                             description: 'Finalize all design elements and layouts'
                         },
                         {
