@@ -26,7 +26,7 @@
                             name: 'Material Procurement',
                             duration: 3,
                             startDate: '2025-08-06',
-                            assignee: 'Sardigi and Kalpak',
+                            assignee: 'Signage and Carpentry',
                             status: 'in-progress',
                             description: 'Source ply, LEDs, vinyl, and other materials'
                         },
@@ -60,7 +60,7 @@
                             name: 'Flooring Installation',
                             duration: 2,
                             startDate: '2025-08-08',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Install base flooring and cladding'
                         },
@@ -69,7 +69,7 @@
                             name: 'Off-site Fabrication',
                             duration: 3,
                             startDate: '2025-08-06',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Fabricate podiums, walls, and structures'
                         },
@@ -78,7 +78,7 @@
                             name: 'On-site Installation',
                             duration: 2,
                             startDate: '2025-08-09',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Install fabricated elements on site'
                         }
@@ -94,7 +94,7 @@
                             name: 'LED Strip Installation',
                             duration: 2,
                             startDate: '2025-08-10',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Install LED strips around podiums and displays'
                         },
@@ -103,7 +103,7 @@
                             name: 'Electrical Testing',
                             duration: 1,
                             startDate: '2025-08-11',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Test all electrical connections and safety checks'
                         }
@@ -119,7 +119,7 @@
                             name: 'Vinyl Printing & Application',
                             duration: 2,
                             startDate: '2025-08-11',
-                            assignee: 'Sardigi',
+                            assignee: 'Signage',
                             status: 'pending',
                             description: 'Print and apply vinyl graphics'
                         },
@@ -128,7 +128,7 @@
                             name: 'Final Finishing & Touch-ups',
                             duration: 1,
                             startDate: '2025-08-12',
-                            assignee: 'Kalpak',
+                            assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Complete all finishing work and touch-ups'
                         },
