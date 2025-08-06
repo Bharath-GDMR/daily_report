@@ -1,0 +1,1798 @@
+[
+    {
+        "id": 1,
+        "name": "Bharath",
+        "phone": "+91-8787545171",
+        "email": "Bharath.gdmr@gmail.com",
+        "address": "GDMR Building, opp. IOB Bank, Samithy Nagar, Peroorkada, Thiruvananthapuram, Kerala 695005",
+        "keywords": [
+            "Projects",
+            "work",
+            "HOD",
+            "VM"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Akhil Pillai",
+        "phone": "+91-9778423184",
+        "email": "marketing@gdmrfoundation.com",
+        "address": "GDMR Building, opp. IOB Bank, Samithy Nagar, Peroorkada, Thiruvananthapuram, Kerala 695005",
+        "keywords": [
+            "GM",
+            "Work",
+            "Projects",
+            "Management"
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Ajay Dhandhukiya",
+        "phone": "",
+        "email": "Ajay.Dhandhukiya@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 144,
+        "name": "Vashi_UVM (U144)",
+        "phone": "",
+        "email": "Vashi_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Unit No: G- A2 & F - A2, Inorbit Mall, Plot No 39/1, Vashi - 400 705.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Vashi"
+    },
+    {
+        "id": 8527,
+        "name": "Wakad Pune_UVM (U8527)",
+        "phone": "",
+        "email": "WakadPune_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 8540,
+        "name": "Warangal_UVM (U8540)",
+        "phone": "",
+        "email": "Warangal_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 126,
+        "name": "OMR_UVM (U126)",
+        "phone": "",
+        "email": "OMR_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Gopalan Signature Mall, Opp. RMZ Infinity,Old Madras Road , Bangalore  560 093.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "OMR Bang"
+    },
+    {
+        "id": 228,
+        "name": "Jodhpur_UVM (U228)",
+        "phone": "",
+        "email": "Jodhpur_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Indiabulls Mega Mall, Meera Nagar, Jodhpur, Rajasthan 342005",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Jodhpur"
+    },
+    {
+        "id": 269,
+        "name": "Panjagutta_UVM (U269)",
+        "phone": "",
+        "email": "Panjagutta_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Second Floor, Next Galleria Mall, Near Punjagutta Circle, Punjagutta Metro Railway Station, Punjagutta, Hyderabad  500 082.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "L&T Punjagutta"
+    },
+    {
+        "id": 496,
+        "name": "Siliguri_2_UVM (U496)",
+        "phone": "",
+        "email": "Siliguri_2_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Mlacropolis Mall, Opposite to Anandaloke Hospital, 2nd Mile, Sevoke Road, Ward no 41, Siliguri Municipal Corporation, P.S. - Bhaktinagar, P.O.  Siliguri, Dist- Jalpaiguri, West Bengal - 734001.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Acropolis, Siliguri 2"
+    },
+    {
+        "id": 8502,
+        "name": "Ranchi_2_UVM (U8502)",
+        "phone": "",
+        "email": "Ranchi_2_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Nucleus Parikrama, Arrow Line Real State Pvt Ltd, Kanke Road, Opp. Rock Garden, Beside Yamaha Showroom, Ranchi, Jharkhand 834008.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Nucleus Parikrama Mall, Ranchi"
+    },
+    {
+        "id": 12,
+        "name": "KolkataMarriot UVM (Jyoti Kumari)",
+        "phone": "",
+        "email": "KolkataMarriot_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 140,
+        "name": "BlrAirport_UVM (U140)",
+        "phone": "",
+        "email": "BlrAirport_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Airport Retail, Passenger Terminal Building, Bengaluru International Airport, Devanhalli, Bengaluru - 560 300.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Airport Bangalore"
+    },
+    {
+        "id": 110,
+        "name": "Gurgaon_UVM (U110)",
+        "phone": "",
+        "email": "Gurgaon_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. MGF Metropolitan Mall, M.G. Road, Gurugram, Harayana. 122001",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Gurgaon"
+    },
+    {
+        "id": 272,
+        "name": "Panvel_UVM (U272)",
+        "phone": "",
+        "email": "Panvel_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Orion Mall, Plot No  311, Mumbai Pune Highway, Near Panvel Bus Depot, Panvel  410 206.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Panvel"
+    },
+    {
+        "id": 155,
+        "name": "DbMallBhopal_UVM (U155) (Ayush Patel)",
+        "phone": "",
+        "email": "DbMallBhopal_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, DB City Mall, Arera Hills, Bhopal 462 011",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhopal"
+    },
+    {
+        "id": 359,
+        "name": "Bhubaneshwar_UVM (U359)",
+        "phone": "",
+        "email": "Bhubaneshwar_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Utkal Galleria Mall, Gautam Nagar St, Gautam Nagar, Bhubaneswar, Odisha 751 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhubaneswar"
+    },
+    {
+        "id": 262,
+        "name": "Calicut_UVM (U262)",
+        "phone": "",
+        "email": "Calicut_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Hilite Mall, T1, G 1003, Kozhikode Bypass, Kozhikode, Kerala 673 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Calicut"
+    },
+    {
+        "id": 154,
+        "name": "Cyberabad_UVM (U154)",
+        "phone": "",
+        "email": "Cyberabad_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, In orbit mall Hi-tech city Cyberabad- Hyderabad - 500 081.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Cyberabad"
+    },
+    {
+        "id": 156,
+        "name": "Durgapur_UVM (U156), Meghna",
+        "phone": ", 70011 76498",
+        "email": "Durgapur_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Junction Mall, Mouza- Faridpur, J.L.No.74, City Centre, Durgapur-713216(W.B).",
+        "keywords": [
+            "shoppersstop",
+            "VM"
+        ],
+        "Store": "Durgapur"
+    },
+    {
+        "id": 223,
+        "name": "ElproPune_UVM (U223)",
+        "phone": "",
+        "email": "ElproPune_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Elpro City Square Mall, Chinchwad Gaon, Pimpri Chinchwad, Pune - 411033.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Elpro Pune"
+    },
+    {
+        "id": 8503,
+        "name": "Faridabad_UVM (U8503)",
+        "phone": "",
+        "email": "Faridabad_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Faridabad BATA chowk"
+    },
+    {
+        "id": 255,
+        "name": "GaurGhaziabad_UVM (U255)",
+        "phone": "",
+        "email": "GaurGhaziabad_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Gaur Central Mall, A1-A4, Raj Nagar District Centre, Ghaziabad - 201 001.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "The Gaur Mall Ghaziabad"
+    },
+    {
+        "id": 114,
+        "name": "InorbitMalad_UVM (U114)",
+        "phone": "",
+        "email": "InorbitMalad_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Inorbit Mall (I) Pvt Ltd, Plot No - 1406 - A, 28/A Link Road, Malad - West, Mumbai - 400 064.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Malad"
+    },
+    {
+        "id": 8513,
+        "name": "Guntur_UVM (U8513)",
+        "phone": "",
+        "email": "Guntur_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 8512,
+        "name": "Gwalior_UVM (U8512)",
+        "phone": "",
+        "email": "Gwalior_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Keshar Towers, Race course road, Gwalior  474009",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Gwalior"
+    },
+    {
+        "id": 168,
+        "name": "Indore_UVM (U168)",
+        "phone": "",
+        "email": "Indore_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, BPK Star Building, Opp. LIG Gurudwara, A.B. Road, Indore - 452 001.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Indore"
+    },
+    {
+        "id": 188,
+        "name": "Acropolis_UVM (U188)",
+        "phone": "",
+        "email": "Acropolis_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Acropolis mall,1858/1 , Rajdanga Main Road, Kolkata - 700 107.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Acropolis, Kolkatta"
+    },
+    {
+        "id": 8528,
+        "name": "Kota_UVM (U8528)",
+        "phone": "",
+        "email": "Kota_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 121,
+        "name": "FunLucknow_UVM (U121)",
+        "phone": "",
+        "email": "FunLucknow_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Fun Republic Mall, Gomti Nagar Lucknow 226010.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Lucknow"
+    },
+    {
+        "id": 851,
+        "name": "LuluTrivandrum_UVM (U851)",
+        "phone": "",
+        "email": "LuluTrivandrum_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Lulu Mall, Opp. Techno Park, NH 66 Bypass Road, Akkulam, Thiruvananthapuram 695029",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Lulu Mall, Trivandrum"
+    },
+    {
+        "id": 183,
+        "name": "MgrpattaPune_UVM (U183)",
+        "phone": ", 9175954475 - Rakesh Patil ADM, Jagannath - 9763535592",
+        "email": "MgrpattaPune_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, G-26 & F-16,Seasons Mall, Magarpatta, Hadapsar, Pune -411 013.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Magarpatta Pune"
+    },
+    {
+        "id": 8547,
+        "name": "ChennaiNexus_UVM (U8547)",
+        "phone": "",
+        "email": "ChennaiNexus_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 170,
+        "name": "LogixNoida_UVM (U170)",
+        "phone": "",
+        "email": "LogixNoida_UVM@shoppersstop.com",
+        "address": "Logix City Center, Plot No, BW/58, Block BW, Sector 32, Noida, Uttar Pradesh 201301",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Logix Noida"
+    },
+    {
+        "id": 331,
+        "name": "Palladium_UVM (U331)",
+        "phone": "",
+        "email": "Palladium_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Palladium Mall, 28, Velachery road, Nagendra Nagar,Velachery, Chennai, Tamil Nadu  600 042.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Palladium Chennai"
+    },
+    {
+        "id": 8514,
+        "name": "Patna_UVM (U8514), Geetanjali",
+        "phone": ", 84096 07510",
+        "email": "Patna_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, City Centre Patna, Budh Marg, Lodhipur, Opposite Lodhipur Fire Station, Patna-800001. Bihar",
+        "keywords": [
+            "shoppersstop",
+            "VM"
+        ],
+        "Store": "Patna"
+    },
+    {
+        "id": 274,
+        "name": "RMM_UVM (U274)",
+        "phone": "",
+        "email": "RMM_UVM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Royal Meenakshi Mall, Ground Floor, Bannerghatta Road, Hulimavu, Bangalore - 560076",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Royal Meenakshi Mall, Bangalore"
+    },
+    {
+        "id": 144,
+        "name": "Vashi_DM (U144)",
+        "phone": "",
+        "email": "Vashi_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Unit No: G- A2 & F - A2, Inorbit Mall, Plot No 39/1, Vashi - 400 705.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Vashi"
+    },
+    {
+        "id": 144,
+        "name": "Vashi_UH (U144) (Sharad Rao)",
+        "phone": "",
+        "email": "Vashi_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Unit No: G- A2 & F - A2, Inorbit Mall, Plot No 39/1, Vashi - 400 705.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Vashi"
+    },
+    {
+        "id": 8527,
+        "name": "Wakad Pune_DM (U8527)",
+        "phone": "",
+        "email": "WakadPune_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 8527,
+        "name": "Wakad Pune_UH (U8527)",
+        "phone": "",
+        "email": "WakadPune_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 8540,
+        "name": "Warangal_DM (U8540)",
+        "phone": "",
+        "email": "Warangal_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 8540,
+        "name": "Warangal_UH (U8540) (Srinivas)",
+        "phone": "",
+        "email": "Warangal_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "shoppersstop"
+        ]
+    },
+    {
+        "id": 126,
+        "name": "OMR_DM (U126)",
+        "phone": "",
+        "email": "OMR_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Gopalan Signature Mall, Opp. RMZ Infinity,Old Madras Road , Bangalore  560 093.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "OMR Bang"
+    },
+    {
+        "id": 126,
+        "name": "OMR_UH (U126) (Bikram Keshari Chaudhury)",
+        "phone": "",
+        "email": "OMR_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Gopalan Signature Mall, Opp. RMZ Infinity,Old Madras Road , Bangalore  560 093.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "OMR Bang"
+    },
+    {
+        "id": 228,
+        "name": "Jodhpur_DM (U228)",
+        "phone": "",
+        "email": "Jodhpur_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Indiabulls Mega Mall, Meera Nagar, Jodhpur, Rajasthan 342005",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Jodhpur"
+    },
+    {
+        "id": 228,
+        "name": "Jodhpur_UH (U228) (Devendra Singh)",
+        "phone": "",
+        "email": "Jodhpur_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Indiabulls Mega Mall, Meera Nagar, Jodhpur, Rajasthan 342005",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Jodhpur"
+    },
+    {
+        "id": 269,
+        "name": "Panjagutta_DM (U269)",
+        "phone": "",
+        "email": "Panjagutta_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Second Floor, Next Galleria Mall, Near Punjagutta Circle, Punjagutta Metro Railway Station, Punjagutta, Hyderabad  500 082.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "L&T Punjagutta"
+    },
+    {
+        "id": 269,
+        "name": "Panjagutta_UH (U269) (A S Kalyan Rao)",
+        "phone": "",
+        "email": "Panjagutta_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Second Floor, Next Galleria Mall, Near Punjagutta Circle, Punjagutta Metro Railway Station, Punjagutta, Hyderabad  500 082.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "L&T Punjagutta"
+    },
+    {
+        "id": 496,
+        "name": "Siliguri_2_DM (U496)",
+        "phone": "",
+        "email": "Siliguri_2_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Mlacropolis Mall, Opposite to Anandaloke Hospital, 2nd Mile, Sevoke Road, Ward no 41, Siliguri Municipal Corporation, P.S. - Bhaktinagar, P.O.  Siliguri, Dist- Jalpaiguri, West Bengal - 734001.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Acropolis, Siliguri 2"
+    },
+    {
+        "id": 496,
+        "name": "Siliguri_2_UH (U496) (Manoj Chhetrii)",
+        "phone": "",
+        "email": "Siliguri_2_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Mlacropolis Mall, Opposite to Anandaloke Hospital, 2nd Mile, Sevoke Road, Ward no 41, Siliguri Municipal Corporation, P.S. - Bhaktinagar, P.O.  Siliguri, Dist- Jalpaiguri, West Bengal - 734001.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Acropolis, Siliguri 2"
+    },
+    {
+        "id": 8502,
+        "name": "Ranchi_2_DM (U8502)",
+        "phone": "",
+        "email": "Ranchi_2_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Nucleus Parikrama, Arrow Line Real State Pvt Ltd, Kanke Road, Opp. Rock Garden, Beside Yamaha Showroom, Ranchi, Jharkhand 834008.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Nucleus Parikrama Mall, Ranchi"
+    },
+    {
+        "id": 8502,
+        "name": "Ranchi_2_UH (U8502) (Sumit Kumar Jha)",
+        "phone": "",
+        "email": "Ranchi_2_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Nucleus Parikrama, Arrow Line Real State Pvt Ltd, Kanke Road, Opp. Rock Garden, Beside Yamaha Showroom, Ranchi, Jharkhand 834008.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Nucleus Parikrama Mall, Ranchi"
+    },
+    {
+        "id": 8521,
+        "name": "KolkataMarriot_DM (U8521)",
+        "phone": "",
+        "email": "KolkataMarriot_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Plot No.Cb-217, Premises No.29-111, Arterial Road(Mar). Action Area-Ic, New Town, Kolkata- 700156",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Newtown Marriott Kolkata"
+    },
+    {
+        "id": 8521,
+        "name": "KolkataMarriot_UH (U8521) (Saddam Hussain)",
+        "phone": "",
+        "email": "KolkataMarriot_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Plot No.Cb-217, Premises No.29-111, Arterial Road(Mar). Action Area-Ic, New Town, Kolkata- 700156",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Newtown Marriott Kolkata"
+    },
+    {
+        "id": 140,
+        "name": "BlrAirport_DM (U140)",
+        "phone": "",
+        "email": "BlrAirport_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Airport Retail, Passenger Terminal Building, Bengaluru International Airport, Devanhalli, Bengaluru - 560 300.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Airport Bangalore"
+    },
+    {
+        "id": 140,
+        "name": "BlrAirport_UH (U140) (Chandrashekara GR)",
+        "phone": "",
+        "email": "BlrAirport_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. Airport Retail, Passenger Terminal Building, Bengaluru International Airport, Devanhalli, Bengaluru - 560 300.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Airport Bangalore"
+    },
+    {
+        "id": 110,
+        "name": "Gurgaon_DM (U110)",
+        "phone": "",
+        "email": "Gurgaon_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. MGF Metropolitan Mall, M.G. Road, Gurugram, Harayana. 122001",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Gurgaon"
+    },
+    {
+        "id": 110,
+        "name": "Gurgaon_UH (U110) (Sandeep Kumar)",
+        "phone": "",
+        "email": "Gurgaon_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd. MGF Metropolitan Mall, M.G. Road, Gurugram, Harayana. 122001",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Gurgaon"
+    },
+    {
+        "id": 272,
+        "name": "Panvel_DM (U272)",
+        "phone": "",
+        "email": "Panvel_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Orion Mall, Plot No  311, Mumbai Pune Highway, Near Panvel Bus Depot, Panvel  410 206.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Panvel"
+    },
+    {
+        "id": 272,
+        "name": "Panvel_UH (U272) (Prashant Wadkar)",
+        "phone": "",
+        "email": "Panvel_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Orion Mall, Plot No  311, Mumbai Pune Highway, Near Panvel Bus Depot, Panvel  410 206.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Panvel"
+    },
+    {
+        "id": 155,
+        "name": "DbMallBhopal_DM (U155)",
+        "phone": "",
+        "email": "DbMallBhopal_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, DB City Mall, Arera Hills, Bhopal 462 011",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhopal"
+    },
+    {
+        "id": 155,
+        "name": "DbMallBhopal_UH (U155) (Manoj Piryani)",
+        "phone": "",
+        "email": "DbMallBhopal_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, DB City Mall, Arera Hills, Bhopal 462 011",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhopal"
+    },
+    {
+        "id": 359,
+        "name": "Bhubaneshwar_DM (U359)",
+        "phone": "",
+        "email": "Bhubaneshwar_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Utkal Galleria Mall, Gautam Nagar St, Gautam Nagar, Bhubaneswar, Odisha 751 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhubaneswar"
+    },
+    {
+        "id": 359,
+        "name": "Bhubaneshwar_UH (U359) (Anirban Ghosh)",
+        "phone": "",
+        "email": "Bhubaneshwar_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Utkal Galleria Mall, Gautam Nagar St, Gautam Nagar, Bhubaneswar, Odisha 751 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Bhubaneswar"
+    },
+    {
+        "id": 262,
+        "name": "Calicut_DM (U262)",
+        "phone": "",
+        "email": "Calicut_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Hilite Mall, T1, G 1003, Kozhikode Bypass, Kozhikode, Kerala 673 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Calicut"
+    },
+    {
+        "id": 262,
+        "name": "Calicut_UH (U262) (Sandeep Variyam)",
+        "phone": "",
+        "email": "Calicut_UH@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, Hilite Mall, T1, G 1003, Kozhikode Bypass, Kozhikode, Kerala 673 014.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Calicut"
+    },
+    {
+        "id": 154,
+        "name": "Cyberabad_DM (U154)",
+        "phone": "",
+        "email": "Cyberabad_DM@shoppersstop.com",
+        "address": "Shoppers Stop Ltd, In orbit mall Hi-tech city Cyberabad- Hyderabad - 500 081.",
+        "keywords": [
+            "shoppersstop"
+        ],
+        "Store": "Cyberabad"
+    },
+    {
+        "id": 69,
+        "name": "Ahmedabad",
+        "phone": "Kriti (VM) - +91 81151 24883, Ishwar - +91 97239 82537",
+        "email": "vastrapur_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Ahmedabad"
+    },
+    {
+        "id": 70,
+        "name": "",
+        "phone": "Puneet DM - +91 72309 28980",
+        "email": "vastrapur_rom@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 71,
+        "name": "",
+        "phone": "Sagar DM - +91 96382 11370",
+        "email": "vastrapur_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 72,
+        "name": "",
+        "phone": "krupesh -",
+        "email": "vastrapur_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 73,
+        "name": "",
+        "phone": "",
+        "email": "vastrapur_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 74,
+        "name": "Andheri",
+        "phone": "Ankita VM - 8279728198, Amzad (Superwisor)- +91 97731 10086",
+        "email": "Andheri_ROM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Andheri"
+    },
+    {
+        "id": 75,
+        "name": "",
+        "phone": "Deepak DM - 865227628, Faizan - +91 99208 67347",
+        "email": "Andheri_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 76,
+        "name": "",
+        "phone": "Niyaz - +91 97026 25433",
+        "email": "Andheri_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 77,
+        "name": "Aundh Pune",
+        "phone": "Umesh( VM )  - +91 97663 67119",
+        "email": "aundh_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Aundh Pune"
+    },
+    {
+        "id": 78,
+        "name": "",
+        "phone": "",
+        "email": "aundh_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 79,
+        "name": "",
+        "phone": "",
+        "email": "aundh_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 80,
+        "name": "Aurangabad",
+        "phone": "Neha +91 70834 17600, Amzad (Superwisor)- +91 97731 10086",
+        "email": "aurangabad_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Aurangabad"
+    },
+    {
+        "id": 81,
+        "name": "",
+        "phone": "",
+        "email": "aurangabad_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 82,
+        "name": "",
+        "phone": "Pritam Mohan admin - 8788166732",
+        "email": "aurangabad_uvm@shoppersstop.com,",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 83,
+        "name": "Bandra",
+        "phone": "Richa vm - 9920751313, Amzad (Superwisor)- +91 97731 10086",
+        "email": "Bandra_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Bandra"
+    },
+    {
+        "id": 84,
+        "name": "",
+        "phone": "Naved - +91 99309 24840 / Ajaz - +91 72081 80728",
+        "email": "Bandra_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 85,
+        "name": "",
+        "phone": "Sameer - +91 73047 12720",
+        "email": "Bandra_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 86,
+        "name": "Bhopal",
+        "phone": "Ayush VM - 9399568303",
+        "email": "dbmallbhopal_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Bhopal"
+    },
+    {
+        "id": 87,
+        "name": "",
+        "phone": "",
+        "email": "dbmallbhopal_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 88,
+        "name": "",
+        "phone": "",
+        "email": "dbmallbhopal_rom@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 89,
+        "name": "",
+        "phone": "",
+        "email": "dbmallbhopal_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 90,
+        "name": "Elpro Pune",
+        "phone": "Dion UH - 9820219690, Wasim - +91 84596 05820",
+        "email": "elpropune_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Elpro Pune"
+    },
+    {
+        "id": 91,
+        "name": "",
+        "phone": "Sushmita vm - 7057505590",
+        "email": "elpropune_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 92,
+        "name": "",
+        "phone": "",
+        "email": "elpropune_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 93,
+        "name": "Goa",
+        "phone": "Amrit vm - 7004889083",
+        "email": "goa_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Goa"
+    },
+    {
+        "id": 94,
+        "name": "",
+        "phone": "",
+        "email": "goa_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 95,
+        "name": "Gwalior",
+        "phone": "Bhoopsingh (adm) - +91 70004 51780",
+        "email": "gwalior_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": "Gwalior"
+    },
+    {
+        "id": 96,
+        "name": "",
+        "phone": "",
+        "email": "gwalior_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 97,
+        "name": "",
+        "phone": "",
+        "email": "gwalior_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 98,
+        "name": "Indore",
+        "phone": "Chanda Rai - +91 91008 20031, Anuj - 9303492371",
+        "email": "indore_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Indore"
+    },
+    {
+        "id": 99,
+        "name": "",
+        "phone": "Pawni vm - 7905090861",
+        "email": "indore_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 100,
+        "name": "",
+        "phone": "",
+        "email": "Indore_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 101,
+        "name": "Juhu",
+        "phone": "Kavita VM  +91 6362 569 838, Amzad (Superwisor)- +91 97731 10086",
+        "email": "juhu_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Juhu"
+    },
+    {
+        "id": 102,
+        "name": "",
+        "phone": "",
+        "email": "juhu_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 103,
+        "name": "",
+        "phone": "",
+        "email": "juhu_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 104,
+        "name": "",
+        "phone": "",
+        "email": "juhu_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 105,
+        "name": "",
+        "phone": "Karan DM - 7030288145",
+        "email": "juhu_rom@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 106,
+        "name": "Kalyan",
+        "phone": "",
+        "email": "Metrokalyan_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Kalyan"
+    },
+    {
+        "id": 107,
+        "name": "",
+        "phone": "",
+        "email": "Metrokalyan_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 108,
+        "name": "",
+        "phone": "",
+        "email": "metrokalyan_ADM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 109,
+        "name": "",
+        "phone": "",
+        "email": "Metrokalyan_DM@shopppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 110,
+        "name": "Kolhapur",
+        "phone": "Saurabh VM - 7620098182",
+        "email": "kolhapur_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Kolhapur"
+    },
+    {
+        "id": 111,
+        "name": "",
+        "phone": "Ravindra Area Head - +91 99203 18005",
+        "email": "kolhapur_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 112,
+        "name": "Latur",
+        "phone": "Poonam vm - 9405724916",
+        "email": "Latur_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Latur"
+    },
+    {
+        "id": 113,
+        "name": "",
+        "phone": "",
+        "email": "Latur_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 114,
+        "name": "",
+        "phone": "Bhagyasree UVM - 09403198747",
+        "email": "MgrpattaPune_ROM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 115,
+        "name": "",
+        "phone": "",
+        "email": "MgrpattaPune_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 116,
+        "name": "",
+        "phone": "",
+        "email": "MgrpattaPune_ADM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 117,
+        "name": "",
+        "phone": "",
+        "email": "MgrpattaPune_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 118,
+        "name": "Malad",
+        "phone": "Divya vm - 8605022909, Harshan - +91 97025 88017",
+        "email": "inorbitmalad_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Malad"
+    },
+    {
+        "id": 119,
+        "name": "",
+        "phone": "",
+        "email": "inorbitmalad_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 120,
+        "name": "",
+        "phone": "",
+        "email": "inorbitmalad_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 121,
+        "name": "Nashik",
+        "phone": "8347007880 - admin - Dinesh, Amzad (Superwisor)- +91 97731 10086",
+        "email": "nashik_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Nashik"
+    },
+    {
+        "id": 122,
+        "name": "",
+        "phone": "7057505590 - Shushmita - uvm",
+        "email": "Nashik_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 123,
+        "name": "",
+        "phone": "8956575091 - Namdev - DM",
+        "email": "nashik_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 124,
+        "name": "Pacific Pune",
+        "phone": "Amir - +91 83296 48028",
+        "email": "PacificPune_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Pacific Pune"
+    },
+    {
+        "id": 125,
+        "name": "",
+        "phone": "",
+        "email": "PacificPune_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 126,
+        "name": "",
+        "phone": "",
+        "email": "PacificPune_ADM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 127,
+        "name": "",
+        "phone": "",
+        "email": "PacificPune_Uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 128,
+        "name": "Panvel",
+        "phone": "Shashikant Patil - 9819343594 Admin",
+        "email": "Panvel_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Panvel"
+    },
+    {
+        "id": 129,
+        "name": "",
+        "phone": "Ankit vm -  870 964 8707",
+        "email": "Panvel_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 130,
+        "name": "",
+        "phone": "",
+        "email": "Panvel_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 131,
+        "name": "Pheonix Indore",
+        "phone": "ADM - +91 97540 81488, +91 90090 91783",
+        "email": "Indore2phoenix_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Pheonix Indore"
+    },
+    {
+        "id": 132,
+        "name": "",
+        "phone": "Anshita VM - 9039015655",
+        "email": "Indore2phoenix_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 133,
+        "name": "",
+        "phone": "",
+        "email": "Indore2phoenix_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 134,
+        "name": "R City",
+        "phone": "Jayawant (adm) - +91 98338 38795, Vikas - +91 93210 01118",
+        "email": "Rcity_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "R City"
+    },
+    {
+        "id": 135,
+        "name": "",
+        "phone": "Amir - +91 72195 84828",
+        "email": "Rcity_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 136,
+        "name": "",
+        "phone": "",
+        "email": "Rcity_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 137,
+        "name": "Seawoods",
+        "phone": "Ankit - 8790648707, Suraj - +91 98330 05751",
+        "email": "Seawood_UVM@Shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": "Seawoods"
+    },
+    {
+        "id": 138,
+        "name": "",
+        "phone": "Security head - +91 97739 49013, Arbaz - +91 98922 44403",
+        "email": "Seawood_UH@Shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 139,
+        "name": "Surat",
+        "phone": "",
+        "email": "vrsurat_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Surat"
+    },
+    {
+        "id": 140,
+        "name": "",
+        "phone": "",
+        "email": "vrsurat_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 141,
+        "name": "",
+        "phone": "Naresh (adm) - +91 90335 55661",
+        "email": "vrsurat_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 142,
+        "name": "Thane",
+        "phone": "Nicholas DM -  +91 98677 06933, Shahid - +91 98208 10788",
+        "email": "viviana_rom@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Thane"
+    },
+    {
+        "id": 143,
+        "name": "",
+        "phone": "Divyanshi VM - 7376504170, Nadim - +91 98673 44204",
+        "email": "viviana_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 144,
+        "name": "",
+        "phone": "Rakesh - +91 97027 02741",
+        "email": "viviana_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 145,
+        "name": "",
+        "phone": "Altaf - +91 84335 32682",
+        "email": "viviana_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 146,
+        "name": "Vadodara",
+        "phone": "Shruti vm - 72269 02003",
+        "email": "vadodara_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Vadodara"
+    },
+    {
+        "id": 147,
+        "name": "",
+        "phone": "",
+        "email": "vadodara_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 148,
+        "name": "",
+        "phone": "",
+        "email": "vadodara_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 149,
+        "name": "Vashi",
+        "phone": "Bhavesh (UH) - +91 93248 27330",
+        "email": "vashi_uh@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "Vashi"
+    },
+    {
+        "id": 150,
+        "name": "",
+        "phone": "VM - +91 8249969834 Smita",
+        "email": "vashi_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Sardigi"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 151,
+        "name": "",
+        "phone": "",
+        "email": "vashi_dm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 152,
+        "name": "",
+        "phone": "",
+        "email": "vashi_adm@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 153,
+        "name": "Surat 2",
+        "phone": "Ricky - UH - +91 97626 51918, Abhishek vm - 70617 88968",
+        "email": "",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Surat 2"
+    },
+    {
+        "id": 154,
+        "name": "",
+        "phone": "Mayur DM - +91 88302 67381",
+        "email": "AshirwadSurat_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 155,
+        "name": "Wakad Pune",
+        "phone": "Apeksha VM - +91 98349 68195",
+        "email": "Wakadpune_ADM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Wakad Pune"
+    },
+    {
+        "id": 156,
+        "name": "",
+        "phone": "",
+        "email": "Wakadpune_UVM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 157,
+        "name": "",
+        "phone": "",
+        "email": "wakadpune_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 158,
+        "name": "ARC Pune",
+        "phone": "Rahul DM - 7798321369",
+        "email": "NIBMPUNE_DM@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": "ARC Pune"
+    },
+    {
+        "id": 159,
+        "name": "",
+        "phone": "Dutta - 9145088165",
+        "email": "NIBMPUNE_ADM@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 160,
+        "name": "",
+        "phone": "",
+        "email": "NIBMPUNE_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [],
+        "Store": ""
+    },
+    {
+        "id": 161,
+        "name": "Agora ",
+        "phone": "Nitish UH - 9670445999",
+        "email": "Vadodara2agoramall_uvm@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Ramgraphics"
+        ],
+        "Store": "Agora "
+    },
+    {
+        "id": 162,
+        "name": ", Amiya, Khogendro, Prasanna, Pravaker, Naomi, Neetu",
+        "phone": "Shruti - 7226902003, 9264446303, 99756 21399, 9861251078, 99370 49513, 7005626560, 7278271103",
+        "email": "Vadodara2_UH@shoppersstop.com",
+        "address": "",
+        "keywords": [
+            "Admin",
+            "UH",
+            "VM"
+        ],
+        "Store": ""
+    },
+    {
+        "id": 163,
+        "name": "Elgin (Srabati)",
+        "phone": "6290588937, 813934197",
+        "email": "",
+        "address": "Kol 1",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Elgin"
+    },
+    {
+        "id": 164,
+        "name": "Saltlake (Nazni)",
+        "phone": "8100604240, 8637055172",
+        "email": "",
+        "address": "Kol 2",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Saltlake"
+    },
+    {
+        "id": 165,
+        "name": "Southcity (Anyesha)",
+        "phone": "98365 90417, 9830119593",
+        "email": "",
+        "address": "Kol 3",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Southcity"
+    },
+    {
+        "id": 166,
+        "name": "CCNT (Geetanjli)",
+        "phone": "77779993615, 9933858416",
+        "email": "",
+        "address": "KOl 4",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "CCNT"
+    },
+    {
+        "id": 167,
+        "name": "Acropolic (Aditi)",
+        "phone": "947222243, 877 725 5607",
+        "email": "",
+        "address": "Kol",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Acropolic"
+    },
+    {
+        "id": 168,
+        "name": "Manisquare (Ankur)",
+        "phone": "96744 36448, 8603907454",
+        "email": "",
+        "address": "Kol",
+        "keywords": [
+            "DM"
+        ],
+        "Store": "Manisquare"
+    },
+    {
+        "id": 169,
+        "name": "New town (Jyoti Kumari)",
+        "phone": "8873695250",
+        "email": "",
+        "address": "Kol Marriot",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "New town"
+    },
+    {
+        "id": 170,
+        "name": "Center mall (Priyanku)",
+        "phone": "87218 02187",
+        "email": "",
+        "address": "Guwahati",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Center mall"
+    },
+    {
+        "id": 171,
+        "name": "City center (Dipika)",
+        "phone": "86749 47921",
+        "email": "",
+        "address": "Silliguri",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "City center"
+    },
+    {
+        "id": 172,
+        "name": "Acropolice (Siddharth)",
+        "phone": "9046545566",
+        "email": "",
+        "address": "Silliguri",
+        "keywords": [
+            "DM"
+        ],
+        "Store": "Acropolice"
+    },
+    {
+        "id": 173,
+        "name": "Qwest (Ria)",
+        "phone": "96745 97119",
+        "email": "",
+        "address": "Qwest",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "Qwest"
+    },
+    {
+        "id": 174,
+        "name": "City center (Kashish)",
+        "phone": "9304176847",
+        "email": "",
+        "address": "Raipur",
+        "keywords": [
+            "VM"
+        ],
+        "Store": "City center"
+    },
+    {
+        "id": 175,
+        "name": "Nucleas Mall Ranchi (Amiya)",
+        "phone": "9264446303",
+        "email": "",
+        "address": "Ranchi",
+        "keywords": [
+            "Admin"
+        ],
+        "Store": "Nucleas Mall Ranchi"
+    }
+]
