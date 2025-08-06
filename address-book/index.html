@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Book</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Address Book</h1>
+            <p>Search by name, phone, email, or keywords</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search contacts or keywords...">
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Add Contact
+            </button>
+            <button class="btn btn-success" onclick="exportContacts()">Export JSON</button>
+        </div>
+
+        <!-- Contacts List -->
+        <div id="contactsList"></div>
+
+        <!-- No Results -->
+        <div id="noResults" class="no-results" style="display: none;">
+            <h3>No contacts found</h3>
+            <p>Try adjusting your search terms or add a new contact.</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Add New Contact</div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <input type="text" id="nameInput" class="form-input" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phoneInput" class="form-input" placeholder="Phone">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="emailInput" class="form-input" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <textarea id="addressInput" class="form-input form-textarea" placeholder="Address"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="keywordsInput" class="form-input" placeholder="Keywords (comma-separated)">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <span id="submitText">Add Contact</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

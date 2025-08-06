@@ -47,6 +47,24 @@
                             assignee: 'Bharath and Akhil',
                             status: 'pending',
                             description: 'Working Drawings post Design Finalization'
+                        },
+                        {
+                            id: 'hostesses-for-event',
+                            name: 'Hostesses for Event',
+                            duration: 1,
+                            startDate: '2025-08-08',
+                            assignee: 'Prithivi and Githi',
+                            status: 'pending',
+                            description: 'Find and finalize hostesses for the event'
+                        },
+                        {
+                            id: 'freebie-jar',
+                            name: 'Freebie Jar',
+                            duration: 1,
+                            startDate: '2025-08-08',
+                            assignee: 'Yasir',
+                            status: 'pending',
+                            description: 'To visit market and get some freebie jars and containers'
                         }
                     ]
                 },
