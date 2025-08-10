@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moodboard Trends — Demo</title>
+
+  <!-- CDN libraries (client-side): replace with local copies or lock versions for production -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.8.0/pptxgen.bundle.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="nav-left">
+        <button id="nav-logo" class="logo">Moodboard<span class="accent">.</span></button>
+        <div class="hide-sm nav-links">
+          <button data-view="dashboard" class="nav-btn active">Dashboard</button>
+          <button data-view="editor" class="nav-btn">Editor</button>
+          <button data-view="branding" class="nav-btn">Brand Kit</button>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <button id="theme-toggle" aria-label="Toggle theme">🌓</button>
+        <div class="divider hide-sm"></div>
+        <button id="logout" class="btn small ghost">Logout</button>
+      </div>
+    </header>
+
+    <!-- VIEWS -->
+    <main class="container">
+      <!-- LOGIN -->
+      <section id="view-login" class="card center-view">
+        <div class="card-inner">
+          <h2>Sign in</h2>
+          <form id="login-form" class="form">
+            <input id="username" placeholder="username" />
+            <input id="password" type="password" placeholder="password" />
+            <button class="btn primary" type="submit">Sign in</button>
+          </form>
+          <div class="social">
+            <button class="btn ghost">Continue with Google</button>
+            <button class="btn ghost">Continue with Facebook</button>
+          </div>
+          <p class="muted">Default admin: <code id="admin-cred"></code></p>
+        </div>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section id="view-dashboard" class="view card hidden">
+        <div class="card-head">
+          <h1>Dashboard</h1>
+          <div class="controls">
+            <input id="trend-query" placeholder="Search trends (example: 'sustainable fashion')" />
+            <button id="trend-search" class="btn">Search</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card small">
+            <h3>Trend Feed (placeholder)</h3>
+            <div id="trend-feed" class="trend-feed">
+              <p class="muted">No trend data yet — wire your trend APIs (Google Trends / Pinterest / WGSN) into the backend.</p>
+            </div>
+          </div>
+
+          <div class="card small">
+            <h3>Quick Moodboards</h3>
+            <div id="boards" class="boards">
+              <button id="create-board" class="btn">+ New Moodboard</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDITOR -->
+      <section id="view-editor" class="view card hidden">
+        <div class="card-head">
+          <h1>Moodboard Editor</h1>
+          <div class="controls">
+            <input id="unsplash-key" placeholder="Unsplash Access Key (optional)" />
+            <input id="search-input" placeholder="Search Unsplash (eg: 'vintage fashion')" />
+            <button id="search-unsplash" class="btn">Search</button>
+            <input id="file-input" type="file" accept="image/*" />
+            <button id="export-pdf" class="btn primary">Export PDF</button>
+            <button id="export-ppt" class="btn">Export PPT</button>
+          </div>
+        </div>
+
+        <div class="editor">
+          <aside class="search-panel">
+            <h4>Search results</h4>
+            <div id="search-results" class="search-results"></div>
+          </aside>
+
+          <section class="canvas-wrap">
+            <div class="canvas-toolbar">
+              <input id="board-title" placeholder="Moodboard title..." />
+              <div class="spacer"></div>
+              <button id="clear-board" class="btn ghost">Clear</button>
+            </div>
+
+            <div id="moodboard" class="moodboard" ondragover="event.preventDefault()">
+              <div class="drop-hint">Drag images here or click images to add</div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- BRAND KIT -->
+      <section id="view-branding" class="view card hidden">
+        <div class="card-head">
+          <h1>Brand Kit</h1>
+          <div class="controls">
+            <input id="brand-name" placeholder="Brand name" />
+            <input id="logo-upload" type="file" accept="image/*" />
+          </div>
+        </div>
+
+        <div class="grid three">
+          <div class="card small">
+            <h3>Colors</h3>
+            <div id="brand-colors" class="colors">
+              <div class="swatch">#FF6B6B</div>
+              <div class="swatch">#FFE66D</div>
+              <div class="swatch">#4ECDC4</div>
+            </div>
+            <button id="add-swatch" class="btn">Add Color</button>
+          </div>
+
+          <div class="card small">
+            <h3>Fonts</h3>
+            <div class="muted">Use system fonts or add custom font stack in CSS.</div>
+          </div>
+
+          <div class="card small">
+            <h3>Logo</h3>
+            <div id="logo-preview" class="logo-preview muted">No logo uploaded</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer muted">
+        Built for demo • Open the console for instructions • Dark mode supported
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
