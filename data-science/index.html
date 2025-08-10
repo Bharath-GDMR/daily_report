@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Data Science Learning Module — Interactive Landing</title>
+  <meta name="description" content="Interactive landing page showing data types via animated charts (numerical, categorical, time-series, geospatial, text)" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#0f172a; --card:#1e293b; --muted:#94a3b8; --accent:#7c3aed; --glass: rgba(255,255,255,0.05);
+      --border-color: rgba(255, 255, 255, 0.07);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e2e8f0;background-color: var(--bg);}
+
+    header{padding:24px;display:flex;gap:16px;align-items:center;justify-content:space-between; border-bottom: 1px solid var(--border-color); background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 10;}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700; font-size: 20px;}
+    h1{font-size:18px;margin:0}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:14px}
+
+    main{padding:32px 24px;max-width:1400px;margin:0 auto}
+
+    .hero-section { text-align: center; padding: 48px 24px; background: var(--glass); border-radius: 12px; margin-bottom: 32px; border: 1px solid var(--border-color); }
+    .hero-section h2 { font-size: 28px; margin: 0 0 8px; color: #f1f5f9; }
+    .hero-section p { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto; }
+
+    .chart-grid { display: grid; gap: 24px; grid-template-columns: repeat(12, 1fr); }
+
+    .card{background:var(--card); padding:24px;border-radius:12px; border: 1px solid var(--border-color); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .card h3{margin:0 0 8px;font-size:16px; color: #f8fafc;}
+    .card .meta{font-size:13px;color:var(--muted);margin-top:12px; line-height: 1.5;}
+
+    /* Spanning classes */
+    .col-span-3 { grid-column: span 3; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-5 { grid-column: span 5; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-7 { grid-column: span 7; }
+    .col-span-12 { grid-column: span 12; }
+
+    canvas{width:100% !important;height:280px !important}
+    .big-canvas{height:320px !important}
+
+    footer{padding:32px 24px;color:var(--muted);text-align:center; border-top: 1px solid var(--border-color); margin-top: 32px;}
+
+    /* responsive tweaks */
+    @media (max-width:1200px){
+      .col-span-lg-6 { grid-column: span 6; }
+    }
+    @media (max-width:992px){
+      .col-span-md-12 { grid-column: span 12; }
+      canvas { height: 240px !important; }
+    }
+    @media (max-width:768px){
+      header { flex-direction: column; gap: 20px; }
+      .chart-grid { grid-template-columns: 1fr; }
+      .card { grid-column: span 1 !important; } /* Override all spans for single column */
+    }
+
+    /* simple heatmap styles */
+    .heatmap{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
+    .heatcell{aspect-ratio:1 / 1;border-radius:4px}
+
+    /* treemap container */
+    .treemap{width:100%;height:100%; min-height: 240px; background:transparent;display:flex;flex-wrap:wrap;border-radius:8px;padding:4px}
+    .treemap > div{border-radius:6px;margin:4px;padding:8px;color:white;font-size:12px;display:flex;align-items:flex-end}
+
+    /* utility */
+    .row{display:flex;gap:12px;align-items:center}
+    .muted{color:var(--muted);font-size:13px}
+    .btn{background:var(--glass);border:1px solid var(--border-color);padding:10px 16px;border-radius:8px;color:var(--muted);cursor:pointer; font-weight: 500; transition: background-color 0.2s ease;}
+    .btn:hover { background-color: rgba(255,255,255,0.1); }
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">DS</div>
+      <div>
+        <h1>Data Science Learning Module</h1>
+        <p class="lead">Explore core data types with animated, responsive charts.</p>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn" id="regen">Regenerate Data</button>
+      <button class="btn primary" id="togglePlay">Pause Animations</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section">
+        <h2>Interactive Data Visualizations</h2>
+        <p>An exploration of core data types through animated, responsive charts. This module covers numeric, categorical, time-series, geospatial, and other fundamental data structures.</p>
+    </section>
+
+    <div class="chart-grid">
+
+      <div class="card col-span-4 col-span-lg-6 col-span-md-12">
+        <h3>Numeric — Distribution</h3>
+        <canvas id="histogram"></canvas>
+        <div class="meta">A histogram shows the distribution of continuous numeric data by binning values and counting frequencies.</div>
+      </div>
+
+      <div class="card col-span-4 col-span-lg-6 col-span-md-12">
+        <h3>Categorical — Counts</h3>
+        <canvas id="bar"></canvas>
+        <div class="meta">Bar charts are used to display and compare the frequency counts of nominal categorical data.</div>
+      </div>
+
+      <div class="card col-span-4 col-span-lg-6 col-span-md-12">
+        <h3>Correlation — Scatter Plot</h3>
+        <canvas id="scatter"></canvas>
+        <div class="meta">A scatter plot shows the relationship between two numeric variables. A bubble chart can add a third dimension using size.</div>
+      </div>
+
+      <div class="card col-span-12 col-span-md-12">
+        <h3>Time-series — Trend & Seasonality</h3>
+        <canvas id="line" class="big-canvas"></canvas>
+        <div class="meta">Line charts are ideal for visualizing time-series data to identify trends, seasonality, and anomalies over time.</div>
+      </div>
+
+      <div class="card col-span-3 col-span-lg-6 col-span-md-12">
+        <h3>Box Plot</h3>
+        <canvas id="box"></canvas>
+        <div class="meta">A summary of numeric data showing min, Q1, median, Q3, and max.</div>
+      </div>
+
+      <div class="card col-span-3 col-span-lg-6 col-span-md-12">
+        <h3>Radar Chart</h3>
+        <canvas id="radar"></canvas>
+        <div class="meta">For profiling a subject across multiple multivariate features.</div>
+      </div>
+
+      <div class="card col-span-3 col-span-lg-6 col-span-md-12">
+        <h3>Heatmap</h3>
+        <div id="heat" class="heatmap"></div>
+        <div class="meta">2D density map, useful for correlation matrices.</div>
+      </div>
+
+      <div class="card col-span-3 col-span-lg-6 col-span-md-12">
+        <h3>Treemap</h3>
+        <div id="treemap" class="treemap"></div>
+        <div class="meta">Visualizes hierarchical data as nested rectangles.</div>
+      </div>
+
+      <div class="card col-span-6 col-span-md-12">
+        <h3>Text — Word Frequency</h3>
+        <canvas id="wordbar"></canvas>
+        <div class="meta">Tokenize sample text and show top tokens by frequency.</div>
+      </div>
+
+      <div class="card col-span-6 col-span-md-12">
+        <h3>Geospatial (Demo)</h3>
+        <canvas id="geo"></canvas>
+        <div class="meta">A scatter plot of latitude/longitude points (demo only).</div>
+      </div>
+
+      <div class="card col-span-12">
+        <h3>Playground & Notes</h3>
+        <p class="muted">Use the "Regenerate Data" button to produce new synthetic datasets. Charts are responsive and animated; animation can be paused. This landing is purposely self-contained and ready to drop into a learning module. Replace the synthetic generators with your dataset loader (CSV, API) in <code>window.generateAll()</code>.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    Built with Chart.js — demo data generated in-browser • Export or embed charts as needed.
+  </footer>
+
+  <script>
+    // ------------------------------
+    // Utilities & synthetic data
+    // ------------------------------
+    function randn_bm(mu=0, sigma=1, n=1){
+      // Box-Muller for normal variates
+      const arr = [];
+      for(let i=0;i<n;i++){
+        let u=0,v=0; while(u===0) u=Math.random(); while(v===0) v=Math.random();
+        let num = Math.sqrt(-2.0*Math.log(u))*Math.cos(2*Math.PI*v);
+        arr.push(num * sigma + mu);
+      }
+      return arr.length===1?arr[0]:arr;
+    }
+
+    function sampleCategorical(labels,counts){
+      const out=[];
+      for(let i=0;i<counts;i++) out.push(labels[Math.floor(Math.random()*labels.length)]);
+      return out;
+    }
+
+    function binsFromArray(arr,nbins=12){
+      const min=Math.min(...arr), max=Math.max(...arr);
+      const binWidth=(max-min)/nbins; const bins=new Array(nbins).fill(0);
+      arr.forEach(v=>{ let idx=Math.floor((v-min)/binWidth); if(idx>=nbins) idx=nbins-1; if(idx<0) idx=0; bins[idx]++; });
+      const labels=new Array(nbins).fill(0).map((_,i)=> (min + i*binWidth).toFixed(1));
+      return {labels,bins};
+    }
+
+    // ------------------------------
+    // Chart creation wrappers
+    // ------------------------------
+    const ctxs = {};
+    const charts = {};
+    const optionsBase = {responsive:true, maintainAspectRatio:false, animation:{duration:1000, easing:'easeInOutCubic'}};
+
+    // Register the box plot overlay plugin once
+    Chart.register({id:'boxOverlay', afterDraw(c){ if(!c._q) return; const {ctx, chartArea:{left,top,right,bottom,width,height}} = c; const {min,q1,q2,q3,max} = c._q; // map to pixels on x scale
+      const xscale = c.scales.x; const px = (v)=> xscale.getPixelForValue(v - min);
+      // draw line representing min->max
+      ctx.save(); ctx.strokeStyle='rgba(124,58,237,0.9)'; ctx.lineWidth=3; const x1 = xscale.left + 0.05*width; const x2 = xscale.right - 0.05*width; const y = (top+bottom)/2;
+      ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke();
+      // median marker
+      ctx.fillStyle='white'; ctx.beginPath(); ctx.arc((x1+x2)/2,y,6,0,Math.PI*2); ctx.fill(); ctx.restore();
+    }});
+
+    function makeHistogram(id, data){
+      const {labels,bins} = binsFromArray(data, 16);
+      const cfg = {
+        type:'bar', data:{labels, datasets:[{label:'Frequency', data:bins, backgroundColor:'rgba(124,58,237,0.9)', borderRadius:6}]},
+        options: Object.assign({}, optionsBase, {scales:{x:{title:{display:true,text:'Value'}}, y:{title:{display:true,text:'Count'}}}})
+      };
+      charts.hist = new Chart(document.getElementById(id), cfg);
+    }
+
+    function makeBar(id, labels, counts){
+      const cfg={type:'bar', data:{labels, datasets:[{label:'Count', data:counts, backgroundColor:labels.map((_,i)=>`hsla(${i*40%360} 70% 60% / 0.9)`)}]}, options:Object.assign({},optionsBase,{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}})};
+      charts.bar = new Chart(document.getElementById(id), cfg);
+    }
+
+    function makePie(id, labels, counts){
+      const cfg={type:'doughnut', data:{labels, datasets:[{data:counts}]}, options:Object.assign({},optionsBase,{plugins:{legend:{position:'right'}}})};
+      charts.pie = new Chart(document.getElementById(id), cfg);
+    }
+
+    function makeLine(id, times, series){
+      const cfg={type:'line', data:{labels:times, datasets:[{label:'Series', data:series, fill:true, tension:0.3, backgroundColor:'rgba(6,182,212,0.12)', borderColor:'rgba(6,182,212,0.98)', pointRadius:2}]}, options:Object.assign({},optionsBase,{scales:{x:{type:'category', title:{display:true,text:'Time'}}, y:{title:{display:true,text:'Value'}}}})};
+      charts.line = new Chart(document.getElementById(id), cfg);
+    }
+
+    function makeScatter(id, points, bubbles=false){
+      const dataset = {label: bubbles? 'Bubble':'Scatter', data:points.map(p=>({x:p.x,y:p.y,r: bubbles? Math.max(4, Math.abs(p.z)) : undefined})), backgroundColor:'rgba(124,58,237,0.9)'};
+      const cfg = {type: bubbles? 'bubble':'scatter', data:{datasets:[dataset]}, options:Object.assign({}, optionsBase,{scales:{x:{title:{display:true,text:'X'}},y:{title:{display:true,text:'Y'}}}})};
+      charts.scatter = new Chart(document.getElementById(id), cfg);
+    }
+
+    // basic boxplot (rendered with bar stacking trick) — simplified
+    function makeBox(id, samples){
+      // compute five-number summary
+      const sorted = [...samples].sort((a,b)=>a-b); const n=sorted.length;
+      const q1=sorted[Math.floor(n*0.25)]; const q2=sorted[Math.floor(n*0.5)]; const q3=sorted[Math.floor(n*0.75)]; const min=sorted[0]; const max=sorted[n-1];
+      // we'll draw an annotated bar chart showing min->max as one bar and overlay median and quartiles via plugins
+      const cfg={type:'bar',data:{labels:['Summary'],datasets:[{label:'Range',data:[max-min], backgroundColor:'rgba(6,182,212,0.2)', borderWidth:0}]}, options:Object.assign({}, optionsBase,{indexAxis:'y', plugins:{legend:{display:false}, tooltip:{enabled:false}}, scales:{x:{display:false}, y:{display:false}}})};
+      const chart = new Chart(document.getElementById(id), cfg);
+      // draw overlay using annotation in afterDraw
+      chart._q = {min,q1,q2,q3,max};
+      charts.box = chart;
+    }
+
+    function makeRadar(id, labels, values){
+      const cfg={type:'radar', data:{labels, datasets:[{label:'Profile', data:values, fill:true, backgroundColor:'rgba(124,58,237,0.2)', borderColor:'rgba(124,58,237,0.9)'}]}, options:Object.assign({}, optionsBase, {scales:{r:{beginAtZero:true}}})};
+      charts.radar = new Chart(document.getElementById(id), cfg);
+    }
+
+    function makeHeatmap(containerId, nx=12, ny=8){
+      const container = document.getElementById(containerId); container.innerHTML='';
+      const vals=[]; for(let i=0;i<nx*ny;i++) vals.push(Math.random());
+      const max = Math.max(...vals), min = Math.min(...vals);
+      vals.forEach(v=>{ const el=document.createElement('div'); el.className='heatcell'; const t = Math.round(240 - (v-min)/(max-min)*140); el.style.background=`hsl(${t} 70% ${40+ (v*20)}%)`; container.appendChild(el); });
+    }
+
+    function makeTreemap(containerId, items){
+      const root = document.getElementById(containerId); root.innerHTML='';
+      const total = items.reduce((s,i)=>s+i.value,0);
+      // naive packing: sort descending and flow into rows
+      items.sort((a,b)=>b.value-a.value);
+      items.forEach(it=>{
+        const el = document.createElement('div'); el.style.flex = `${it.value} 0 ${Math.max(60, Math.floor(it.value/total*1000))}px`;
+        el.style.background = `linear-gradient(135deg, hsl(${Math.floor(Math.random()*360)} 70% 50%), hsl(${Math.floor(Math.random()*360)} 60% 40%))`;
+        el.innerHTML = `<div style="padding:6px;font-weight:600">${it.name}<div style='font-size:11px;opacity:0.9'>${it.value}</div></div>`;
+        root.appendChild(el);
+      });
+    }
+
+    // ------------------------------
+    // Generate all demo datasets and render
+    // ------------------------------
+    function generateAll(){
+      // Destroy existing charts before creating new ones
+      Object.values(charts).forEach(chart => {
+        if (chart && typeof chart.destroy === 'function') {
+          chart.destroy();
+        }
+      });
+
+      // Numeric continuous
+      const cont = Array.from({length:700}, ()=> randn_bm(50,12));
+      makeHistogram('histogram', cont);
+
+      // categorical
+      const cats = ['Electronics','Clothing','Grocery','Home','Books'];
+      const catData = cats.map(()=> Math.floor(Math.random()*300 + 20));
+      makeBar('bar', cats, catData);
+      makePie('pieTarget', cats, catData); // hidden, supplemental
+
+      // time-series
+      const times = Array.from({length:48}, (_,i)=> `T${i+1}`);
+      const series = times.map((_,i)=> 30 + 12*Math.sin(i/6) + randn_bm(0,6));
+      makeLine('line', times, series);
+
+      // scatter & bubble
+      const pts = Array.from({length:140}, ()=> { const x = randn_bm(5,3); const y = x*0.6 + randn_bm(0,2); return {x:parseFloat(x.toFixed(2)), y:parseFloat(y.toFixed(2)), z:Math.abs(Math.round(randn_bm(8,6)))}});
+      makeScatter('scatter', pts, false);
+      // bubble version
+      // makeScatter('scatterBubble', pts, true);
+
+      // boxplot
+      const sample = Array.from({length:120}, ()=> randn_bm(20,8));
+      makeBox('box', sample);
+
+      // radar
+      const feats = ['Accuracy','Precision','Recall','F1','ROC-AUC'];
+      const vals = feats.map(()=> Math.round(Math.random()*80 + 10));
+      makeRadar('radar', feats, vals);
+
+      // heatmap
+      makeHeatmap('heat', 12,8);
+
+      // treemap
+      const items = [{name:'North', value:420},{name:'South', value:280},{name:'East', value:160},{name:'West', value:80},{name:'Central', value:60}];
+      makeTreemap('treemap', items);
+
+      // text word frequency
+      const sampleText = `Data science combines statistics programming and domain expertise. Data scientists analyze data to extract insights. Visualization is a key part of communicating results.`;
+      const words = sampleText.toLowerCase().replace(/[.,]/g,'').split(/\s+/);
+      const freq = {}; words.forEach(w=> freq[w]= (freq[w]||0)+1);
+      const wf = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+      makeBar('wordbar', wf.map(x=>x[0]), wf.map(x=>x[1]));
+
+      // geo (simple lat/lon scatter projected)
+      const geoPts = Array.from({length:80}, ()=> ({x: (Math.random()*360-180).toFixed(2), y:(Math.random()*180-90).toFixed(2)}));
+      makeScatter('geo', geoPts.map(p=>({x:parseFloat(p.x), y:parseFloat(p.y)})));
+    }
+
+    // ------------------------------
+    // boot
+    // ------------------------------
+    window.addEventListener('load', ()=>{
+      // make a hidden pie to keep chart.js chunk loaded (optional)
+      const hidden = document.createElement('canvas'); hidden.style.display='none'; hidden.id='pieTarget'; document.body.appendChild(hidden);
+
+      generateAll();
+      document.getElementById('regen').addEventListener('click', ()=>{ generateAll(); });
+      const toggle = document.getElementById('togglePlay'); let running=true;
+      toggle.addEventListener('click', ()=>{
+        running = !running; toggle.textContent = running? 'Pause Anim' : 'Resume Anim';
+        Object.values(Chart.instances).forEach(c=>{ if(c.options.animation) c.options.animation.duration = running?1000:0; c.update(); });
+      });
+    });
+
+  </script>
+</body>
+</html>

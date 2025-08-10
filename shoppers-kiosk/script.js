@@ -2,7 +2,7 @@
         // Project data structure
         const project = {
             startDate: '2025-08-05',
-            endDate: '2025-08-13',
+            endDate: '2025-08-14',
             totalBudget: '₹7,20,000'
         };
         let projectData = {
@@ -27,7 +27,7 @@
                             duration: 3,
                             startDate: '2025-08-06',
                             assignee: 'Signage and Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Source ply, LEDs, vinyl, and other materials'
                         },
                         {
@@ -45,7 +45,7 @@
                             duration: 1,
                             startDate: '2025-08-05',
                             assignee: 'Bharath and Akhil',
-                            status: 'pending',
+                            status: 'completed',
                             description: 'Working Drawings post Design Finalization'
                         },
                         {
@@ -54,7 +54,7 @@
                             duration: 1,
                             startDate: '2025-08-08',
                             assignee: 'Prithivi and Githi',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Find and finalize hostesses for the event'
                         },
                         {
@@ -79,23 +79,23 @@
                             duration: 2,
                             startDate: '2025-08-08',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Install base flooring and cladding'
                         },
                         {
                             id: 'fabrication',
                             name: 'Off-site Fabrication',
-                            duration: 3,
-                            startDate: '2025-08-06',
+                            duration: 5,
+                            startDate: '2025-08-09',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Fabricate podiums, walls, and structures'
                         },
                         {
                             id: 'installation',
                             name: 'On-site Installation',
                             duration: 2,
-                            startDate: '2025-08-09',
+                            startDate: '2025-08-13',
                             assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Install fabricated elements on site'
@@ -111,18 +111,18 @@
                             id: 'led-installation',
                             name: 'LED Strip Installation',
                             duration: 2,
-                            startDate: '2025-08-10',
+                            startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Install LED strips around podiums and displays'
                         },
                         {
                             id: 'electrical-testing',
                             name: 'Electrical Testing',
-                            duration: 1,
-                            startDate: '2025-08-11',
+                            duration: 2,
+                            startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Test all electrical connections and safety checks'
                         }
                     ]
@@ -136,16 +136,16 @@
                             id: 'vinyl-work',
                             name: 'Vinyl Printing & Application',
                             duration: 2,
-                            startDate: '2025-08-11',
-                            assignee: 'Signage',
-                            status: 'pending',
+                            startDate: '2025-08-13',
+                            assignee: 'WoW',
+                            status: 'in-progress',
                             description: 'Print and apply vinyl graphics'
                         },
                         {
                             id: 'final-finishing',
                             name: 'Final Finishing & Touch-ups',
-                            duration: 1,
-                            startDate: '2025-08-12',
+                            duration: 2,
+                            startDate: '2025-08-13',
                             assignee: 'Carpentry',
                             status: 'pending',
                             description: 'Complete all finishing work and touch-ups'
@@ -154,7 +154,7 @@
                             id: 'handover',
                             name: 'Client Handover',
                             duration: 1,
-                            startDate: '2025-08-13',
+                            startDate: '2025-08-14',
                             assignee: 'Bharath',
                             status: 'pending',
                             description: 'Final walkthrough and project handover'
