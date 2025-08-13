@@ -53,9 +53,9 @@
                             name: 'Hostesses for Event',
                             duration: 1,
                             startDate: '2025-08-08',
-                            assignee: 'Prithivi and Githi',
-                            status: 'in-progress',
-                            description: 'Find and finalize hostesses for the event'
+                            assignee: 'Bharath to Divya',
+                            status: 'completed',
+                            description: 'Found and shared contact to the client'
                         },
                         {
                             id: 'freebie-jar',
@@ -63,8 +63,8 @@
                             duration: 1,
                             startDate: '2025-08-08',
                             assignee: 'Yasir',
-                            status: 'pending',
-                            description: 'To visit market and get some freebie jars and containers'
+                            status: 'in-progress',
+                            description: 'visited markets - not able to find the jar, will produce it in-house'
                         }
                     ]
                 },
@@ -147,7 +147,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'in-progress',
                             description: 'Complete all finishing work and touch-ups'
                         },
                         {
@@ -369,6 +369,7 @@
             let completedTasks = 0;
             let delayedTasks = 0;
             let onTrackTasks = 0;
+            let progressWeight = 0;
 
             projectData.phases.forEach(phase => {
                 phase.tasks.forEach(task => {
@@ -376,11 +377,15 @@
                     switch(task.status) {
                         case 'completed':
                             completedTasks++;
+                            progressWeight += 1;
                             break;
                         case 'delayed':
                             delayedTasks++;
                             break;
                         case 'in-progress':
+                            onTrackTasks++;
+                            progressWeight += 0.5;
+                            break;
                         case 'pending':
                             onTrackTasks++;
                             break;
@@ -388,7 +393,7 @@
                 });
             });
 
-            const overallProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            const overallProgress = totalTasks > 0 ? Math.round((progressWeight / totalTasks) * 100) : 0;
 
             document.getElementById('overall-progress').textContent = overallProgress + '%';
             document.getElementById('completed-tasks').textContent = completedTasks;
