@@ -63,7 +63,7 @@
                             duration: 1,
                             startDate: '2025-08-08',
                             assignee: 'Yasir',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'visited markets - not able to find the jar, will produce it in-house'
                         }
                     ]
@@ -79,7 +79,7 @@
                             duration: 2,
                             startDate: '2025-08-08',
                             assignee: 'Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Install base flooring and cladding'
                         },
                         {
@@ -88,7 +88,7 @@
                             duration: 5,
                             startDate: '2025-08-09',
                             assignee: 'Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Fabricate podiums, walls, and structures'
                         },
                         {
@@ -97,7 +97,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'pending',
+                            status: 'completed',
                             description: 'Install fabricated elements on site'
                         }
                     ]
@@ -113,7 +113,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Install LED strips around podiums and displays'
                         },
                         {
@@ -122,7 +122,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Test all electrical connections and safety checks'
                         }
                     ]
@@ -138,7 +138,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'WoW',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Print and apply vinyl graphics'
                         },
                         {
@@ -147,7 +147,7 @@
                             duration: 2,
                             startDate: '2025-08-13',
                             assignee: 'Carpentry',
-                            status: 'in-progress',
+                            status: 'completed',
                             description: 'Complete all finishing work and touch-ups'
                         },
                         {
@@ -156,8 +156,17 @@
                             duration: 1,
                             startDate: '2025-08-14',
                             assignee: 'Bharath',
-                            status: 'pending',
+                            status: 'completed',
                             description: 'Final walkthrough and project handover'
+                        },
+                        {
+                            id: 'snag',
+                            name: 'Snag',
+                            duration: 1,
+                            startDate: '2025-08-15',
+                            assignee: 'Bharath, Akhil, wow',
+                            status: 'in-progress',
+                            description: 'finishing and snag list addressing'
                         }
                     ]
                 }
