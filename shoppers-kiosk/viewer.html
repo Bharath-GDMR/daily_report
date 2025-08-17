@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS Setup Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 300;
+        }
+
+        .viewer-container {
+            flex: 1;
+            position: relative;
+            background: #1a1a1a;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 0.9em;
+            max-width: 250px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .control-group button {
+            background: #667eea;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 0.8em;
+            transition: background 0.3s ease;
+        }
+
+        .control-group button:hover {
+            background: #5a67d8;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .file-input input[type="file"] {
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2em;
+            z-index: 1000;
+        }
+
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff6b6b;
+            font-size: 1.1em;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SS Setup Viewer</h1>
+        </div>
+        
+        <div class="viewer-container">
+            <canvas id="viewer"></canvas>
+            
+            <div class="loading" id="loading">Loading model...</div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Camera Controls:</label>
+                    <button onclick="resetCamera()">Reset View</button>
+                    <button onclick="toggleWireframe()">Wireframe</button>
+                </div>
+                
+                <div class="control-group">
+                    <label for="zoom">Zoom:</label>
+                    <input type="range" id="zoom" min="0.1" max="5" step="0.1" value="1" oninput="updateZoom(this.value)">
+                </div>
+                
+                <div class="control-group">
+                    <label>Lighting:</label>
+                    <button onclick="toggleLighting()">Toggle Lights</button>
+                </div>
+                
+                <div class="control-group">
+                    <label for="background">Background:</label>
+                    <button onclick="changeBackground('#1a1a1a')">Dark</button>
+                    <button onclick="changeBackground('#ffffff')">Light</button>
+                    <button onclick="changeBackground('#87CEEB')">Sky</button>
+                </div>
+            </div>
+            
+            <div class="file-input">
+                <input type="file" id="fileInput" accept=".glb,.gltf" onchange="loadNewModel(event)">
+            </div>
+            
+            <div class="stats" id="stats"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        let scene, camera, renderer, model, mixer, clock;
+        let controls = {};
+        let wireframeMode = false;
+        let lightingEnabled = true;
+        let ambientLight, directionalLight;
+
+        // Initialize the 3D viewer
+        function init() {
+            const canvas = document.getElementById('viewer');
+            const container = canvas.parentElement;
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a1a);
+            
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 2000);
+            camera.position.set(10, 10, 10);
+            
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1;
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            
+            // Lighting setup
+            ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+            scene.add(ambientLight);
+            
+            directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            directionalLight.position.set(5, 5, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            
+            // Add a secondary light
+            const light2 = new THREE.DirectionalLight(0xffffff, 0.4);
+            light2.position.set(-5, 5, -5);
+            scene.add(light2);
+            
+            // Mouse controls (basic orbit)
+            setupMouseControls();
+            
+            // Animation clock
+            clock = new THREE.Clock();
+            
+            // Load the default model
+            loadModel('setup.glb');
+            
+            // Start render loop
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function setupMouseControls() {
+            let isMouseDown = false;
+            let mouseX = 0, mouseY = 0;
+            let targetRotationX = 0, targetRotationY = 0;
+            let currentRotationX = 0, currentRotationY = 0;
+            
+            const canvas = document.getElementById('viewer');
+            
+            canvas.addEventListener('mousedown', (event) => {
+                isMouseDown = true;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+            
+            canvas.addEventListener('mousemove', (event) => {
+                if (!isMouseDown) return;
+                
+                const deltaX = event.clientX - mouseX;
+                const deltaY = event.clientY - mouseY;
+                
+                targetRotationY += deltaX * 0.01;
+                targetRotationX += deltaY * 0.01;
+                
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                isMouseDown = false;
+            });
+            
+            canvas.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                const scale = event.deltaY > 0 ? 1.1 : 0.9;
+                camera.position.multiplyScalar(scale);
+            });
+            
+            // Smooth camera rotation in animation loop
+            controls.update = () => {
+                currentRotationX += (targetRotationX - currentRotationX) * 0.1;
+                currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+                
+                const radius = camera.position.length();
+                camera.position.x = radius * Math.sin(currentRotationY) * Math.cos(currentRotationX);
+                camera.position.y = radius * Math.sin(currentRotationX);
+                camera.position.z = radius * Math.cos(currentRotationY) * Math.cos(currentRotationX);
+                
+                camera.lookAt(scene.position);
+            };
+        }
+
+        function loadModel(filename) {
+            const loading = document.getElementById('loading');
+            const stats = document.getElementById('stats');
+            
+            loading.style.display = 'block';
+            
+            const loader = new THREE.GLTFLoader();
+            
+            loader.load(
+                filename,
+                (gltf) => {
+                    if (model) {
+                        scene.remove(model);
+                    }
+                    model = gltf.scene;
+                    model.traverse(function (node) {
+                        if (node.isMesh) {
+                            node.castShadow = true;
+                            node.receiveShadow = true;
+                        }
+                    });
+                    scene.add(model);
+                    loading.style.display = 'none';
+                    updateStats('Model loaded successfully.');
+                },
+                (progress) => {
+                    const percent = (progress.loaded / progress.total) * 100;
+                    loading.textContent = `Loading... ${Math.round(percent)}%`;
+                },
+                (error) => {
+                    console.error('Error loading model:', error);
+                    showError('Error loading model. Please make sure the GLB file is valid.');
+                    loading.style.display = 'none';
+                }
+            );
+        }
+
+        function loadNewModel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                loadModel(e.target.result);
+                updateStats(`File selected: ${file.name}`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            
+            // Update controls
+            if (controls.update) controls.update();
+            
+            // Rotate model slightly for demo
+            if (model) {
+                model.rotation.y += 0.005;
+            }
+            
+            // Update animations if any
+            if (mixer) mixer.update(delta);
+            
+            renderer.render(scene, camera);
+        }
+
+        function resetCamera() {
+            camera.position.set(5, 5, 5);
+            camera.lookAt(scene.position);
+        }
+
+        function toggleWireframe() {
+            wireframeMode = !wireframeMode;
+            if (model) {
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material.wireframe = wireframeMode;
+                    }
+                });
+            }
+        }
+
+        function updateZoom(value) {
+            camera.position.multiplyScalar(1 / camera.position.length()).multiplyScalar(parseFloat(value) * 5);
+        }
+
+        function toggleLighting() {
+            lightingEnabled = !lightingEnabled;
+            ambientLight.intensity = lightingEnabled ? 0.6 : 0.2;
+            directionalLight.intensity = lightingEnabled ? 0.8 : 0.3;
+        }
+
+        function changeBackground(color) {
+            scene.background = new THREE.Color(color);
+        }
+
+        function updateStats(text) {
+            const stats = document.getElementById('stats');
+            stats.textContent = text;
+        }
+
+        function showError(message) {
+            const error = document.createElement('div');
+            error.className = 'error';
+            error.innerHTML = `
+                <h3>Error</h3>
+                <p>${message}</p>
+                <p><small>Note: This viewer needs GLTFLoader for full GLB support. A placeholder is shown instead.</small></p>
+            `;
+            document.querySelector('.viewer-container').appendChild(error);
+            
+            setTimeout(() => error.remove(), 5000);
+        }
+
+        function onWindowResize() {
+            const container = document.querySelector('.viewer-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
