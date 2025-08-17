@@ -1,0 +1,223 @@
+@import url(https://fonts.bunny.net/css?family=jura:300,500);
+@layer base, demo;
+
+@layer demo {
+	nav {
+		--degrees: 360deg; /* amount of degrees in which to divide the item postions (max 360deg) */
+		--degree-start: -90deg; /* degree where to start placing the items - it will start at the 3 o'clock postion by default */
+		--radius: 80px; /* radius of circle - distance from center*/
+		--items: 5;
+
+		--icon-size: 60px;
+		--icon-padding: 1rem;
+		--icon-clr: rgb(241, 245, 249);
+		--icon-clr-hover: white;
+
+		--nav-bg-clr: rgba(89, 22, 139, 0.75);
+		--nav-toggle-bg-clr: rgb(112, 8, 231);
+
+		--nav-trans-duration: 300ms;
+		--nav-trans-easing: ease-in-out;
+		--nav-width-expanded: calc(var(--icon-size) + var(--radius) * -2);
+
+		position: fixed;
+		inset: 0;
+		margin: auto;
+		width: var(--icon-size);
+		aspect-ratio: 1;
+		background-color: var(--nav-bg-clr);
+		border-radius: 50%;
+		color: white;
+		transition: all var(--nav-trans-duration) var(--nav-trans-easing);
+		/* expanding background */
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background-color: inherit;
+			border-radius: inherit;
+			backdrop-filter: blur(3px);
+			transition: inset var(--nav-trans-duration) var(--nav-trans-easing);
+		}
+
+		/* all buttons/links centered */
+		& > * {
+			position: absolute;
+			inset: 0;
+			margin: auto;
+			color: white;
+			width: var(--icon-size);
+			height: var(--icon-size);
+			padding: var(--icon-padding);
+			border-radius: 50%;
+			display: grid;
+			place-content: center;
+
+			& svg {
+				width: 100%;
+				transition: scale 150ms ease-in-out, opacity 150ms ease-in-out,
+					translate 150ms ease-in-out;
+				color: var(--icon-clr);
+			}
+			&:hover > svg {
+				color: var(--icon-clr-hover);
+			}
+		}
+
+		/* nav toggle button */
+		& > button {
+			z-index: 2; /* above icons for when the slide out */
+			appearance: none;
+			border: none;
+			background-color: var(--nav-toggle-bg-clr);
+			transition: outline 300ms ease-in-out;
+
+			&:focus-visible {
+				outline: 1px dashed steelblue;
+				outline-offset: 5px;
+			}
+			&:hover > svg {
+				scale: 1.2;
+			}
+			& > svg path {
+				transition-property: color, scale, rotate;
+				transition-duration: 150ms;
+				transition-timing-function: ease-in-out;
+				transition-delay: 0m;
+				transform-origin: center center;
+			}
+			&[aria-expanded="true"] {
+				& > svg path:is(:nth-of-type(1), :nth-of-type(4)) {
+					scale: 0 1;
+				}
+				& > svg path:nth-of-type(2) {
+					rotate: -45deg;
+				}
+				& > svg path:nth-of-type(3) {
+					rotate: 45deg;
+				}
+			}
+		}
+
+		/* sibling indexs on links - will replace with sibling-index() one day */
+		& a:nth-of-type(1) {
+			--i: 1;
+		}
+		a:nth-of-type(2) {
+			--i: 2;
+		}
+		a:nth-of-type(3) {
+			--i: 3;
+		}
+		a:nth-of-type(4) {
+			--i: 4;
+		}
+		a:nth-of-type(5) {
+			--i: 5;
+		}
+		a:nth-of-type(6) {
+			--i: 6;
+		}
+		a:nth-of-type(7) {
+			--i: 7;
+		}
+		a:nth-of-type(8) {
+			--i: 8;
+		}
+
+		/* link styling */
+		& > a {
+			--angle: calc(
+				(var(--degrees) / var(--items)) * (var(--i) - 1) + var(--degree-start)
+			);
+			--x: calc(cos(var(--angle)) * var(--radius));
+			--y: calc(sin(var(--angle)) * var(--radius));
+
+			transition: all var(--nav-trans-duration) var(--nav-trans-easing);
+			opacity: 0;
+			pointer-events: none;
+			&::after {
+				content: attr(title);
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				translate: -50%;
+				font-size: 0.7rem;
+				opacity: 0;
+				transition: translate 150ms ease-in-out, opacity 150ms ease-in-out;
+			}
+			&:hover > svg {
+				translate: 0 -0.5rem;
+			}
+			&:hover::after {
+				opacity: 1;
+				translate: -50% 0.5rem;
+			}
+		}
+	}
+
+	/* nav expanded */
+	nav:has([aria-expanded="true"]) {
+		&::before {
+			inset: var(--nav-width-expanded);
+		}
+		& > a {
+			transform: translate(var(--x), var(--y));
+			opacity: 1;
+			pointer-events: auto;
+			transition-delay: calc(var(--nav-trans-duration) * 0.5 * var(--i));
+		}
+	}
+}
+
+/* general styling not relevant for this demo */
+@layer base {
+	* {
+		box-sizing: border-box;
+	}
+	:root {
+		color-scheme: light dark;
+		--bg-dark: rgb(12, 10, 9);
+		--bg-light: rgb(255, 237, 212);
+		--txt-light: rgb(10, 10, 10);
+		--txt-dark: rgb(245, 245, 245);
+	}
+
+	body {
+		background-color: light-dark(var(--bg-light), var(--bg-dark));
+		color: light-dark(var(--txt-light), var(--txt-dark));
+		min-height: 100svh;
+		margin: 0;
+		padding: 1rem;
+		font-family: "Jura", sans-serif;
+		font-size: 1rem;
+		line-height: 1.5;
+		display: flex;
+		place-items: center;
+
+		flex-direction: column;
+		gap: 2rem;
+		& > * {
+			/*outline: 1px dashed red;*/
+		}
+	}
+	h1 {
+		font-size: clamp(1.1rem, 3.5vw + 0.05rem, 2rem);
+	}
+	header {
+		& a {
+			color: hotpink;
+			text-decoration: none;
+
+			transition: outline 150ms ease-in-out;
+			&:where(:hover, :focus-visible) {
+				outline: 1px dashed;
+				outline-offset: 5px;
+			}
+		}
+		& .links {
+			display: grid;
+			gap: 0.5rem;
+		}
+	}
+}
