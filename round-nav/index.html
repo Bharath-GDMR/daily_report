@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Logo Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .launcher-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .central-icon {
+            width: 100px;
+            height: 100px;
+            background: transparent;
+            /* border-radius: 50%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); */
+        }
+
+        .central-icon:hover {
+            transform: scale(1.1);
+            /* box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); */
+        }
+
+        .central-icon.active {
+            transform: scale(0.9);
+            background: transparent;
+        }
+
+        .central-icon img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo-item {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            /* border-radius: 50%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0) translate(-50%, -50%);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* box-shadow: 0 5px 20px rgba(0,0,0,0.3); */
+            background: transparent;
+        }
+
+        .logo-item.visible {
+            opacity: 1;
+            transform: scale(1) translate(-50%, -50%);
+        }
+
+        .logo-item:hover {
+            transform: scale(1.2) translate(-42%, -42%);
+            /* box-shadow: 0 10px 30px rgba(0,0,0,0.5); */
+        }
+
+        .logo-item:hover::after {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+
+        .logo-item::after {
+            content: attr(data-name);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .photoshop {
+            top: 50%;
+            left: 50%;
+            margin-left: 95px;
+            margin-top: -31px;
+        }
+
+        .autocad {
+            top: 50%;
+            left: 50%;
+            margin-left: 59px;
+            margin-top: 81px;
+        }
+
+        .blender {
+            top: 50%;
+            left: 50%;
+            margin-left: -59px;
+            margin-top: 81px;
+        }
+
+        .project {
+            top: 50%;
+            left: 50%;
+            margin-left: -95px;
+            margin-top: -31px;
+        }
+        .illustrator {
+            top: 50%;
+            left: 50%;
+            margin-left: 0px;
+            margin-top: -100px;
+        }
+
+        .logo-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .launcher-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .central-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .central-icon::before {
+                font-size: 24px;
+            }
+            
+            .logo-item {
+                width: 60px;
+                height: 60px;
+            }
+            
+            /* Mobile - Perfect circle with 70px radius */
+            .illustrator { margin-top: -70px; margin-left: 0px; }
+            .photoshop { margin-top: -22px; margin-left: 67px; }
+            .autocad { margin-top: 57px; margin-left: 41px; }
+            .blender { margin-top: 57px; margin-left: -41px; }
+            .project { margin-top: -22px; margin-left: -67px; }
+        }
+
+        /* Glow effect */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+
+        .central-icon.glowing {
+            /* animation: glow 2s ease-in-out infinite; */
+        }
+    </style>
+</head>
+<body>
+    <div class="launcher-container">
+        <div class="central-icon glowing" id="centralIcon">
+            <img src="./logo.png" alt="Central Logo" />
+        </div>
+        
+        <div class="logo-item illustrator" data-name="Adobe Illustrator" data-delay="0">
+            <img src="./adobe-illustrator-svgrepo-com.svg" alt="Adobe Illustrator" />
+        </div>
+        <div class="logo-item photoshop" data-name="Adobe Photoshop" data-delay="100">
+            <img src="./Adobe_Photoshop_CC_icon.svg" alt="Adobe Photoshop" />
+        </div>
+        <div class="logo-item autocad" data-name="AutoCAD" data-delay="200">
+            <img src="./autocad-icon.svg" alt="AutoCAD" />
+        </div>
+        <div class="logo-item blender" data-name="Blender" data-delay="300">
+            <img src="./blender-2.svg" alt="Blender" />
+        </div>
+        <div class="logo-item project" data-name="Microsoft Project" data-delay="400">
+            <img src="./Microsoft_Project.svg" alt="Microsoft Project" />
+        </div>
+    </div>
+
+    <script>
+        const centralIcon = document.getElementById('centralIcon');
+        const logoItems = document.querySelectorAll('.logo-item');
+        let isExpanded = false;
+        let particles = [];
+
+        // Create floating particles
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+            
+            const angle = Math.random() * 2 * Math.PI;
+            const velocity = 2 + Math.random() * 3;
+            const life = 60 + Math.random() * 40;
+            
+            particles.push({
+                element: particle,
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * velocity,
+                vy: Math.sin(angle) * velocity,
+                life: life,
+                maxLife: life
+            });
+        }
+
+        function animateParticles() {
+            particles = particles.filter(particle => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life--;
+                
+                const opacity = particle.life / particle.maxLife;
+                particle.element.style.left = particle.x + 'px';
+                particle.element.style.top = particle.y + 'px';
+                particle.element.style.opacity = opacity;
+                
+                if (particle.life <= 0) {
+                    particle.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        // Ripple effect
+        function createRipple(e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            const rect = e.target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (rect.left + rect.width / 2 - size / 2) + 'px';
+            ripple.style.top = (rect.top + rect.height / 2 - size / 2) + 'px';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        // Central icon click handler
+        centralIcon.addEventListener('click', function(e) {
+            createRipple(e);
+            
+            // Create particles
+            const rect = centralIcon.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    createParticle(centerX, centerY);
+                }, i * 50);
+            }
+            
+            isExpanded = !isExpanded;
+            centralIcon.classList.toggle('active');
+            centralIcon.classList.toggle('glowing');
+            
+            logoItems.forEach((item, index) => {
+                const delay = parseInt(item.dataset.delay);
+                setTimeout(() => {
+                    if (isExpanded) {
+                        item.classList.add('visible');
+                    } else {
+                        item.classList.remove('visible');
+                    }
+                }, isExpanded ? delay : delay / 2);
+            });
+        });
+
+        // Logo item click handlers
+        logoItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                createRipple(e);
+                
+                const name = this.dataset.name;
+                
+                // Create success particles
+                const rect = this.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                for (let i = 0; i < 12; i++) {
+                    setTimeout(() => {
+                        createParticle(centerX, centerY);
+                    }, i * 30);
+                }
+                
+                // Simulate opening application
+                this.style.transform = 'scale(1.3) translate(-38%, -38%)';
+                setTimeout(() => {
+                    this.style.transform = this.classList.contains('visible') ? 'scale(1) translate(-50%, -50%)' : 'scale(0) translate(-50%, -50%)';
+                }, 200);
+                
+                console.log(`Opening ${name}...`);
+            });
+
+            // Enhanced hover effects
+            item.addEventListener('mouseenter', function() {
+                this.style.animationDelay = Math.random() * 0.5 + 's';
+            });
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.launcher-container') && isExpanded) {
+                centralIcon.click();
+            }
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                centralIcon.click();
+            }
+        });
+    </script>
+</body>
+</html>
