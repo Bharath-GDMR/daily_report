@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Data Science</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d35 50%, #0f1419 100%);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #00d4ff;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00d4ff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Landing Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Course Cards Carousel */
+        .courses-section {
+            padding: 5rem 0;
+            background: rgba(26, 29, 53, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .card {
+            min-width: 350px;
+            margin: 0 1rem;
+            background: linear-gradient(135deg, rgba(26, 29, 53, 0.8), rgba(15, 20, 25, 0.9));
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .card p {
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .card-link:hover {
+            color: #7c3aed;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(0, 212, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        /* Course Detail Sections */
+        .course-detail {
+            padding: 5rem 0;
+            background: rgba(15, 20, 25, 0.3);
+        }
+
+        .course-detail:nth-child(even) {
+            background: rgba(26, 29, 53, 0.2);
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .detail-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-image:hover {
+            transform: scale(1.05);
+        }
+
+        .detail-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .detail-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .learn-more {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .learn-more:hover {
+            background: #00d4ff;
+            color: #0a0e27;
+            transform: translateX(5px);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: rgba(26, 29, 53, 0.5);
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem;
+            background: rgba(15, 20, 25, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #00d4ff, #7c3aed);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(10, 14, 39, 0.9);
+            padding: 3rem 0 1rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #00d4ff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            padding-top: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(124, 58, 237, 0.8), 0 0 30px rgba(0, 212, 255, 0.5);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .detail-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .card {
+                min-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">AI and Data Science Journey</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#courses" class="nav-link">Courses</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>AI & Data Science</h1>
+            <p>Master the future of technology with our comprehensive learning platform. Dive deep into artificial intelligence, machine learning, and data science with industry-expert guidance.</p>
+            <a href="#courses" class="cta-button">Start Learning Today</a>
+        </div>
+        
+        <!-- Floating Particles -->
+        <div class="particle" style="top: 20%; left: 10%; width: 20px; height: 20px; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 60%; left: 80%; width: 15px; height: 15px; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 30%; right: 20%; width: 25px; height: 25px; animation-delay: 2s;"></div>
+        <div class="particle" style="bottom: 30%; left: 70%; width: 18px; height: 18px; animation-delay: 3s;"></div>
+    </section>
+
+    <!-- Course Cards Carousel -->
+    <section id="courses" class="courses-section">
+        <div class="container">
+            <h2 class="section-title">Explore Our Courses</h2>
+            <div class="carousel-container">
+                <div class="carousel" id="carousel">
+                    <div class="card">
+                        <div class="card-icon">🧠</div>
+                        <h3>Fundamentals of Artificial Intelligence</h3>
+                        <p>Build a solid foundation in AI concepts, algorithms, and applications.</p>
+                        <a href="#ai-fundamentals" class="card-link">Learn More →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💻</div>
+                        <h3>Software Engineering</h3>
+                        <p>Master software development practices and methodologies for AI systems.</p>
+                        <a href="#software-engineering" class="card-link">Learn More →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🤖</div>
+                        <h3>AI & Machine Learning</h3>
+                        <p>Deep dive into machine learning algorithms and AI model development.</p>
+                        <a href="#ai-ml" class="card-link">Learn More →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3>Machine Learning on Big Data</h3>
+                        <p>Learn to process and analyze large datasets with ML techniques.</p>
+                        <a href="#ml-bigdata" class="card-link">Learn More →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <h3>Mental Wealth, Professional Life</h3>
+                        <p>Develop skills for career growth and mental wellbeing in tech.</p>
+                        <a href="#professional-development" class="card-link">Learn More →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🏭</div>
+                        <h3>Industrial Experience</h3>
+                        <p>Gain practical experience with real-world AI implementations.</p>
+                        <a href="#industrial-experience" class="card-link">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-nav">
+                <button class="nav-btn active" onclick="showSlide(0)">1</button>
+                <button class="nav-btn" onclick="showSlide(1)">2</button>
+                <button class="nav-btn" onclick="showSlide(2)">3</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Detail Sections -->
+    <section id="ai-fundamentals" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-image">🧠</div>
+                <div class="detail-text">
+                    <h2>Fundamentals of Artificial Intelligence</h2>
+                    <p>Embark on your AI journey with our comprehensive fundamentals course. Learn about neural networks, search algorithms, knowledge representation, and the philosophical foundations of artificial intelligence. This course provides the essential building blocks for understanding how machines can simulate human intelligence.</p>
+                    <p>Topics include: Problem-solving, knowledge representation, machine learning basics, expert systems, and ethical considerations in AI development.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="software-engineering" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-text">
+                    <h2>Software Engineering</h2>
+                    <p>Master the art of building robust, scalable software systems. Learn industry-standard practices for version control, testing, deployment, and maintenance. This course focuses on the engineering principles that make software reliable and maintainable in production environments.</p>
+                    <p>Key areas: Agile methodologies, design patterns, testing strategies, CI/CD pipelines, and system architecture for AI applications.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+                <div class="detail-image">💻</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai-ml" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-image">🤖</div>
+                <div class="detail-text">
+                    <h2>Artificial Intelligence & Machine Learning</h2>
+                    <p>Dive deep into the core of modern AI with advanced machine learning techniques. Explore supervised and unsupervised learning, deep learning architectures, and cutting-edge AI models. Build practical skills in model training, evaluation, and deployment.</p>
+                    <p>Advanced topics: Deep neural networks, computer vision, natural language processing, reinforcement learning, and transformer architectures.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ml-bigdata" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-text">
+                    <h2>Machine Learning on Big Data</h2>
+                    <p>Learn to harness the power of big data with machine learning at scale. Master distributed computing frameworks, data processing pipelines, and scalable ML algorithms. Understand how to handle petabytes of data and extract meaningful insights.</p>
+                    <p>Technologies covered: Apache Spark, Hadoop ecosystem, distributed ML algorithms, data streaming, and cloud-based ML platforms.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+                <div class="detail-image">📊</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="professional-development" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-image">🎯</div>
+                <div class="detail-text">
+                    <h2>Mental Wealth, Professional Life</h2>
+                    <p>Develop the soft skills and mindset needed for a successful career in tech. Learn about work-life balance, stress management, effective communication, and leadership in technical teams. Build mental resilience and professional networks.</p>
+                    <p>Focus areas: Career planning, networking strategies, presentation skills, team collaboration, and maintaining mental health in high-pressure environments.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="industrial-experience" class="course-detail">
+        <div class="container">
+            <div class="detail-content">
+                <div class="detail-text">
+                    <h2>Industrial Experience</h2>
+                    <p>Bridge the gap between academic learning and industry practice. Work on real-world projects, collaborate with industry partners, and gain hands-on experience with enterprise-level AI systems. Build a portfolio that demonstrates your practical skills.</p>
+                    <p>Experience includes: Industry mentorship, capstone projects, case studies from leading tech companies, and exposure to production AI systems.</p>
+                    <a href="#" class="learn-more">Start Course</a>
+                </div>
+                <div class="detail-image">🏭</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">Home</a>
+                    <a href="#">About Us</a>
+                    <a href="#">Courses</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Courses</h3>
+                    <a href="#">AI Fundamentals</a>
+                    <a href="#">Machine Learning</a>
+                    <a href="#">Data Science</a>
+                    <a href="#">Big Data</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Community</a>
+                    <a href="#">Resources</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AI Learning Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Carousel functionality
+        let currentSlide = 0;
+        const cardsPerView = 3;
+        const totalCards = 6;
+        const maxSlide = Math.ceil(totalCards / cardsPerView) - 1;
+
+        function showSlide(slideIndex) {
+            const carousel = document.getElementById('carousel');
+            const cardWidth = 370; // 350px + 20px margin
+            
+            if (slideIndex > maxSlide) slideIndex = 0;
+            if (slideIndex < 0) slideIndex = maxSlide;
+            
+            currentSlide = slideIndex;
+            
+            const translateX = -(slideIndex * cardWidth * cardsPerView);
+            carousel.style.transform = `translateX(${translateX}px)`;
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index === slideIndex);
+            });
+        }
+
+        // Auto-slide functionality
+        setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(10, 14, 39, 0.98)';
+                header.style.backdropFilter = 'blur(15px)';
+            } else {
+                header.style.background = 'rgba(10, 14, 39, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // Form submission
+        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all course detail sections
+        document.querySelectorAll('.course-detail').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const particles = document.querySelectorAll('.particle');
+            
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            
+            particles.forEach((particle, index) => {
+                const speed = 0.2 + (index * 0.1);
+                particle.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
