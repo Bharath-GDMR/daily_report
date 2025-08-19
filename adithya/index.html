@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI & Data Science</title>
+    <title>AI & Data Science Journey</title>
     <style>
         * {
             margin: 0;
@@ -177,20 +177,22 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .carousel-container {
+        .carousel-wrapper {
             position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
             overflow: hidden;
             border-radius: 15px;
         }
 
         .carousel {
             display: flex;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease-in-out;
         }
 
         .card {
-            min-width: 350px;
-            margin: 0 1rem;
+            flex: 0 0 350px;
+            margin: 0 15px;
             background: linear-gradient(135deg, rgba(26, 29, 53, 0.8), rgba(15, 20, 25, 0.9));
             border-radius: 15px;
             padding: 2rem;
@@ -245,26 +247,51 @@
             color: #7c3aed;
         }
 
-        .carousel-nav {
+        .carousel-controls {
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            align-items: center;
+            gap: 2rem;
             margin-top: 2rem;
         }
 
-        .nav-btn {
-            padding: 0.5rem 1rem;
+        .carousel-btn {
             background: rgba(0, 212, 255, 0.2);
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.3);
             color: white;
-            border-radius: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 212, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background: rgba(0, 212, 255, 0.5);
-            transform: scale(1.1);
+        .dot.active {
+            background: #00d4ff;
+            transform: scale(1.2);
         }
 
         /* Course Detail Sections */
@@ -279,16 +306,35 @@
 
         .detail-content {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 3rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
             align-items: center;
+        }
+
+        .detail-media {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 400px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
         }
 
         .detail-image {
             width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #00d4ff, #7c3aed);
-            border-radius: 15px;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -297,8 +343,38 @@
             transition: transform 0.3s ease;
         }
 
-        .detail-image:hover {
-            transform: scale(1.05);
+        .detail-media:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 212, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .play-button:hover {
+            background: rgba(124, 58, 237, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button::after {
+            content: '▶';
+            color: white;
+            font-size: 1.8rem;
+            margin-left: 5px;
         }
 
         .detail-text h2 {
@@ -313,6 +389,32 @@
             opacity: 0.9;
         }
 
+        .course-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .learn-more {
             display: inline-block;
             padding: 0.8rem 1.5rem;
@@ -322,12 +424,28 @@
             text-decoration: none;
             border-radius: 25px;
             transition: all 0.3s ease;
+            margin-right: 1rem;
         }
 
         .learn-more:hover {
             background: #00d4ff;
             color: #0a0e27;
             transform: translateX(5px);
+        }
+
+        .preview-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #7c3aed, #00d4ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .preview-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
         }
 
         /* Contact Section */
@@ -352,6 +470,7 @@
         .form-group label {
             color: #00d4ff;
             font-weight: bold;
+            text-align: left;
         }
 
         .form-group input,
@@ -424,6 +543,49 @@
             opacity: 0.7;
         }
 
+        /* Modal for video preview */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            background: rgba(26, 29, 53, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            color: #00d4ff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-video {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -455,6 +617,12 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .card {
+                flex: 0 0 300px;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -467,10 +635,25 @@
             .detail-content {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 2rem;
             }
 
             .card {
-                min-width: 300px;
+                flex: 0 0 280px;
+            }
+
+            .course-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-controls {
+                gap: 1rem;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -479,7 +662,7 @@
     <!-- Header -->
     <header class="header">
         <div class="nav-container">
-            <a href="#" class="logo">AI and Data Science Journey</a>
+            <a href="#" class="logo">ADITHYA</a>
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#home" class="nav-link">Home</a></li>
@@ -509,8 +692,8 @@
     <!-- Course Cards Carousel -->
     <section id="courses" class="courses-section">
         <div class="container">
-            <h2 class="section-title">Explore Our Courses</h2>
-            <div class="carousel-container">
+            <h2 class="section-title">Deep Dive</h2>
+            <div class="carousel-wrapper">
                 <div class="carousel" id="carousel">
                     <div class="card">
                         <div class="card-icon">🧠</div>
@@ -550,10 +733,10 @@
                     </div>
                 </div>
             </div>
-            <div class="carousel-nav">
-                <button class="nav-btn active" onclick="showSlide(0)">1</button>
-                <button class="nav-btn" onclick="showSlide(1)">2</button>
-                <button class="nav-btn" onclick="showSlide(2)">3</button>
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prevBtn">‹</button>
+                <div class="carousel-dots" id="dots"></div>
+                <button class="carousel-btn" id="nextBtn">›</button>
             </div>
         </div>
     </section>
@@ -562,12 +745,31 @@
     <section id="ai-fundamentals" class="course-detail">
         <div class="container">
             <div class="detail-content">
-                <div class="detail-image">🧠</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(0, 212, 255, 0.8), rgba(124, 58, 237, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><circle cx="100" cy="100" r="30" fill="%2300d4ff" opacity="0.3"/><circle cx="300" cy="80" r="25" fill="%237c3aed" opacity="0.4"/><circle cx="200" cy="150" r="40" fill="%2300d4ff" opacity="0.2"/><circle cx="320" cy="200" r="35" fill="%237c3aed" opacity="0.3"/></svg>');">
+                        <div class="play-button" onclick="openModal('ai-video')"></div>
+                    </div>
+                </div>
                 <div class="detail-text">
                     <h2>Fundamentals of Artificial Intelligence</h2>
-                    <p>Embark on your AI journey with our comprehensive fundamentals course. Learn about neural networks, search algorithms, knowledge representation, and the philosophical foundations of artificial intelligence. This course provides the essential building blocks for understanding how machines can simulate human intelligence.</p>
+                    <p>Embark on your AI journey with our comprehensive fundamentals course. Learn about neural networks, search algorithms, knowledge representation, and the philosophical foundations of artificial intelligence.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">45</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                    </div>
                     <p>Topics include: Problem-solving, knowledge representation, machine learning basics, expert systems, and ethical considerations in AI development.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('ai-video')">Preview Course</a>
                 </div>
             </div>
         </div>
@@ -578,11 +780,30 @@
             <div class="detail-content">
                 <div class="detail-text">
                     <h2>Software Engineering</h2>
-                    <p>Master the art of building robust, scalable software systems. Learn industry-standard practices for version control, testing, deployment, and maintenance. This course focuses on the engineering principles that make software reliable and maintainable in production environments.</p>
+                    <p>Master the art of building robust, scalable software systems. Learn industry-standard practices for version control, testing, deployment, and maintenance.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">16</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">60</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">20</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                    </div>
                     <p>Key areas: Agile methodologies, design patterns, testing strategies, CI/CD pipelines, and system architecture for AI applications.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('se-video')">Preview Course</a>
                 </div>
-                <div class="detail-image">💻</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(124, 58, 237, 0.8), rgba(0, 212, 255, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><rect x="50" y="50" width="300" height="200" fill="none" stroke="%2300d4ff" stroke-width="2"/><rect x="70" y="70" width="60" height="40" fill="%237c3aed" opacity="0.6"/><rect x="150" y="70" width="80" height="40" fill="%2300d4ff" opacity="0.4"/><rect x="250" y="70" width="70" height="40" fill="%237c3aed" opacity="0.5"/></svg>');">
+                        <div class="play-button" onclick="openModal('se-video')"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -590,12 +811,31 @@
     <section id="ai-ml" class="course-detail">
         <div class="container">
             <div class="detail-content">
-                <div class="detail-image">🤖</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(0, 212, 255, 0.8), rgba(245, 158, 11, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><path d="M50,250 Q100,150 150,200 T250,180 T350,160" stroke="%2300d4ff" stroke-width="3" fill="none"/><circle cx="100" cy="180" r="8" fill="%23f59e0b"/><circle cx="200" cy="200" r="8" fill="%23f59e0b"/><circle cx="300" cy="170" r="8" fill="%23f59e0b"/></svg>');">
+                        <div class="play-button" onclick="openModal('ml-video')"></div>
+                    </div>
+                </div>
                 <div class="detail-text">
                     <h2>Artificial Intelligence & Machine Learning</h2>
-                    <p>Dive deep into the core of modern AI with advanced machine learning techniques. Explore supervised and unsupervised learning, deep learning architectures, and cutting-edge AI models. Build practical skills in model training, evaluation, and deployment.</p>
+                    <p>Dive deep into the core of modern AI with advanced machine learning techniques. Explore supervised and unsupervised learning, deep learning architectures, and cutting-edge AI models.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">20</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">80</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">25</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                    </div>
                     <p>Advanced topics: Deep neural networks, computer vision, natural language processing, reinforcement learning, and transformer architectures.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('ml-video')">Preview Course</a>
                 </div>
             </div>
         </div>
@@ -606,11 +846,30 @@
             <div class="detail-content">
                 <div class="detail-text">
                     <h2>Machine Learning on Big Data</h2>
-                    <p>Learn to harness the power of big data with machine learning at scale. Master distributed computing frameworks, data processing pipelines, and scalable ML algorithms. Understand how to handle petabytes of data and extract meaningful insights.</p>
+                    <p>Learn to harness the power of big data with machine learning at scale. Master distributed computing frameworks, data processing pipelines, and scalable ML algorithms.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">18</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">75</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">30</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                    </div>
                     <p>Technologies covered: Apache Spark, Hadoop ecosystem, distributed ML algorithms, data streaming, and cloud-based ML platforms.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('bigdata-video')">Preview Course</a>
                 </div>
-                <div class="detail-image">📊</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(245, 158, 11, 0.8), rgba(0, 212, 255, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><rect x="50" y="100" width="80" height="100" fill="%2300d4ff" opacity="0.3"/><rect x="160" y="80" width="80" height="120" fill="%23f59e0b" opacity="0.4"/><rect x="270" y="90" width="80" height="110" fill="%237c3aed" opacity="0.3"/><line x1="130" y1="150" x2="160" y2="140" stroke="%2300d4ff" stroke-width="2"/><line x1="240" y1="140" x2="270" y2="145" stroke="%2300d4ff" stroke-width="2"/></svg>');">
+                        <div class="play-button" onclick="openModal('bigdata-video')"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -618,12 +877,31 @@
     <section id="professional-development" class="course-detail">
         <div class="container">
             <div class="detail-content">
-                <div class="detail-image">🎯</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(124, 58, 237, 0.8), rgba(245, 158, 11, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><circle cx="200" cy="150" r="80" fill="none" stroke="%2300d4ff" stroke-width="3"/><circle cx="200" cy="150" r="50" fill="none" stroke="%23f59e0b" stroke-width="2"/><circle cx="200" cy="150" r="20" fill="%237c3aed" opacity="0.6"/><path d="M200,70 L220,90 M200,70 L180,90" stroke="%2300d4ff" stroke-width="2"/></svg>');">
+                        <div class="play-button" onclick="openModal('professional-video')"></div>
+                    </div>
+                </div>
                 <div class="detail-text">
                     <h2>Mental Wealth, Professional Life</h2>
-                    <p>Develop the soft skills and mindset needed for a successful career in tech. Learn about work-life balance, stress management, effective communication, and leadership in technical teams. Build mental resilience and professional networks.</p>
+                    <p>Develop the soft skills and mindset needed for a successful career in tech. Learn about work-life balance, stress management, effective communication, and leadership in technical teams.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">10</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">30</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Workshops</div>
+                        </div>
+                    </div>
                     <p>Focus areas: Career planning, networking strategies, presentation skills, team collaboration, and maintaining mental health in high-pressure environments.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('professional-video')">Preview Course</a>
                 </div>
             </div>
         </div>
@@ -634,11 +912,30 @@
             <div class="detail-content">
                 <div class="detail-text">
                     <h2>Industrial Experience</h2>
-                    <p>Bridge the gap between academic learning and industry practice. Work on real-world projects, collaborate with industry partners, and gain hands-on experience with enterprise-level AI systems. Build a portfolio that demonstrates your practical skills.</p>
+                    <p>Bridge the gap between academic learning and industry practice. Work on real-world projects, collaborate with industry partners, and gain hands-on experience with enterprise-level AI systems.</p>
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">24</div>
+                            <div class="stat-label">Weeks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">200</div>
+                            <div class="stat-label">Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Live Projects</div>
+                        </div>
+                    </div>
                     <p>Experience includes: Industry mentorship, capstone projects, case studies from leading tech companies, and exposure to production AI systems.</p>
                     <a href="#" class="learn-more">Start Course</a>
+                    <a href="#" class="preview-btn" onclick="openModal('industrial-video')">Preview Course</a>
                 </div>
-                <div class="detail-image">🏭</div>
+                <div class="detail-media">
+                    <div class="detail-image" style="background-image: linear-gradient(45deg, rgba(0, 212, 255, 0.8), rgba(124, 58, 237, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23001122" width="400" height="300"/><rect x="80" y="120" width="240" height="120" fill="none" stroke="%2300d4ff" stroke-width="2"/><rect x="100" y="140" width="40" height="40" fill="%237c3aed" opacity="0.6"/><rect x="160" y="140" width="80" height="20" fill="%2300d4ff" opacity="0.4"/><rect x="160" y="170" width="60" height="20" fill="%23f59e0b" opacity="0.5"/><rect x="260" y="140" width="40" height="80" fill="%237c3aed" opacity="0.3"/></svg>');">
+                        <div class="play-button" onclick="openModal('industrial-video')"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -708,35 +1005,134 @@
         </div>
     </footer>
 
-    <script>
-        // Carousel functionality
-        let currentSlide = 0;
-        const cardsPerView = 3;
-        const totalCards = 6;
-        const maxSlide = Math.ceil(totalCards / cardsPerView) - 1;
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3 id="modalTitle">Course Preview</h3>
+            <video class="modal-video" id="modalVideo" controls>
+                <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p id="modalDescription">Watch this preview to get a glimpse of what you'll learn in this comprehensive course.</p>
+        </div>
+    </div>
 
-        function showSlide(slideIndex) {
-            const carousel = document.getElementById('carousel');
-            const cardWidth = 370; // 350px + 20px margin
+    <script>
+        // Carousel functionality - Fixed implementation
+        let currentSlide = 0;
+        const totalCards = 6;
+        const cardsVisible = window.innerWidth <= 768 ? 1 : window.innerWidth <= 1024 ? 2 : 3;
+        const maxSlide = Math.max(0, totalCards - cardsVisible);
+        
+        function createDots() {
+            const dotsContainer = document.getElementById('dots');
+            dotsContainer.innerHTML = '';
+            const totalSlides = maxSlide + 1;
             
+            for (let i = 0; i <= maxSlide; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateCarousel() {
+            const carousel = document.getElementById('carousel');
+            const cardWidth = window.innerWidth <= 768 ? 310 : window.innerWidth <= 1024 ? 330 : 380;
+            
+            const translateX = -(currentSlide * cardWidth * cardsVisible);
+            carousel.style.transform = `translateX(${translateX}px)`;
+            
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function goToSlide(slideIndex) {
             if (slideIndex > maxSlide) slideIndex = 0;
             if (slideIndex < 0) slideIndex = maxSlide;
             
             currentSlide = slideIndex;
-            
-            const translateX = -(slideIndex * cardWidth * cardsPerView);
-            carousel.style.transform = `translateX(${translateX}px)`;
-            
-            // Update navigation buttons
-            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
-                btn.classList.toggle('active', index === slideIndex);
-            });
+            updateCarousel();
         }
 
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // Event listeners for carousel
+        document.getElementById('nextBtn').addEventListener('click', nextSlide);
+        document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
         // Auto-slide functionality
-        setInterval(() => {
-            showSlide(currentSlide + 1);
-        }, 5000);
+        setInterval(nextSlide, 6000);
+
+        // Video modal functionality
+        function openModal(videoType) {
+            const modal = document.getElementById('videoModal');
+            const title = document.getElementById('modalTitle');
+            const video = document.getElementById('modalVideo');
+            const description = document.getElementById('modalDescription');
+            
+            const videoData = {
+                'ai-video': {
+                    title: 'AI Fundamentals Preview',
+                    description: 'Discover the foundations of artificial intelligence and how it\'s shaping our future.'
+                },
+                'se-video': {
+                    title: 'Software Engineering Preview',
+                    description: 'Learn industry-standard practices for building robust, scalable software systems.'
+                },
+                'ml-video': {
+                    title: 'Machine Learning Preview',
+                    description: 'Explore advanced ML algorithms and deep learning architectures.'
+                },
+                'bigdata-video': {
+                    title: 'Big Data ML Preview',
+                    description: 'Master machine learning techniques for processing massive datasets.'
+                },
+                'professional-video': {
+                    title: 'Professional Development Preview',
+                    description: 'Develop essential soft skills for a successful tech career.'
+                },
+                'industrial-video': {
+                    title: 'Industrial Experience Preview',
+                    description: 'Get hands-on experience with real-world AI implementations.'
+                }
+            };
+            
+            const data = videoData[videoType];
+            title.textContent = data.title;
+            description.textContent = data.description;
+            
+            modal.style.display = 'block';
+            video.play();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            
+            modal.style.display = 'none';
+            video.pause();
+            video.currentTime = 0;
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('videoModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -770,7 +1166,7 @@
             alert('Thank you for your message! We will get back to you soon.');
         });
 
-        // Add intersection observer for animations
+        // Intersection observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -793,29 +1189,33 @@
             observer.observe(section);
         });
 
-        // Add hover effects to cards
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px) scale(1.02)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
         // Parallax effect for hero section
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const hero = document.querySelector('.hero');
             const particles = document.querySelectorAll('.particle');
             
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
             
             particles.forEach((particle, index) => {
-                const speed = 0.2 + (index * 0.1);
+                const speed = 0.1 + (index * 0.05);
                 particle.style.transform = `translateY(${scrolled * speed}px)`;
             });
+        });
+
+        // Initialize carousel
+        window.addEventListener('load', () => {
+            createDots();
+            updateCarousel();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            createDots();
+            currentSlide = 0;
+            updateCarousel();
         });
     </script>
 </body>
