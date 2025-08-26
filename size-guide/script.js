@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 const sizes = {
     A0: { name: 'A0', width: 841, height: 1188, dimensions: '841 x 1188 mm | 33.1 x 46.8 in', use: 'Technical drawings, posters' },
@@ -20,12 +21,23 @@ const sizeTitle = document.getElementById('sizeTitle');
 const sizeDimensions = document.getElementById('sizeDimensions');
 const sizeUse = document.getElementById('sizeUse');
 
-let renderer, scene, camera, controls, paperPlane;
+let renderer, scene, camera, controls, paperPlane, labelRenderer;
+let widthLabel, heightLabel;
 
 function init() {
     // Renderer
     const canvas = document.querySelector('#c');
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+    // CSS2DRenderer for labels
+    const annotationsContainer = document.getElementById('annotations-container');
+    labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(annotationsContainer.clientWidth, annotationsContainer.clientHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    labelRenderer.domElement.style.pointerEvents = 'none';
+    annotationsContainer.appendChild(labelRenderer.domElement);
+
 
     // Scene
     scene = new THREE.Scene();
@@ -58,7 +70,7 @@ function init() {
     scene.add(cube); // Add test cube initially
 
     const loader = new GLTFLoader();
-    loader.load('https://media.cgtrader.com/free-3d-models/character/man/low-poly-man.glb',
+    loader.load('human.glb',
         (gltf) => {
             const model = gltf.scene;
             scene.add(model); // Add first, then scale/position
@@ -76,6 +88,7 @@ function init() {
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
             model.position.y += size.y * scale / 2; // Move model to stand on the ground
+            model.position.x = -0.5; // Move to the left
 
             // Remove the test cube if model loads successfully
             scene.remove(cube);
@@ -98,12 +111,24 @@ function init() {
         map: paperTexture,
         color: 0xffffff,
         side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.9
+        transparent: false, // Set to false for full opacity
+        opacity: 1 // Set to 1 for full opacity
     });
     paperPlane = new THREE.Mesh(paperGeometry, paperMaterial);
-    paperPlane.position.set(0, 0.85, 0.5); // Position in front of the model, centered vertically
+    paperPlane.position.set(0.5, 0.85, 0); // Move to the right, and set Z to 0 to be on the same plane as human
     scene.add(paperPlane);
+
+    // Annotations
+    const widthDiv = document.createElement('div');
+    widthDiv.className = 'annotation';
+    widthLabel = new CSS2DObject(widthDiv);
+    scene.add(widthLabel);
+
+    const heightDiv = document.createElement('div');
+    heightDiv.className = 'annotation';
+    heightLabel = new CSS2DObject(heightDiv);
+    scene.add(heightLabel);
+
 
     // Event Listeners
     document.querySelectorAll('.size-list li').forEach(item => {
@@ -119,6 +144,13 @@ function init() {
             const paperHeight = data.height / 1000; // convert mm to meters
 
             paperPlane.scale.set(paperWidth, paperHeight, 1);
+
+            // Update annotation positions and content
+            widthLabel.element.textContent = `${data.width} mm`;
+            widthLabel.position.set(paperPlane.position.x, paperPlane.position.y + (paperHeight / 2) + 0.2, paperPlane.position.z); // Top center
+
+            heightLabel.element.textContent = `${data.height} mm`;
+            heightLabel.position.set(paperPlane.position.x + (paperWidth / 2) + 0.2, paperPlane.position.y, paperPlane.position.z); // Right center
         });
     });
 
@@ -134,8 +166,13 @@ function animate() {
         camera.updateProjectionMatrix();
     }
 
+    // Resize label renderer
+    const annotationsContainer = document.getElementById('annotations-container');
+    labelRenderer.setSize(annotationsContainer.clientWidth, annotationsContainer.clientHeight);
+
     controls.update();
     renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
 }
 
 function resizeRendererToDisplaySize(renderer) {
