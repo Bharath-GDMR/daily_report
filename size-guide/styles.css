@@ -232,7 +232,7 @@ footer {
     background: rgba(0, 0, 0, 0.9); /* Semi-transparent overlay */
     z-index: 1000;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Align content to the top */
     align-items: center;
     overflow-y: auto; /* Enable scrolling for long lists */
   }
