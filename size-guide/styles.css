@@ -124,3 +124,11 @@ footer {
   transform: translate(-50%, -50%); /* Center the annotation */
   pointer-events: auto; /* Allow interaction with annotation if needed */
 }
+
+#size-guide-image {
+  max-width: 400px; /* Adjust as needed */
+  height: auto;
+  margin-top: 20px; /* Space below info panel */
+  margin-left: auto; /* Push to the right */
+  display: block; /* Ensure it behaves as a block element */
+}
