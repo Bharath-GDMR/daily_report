@@ -144,6 +144,28 @@ function init() {
     paperPlane.position.set(0.5, 0.85, 0); // Move to the right, and set Z to 0 to be on the same plane as human
     scene.add(paperPlane);
 
+    // New function to select a size
+    function selectSize(sizeKey) {
+        const data = sizes[sizeKey];
+
+        sizeTitle.textContent = data.name;
+        sizeDimensions.textContent = data.dimensions;
+        sizeUse.textContent = data.use;
+
+        const paperWidth = data.width / 1000; // convert mm to meters
+        const paperHeight = data.height / 1000; // convert mm to meters
+
+        paperPlane.scale.set(paperWidth, paperHeight, 1);
+        if (paperPlane.material.map) {
+            paperPlane.material.map.dispose(); // Dispose of old texture to free memory
+        }
+        paperPlane.material.map = createTextureFromText(data.name);
+        paperPlane.material.needsUpdate = true; // Important for material changes
+    }
+
+    // Call selectSize for A0 as default
+    selectSize('A0');
+
     
 
 
