@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
+
 const sizes = {
     A0: { name: 'A0', width: 841, height: 1188, dimensions: '841 x 1188 mm | 33.1 x 46.8 in', use: 'Technical drawings, posters' },
     A1: { name: 'A1', width: 594, height: 841, dimensions: '594 x 841 mm | 23.4 x 33.1 in', use: 'Technical drawings, posters' },
@@ -21,8 +22,7 @@ const sizeTitle = document.getElementById('sizeTitle');
 const sizeDimensions = document.getElementById('sizeDimensions');
 const sizeUse = document.getElementById('sizeUse');
 
-let renderer, scene, camera, controls, paperPlane, labelRenderer;
-let widthLabel, heightLabel;
+let renderer, scene, camera, controls, paperPlane, labelRenderer, humanHeightLabel;
 
 function init() {
     // Renderer
@@ -37,6 +37,8 @@ function init() {
     labelRenderer.domElement.style.top = '0px';
     labelRenderer.domElement.style.pointerEvents = 'none';
     annotationsContainer.appendChild(labelRenderer.domElement);
+
+    
 
 
     // Scene
@@ -92,6 +94,20 @@ function init() {
 
             // Remove the test cube if model loads successfully
             scene.remove(cube);
+
+            // Create human height label
+            const humanHeightDiv = document.createElement('div');
+            humanHeightDiv.className = 'annotation';
+            humanHeightLabel = new CSS2DObject(humanHeightDiv);
+            scene.add(humanHeightLabel);
+
+            // Set initial human height label content and position
+            const heightInMeters = size.y * scale;
+            const totalInches = heightInMeters * 39.37; // 1 meter = 39.37 inches
+            const feet = Math.floor(totalInches / 12);
+            const inches = Math.round(totalInches % 12); // Round to nearest whole number
+            humanHeightLabel.element.textContent = `${feet}' ${inches}"`;
+            humanHeightLabel.position.set(model.position.x, model.position.y + (size.y * scale / 2) + 0.3, model.position.z); // Above the head
         },
         undefined, // onProgress callback
         (error) => {
@@ -101,14 +117,9 @@ function init() {
         }
     );
 
-    // Texture Loader
-    const textureLoader = new THREE.TextureLoader();
-    const paperTexture = textureLoader.load('gdmr-logo.png');
-
     // Paper Plane
     const paperGeometry = new THREE.PlaneGeometry(1, 1);
     const paperMaterial = new THREE.MeshStandardMaterial({
-        map: paperTexture,
         color: 0xffffff,
         side: THREE.DoubleSide,
         transparent: false, // Set to false for full opacity
@@ -118,16 +129,7 @@ function init() {
     paperPlane.position.set(0.5, 0.85, 0); // Move to the right, and set Z to 0 to be on the same plane as human
     scene.add(paperPlane);
 
-    // Annotations
-    const widthDiv = document.createElement('div');
-    widthDiv.className = 'annotation';
-    widthLabel = new CSS2DObject(widthDiv);
-    scene.add(widthLabel);
-
-    const heightDiv = document.createElement('div');
-    heightDiv.className = 'annotation';
-    heightLabel = new CSS2DObject(heightDiv);
-    scene.add(heightLabel);
+    
 
 
     // Event Listeners
@@ -144,13 +146,13 @@ function init() {
             const paperHeight = data.height / 1000; // convert mm to meters
 
             paperPlane.scale.set(paperWidth, paperHeight, 1);
+            if (paperPlane.material.map) {
+                paperPlane.material.map.dispose(); // Dispose of old texture to free memory
+            }
+            paperPlane.material.map = createTextureFromText(data.name);
+            paperPlane.material.needsUpdate = true; // Important for material changes
 
-            // Update annotation positions and content
-            widthLabel.element.textContent = `${data.width} mm`;
-            widthLabel.position.set(paperPlane.position.x, paperPlane.position.y + (paperHeight / 2) + 0.2, paperPlane.position.z); // Top center
-
-            heightLabel.element.textContent = `${data.height} mm`;
-            heightLabel.position.set(paperPlane.position.x + (paperWidth / 2) + 0.2, paperPlane.position.y, paperPlane.position.z); // Right center
+            
         });
     });
 
@@ -166,10 +168,6 @@ function animate() {
         camera.updateProjectionMatrix();
     }
 
-    // Resize label renderer
-    const annotationsContainer = document.getElementById('annotations-container');
-    labelRenderer.setSize(annotationsContainer.clientWidth, annotationsContainer.clientHeight);
-
     controls.update();
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
@@ -184,6 +182,32 @@ function resizeRendererToDisplaySize(renderer) {
         renderer.setSize(width, height, false);
     }
     return needResize;
+}
+
+function createTextureFromText(text) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    // Set canvas dimensions (adjust as needed for text size and aspect ratio)
+    canvas.width = 256;
+    canvas.height = 256;
+
+    // Fill background (optional, for better visibility)
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Text styling
+    context.font = 'bold 80px Arial';
+    context.fillStyle = 'black';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+
+    // Draw text
+    context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true; // Important for dynamic textures
+    return texture;
 }
 
 init();
