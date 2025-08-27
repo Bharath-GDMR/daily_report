@@ -259,3 +259,33 @@ footer {
     font-size: 1.2em; /* Larger font for readability */
   }
 }
+
+@media (min-width: 769px) and (max-width: 1167px) {
+  .size-display {
+    flex-direction: column; /* Stack items vertically for this range */
+    align-items: center; /* Center items horizontally */
+  }
+
+  #left-column {
+    width: 90%; /* Adjust width for left column */
+    max-width: 600px; /* Prevent it from getting too wide */
+  }
+
+  .reference-container {
+    width: 100%; /* Make fluid within left-column */
+    height: 60vh; /* Control height for 3D scene */
+    margin-top: 0; /* Reset margin-top, as stacking might resolve the shift */
+  }
+
+  #size-guide-image {
+    max-width: 90%; /* Adjust image width */
+    height: auto;
+    margin-top: 20px; /* Add some space below the 3D scene */
+    margin-left: 0; /* Reset left margin */
+  }
+
+  /* You might need to adjust other elements here if they are still problematic */
+  .info-panel {
+    width: 100%; /* Ensure info panel takes full width of left-column */
+  }
+}
