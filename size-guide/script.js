@@ -22,6 +22,21 @@ const sizeTitle = document.getElementById('sizeTitle');
 const sizeDimensions = document.getElementById('sizeDimensions');
 const sizeUse = document.getElementById('sizeUse');
 
+// Update sizeTitle text based on device type
+function updateSizeTitleText() {
+    if (window.innerWidth <= 768) { // Using the same breakpoint as CSS
+        sizeTitle.textContent = 'Select a size';
+    } else {
+        sizeTitle.textContent = 'Hover a size';
+    }
+}
+
+// Call on initial load
+updateSizeTitleText();
+
+// Call on window resize
+window.addEventListener('resize', updateSizeTitleText);
+
 let renderer, scene, camera, controls, paperPlane, labelRenderer, humanHeightLabel;
 
 function init() {
@@ -180,6 +195,11 @@ function resizeRendererToDisplaySize(renderer) {
     const needResize = canvas.width !== width || canvas.height !== height;
     if (needResize) {
         renderer.setSize(width, height, false);
+        // Update labelRenderer size as well
+        const annotationsContainer = document.getElementById('annotations-container');
+        if (annotationsContainer) { // Check if container exists
+            labelRenderer.setSize(annotationsContainer.clientWidth, annotationsContainer.clientHeight);
+        }
     }
     return needResize;
 }
@@ -208,6 +228,24 @@ function createTextureFromText(text) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true; // Important for dynamic textures
     return texture;
+}
+
+// Mobile Navigation Toggle
+const menuToggle = document.getElementById('menu-toggle');
+const mobileNav = document.getElementById('mobile-nav');
+const sizeListItems = document.querySelectorAll('#mobile-nav .size-list li');
+
+if (menuToggle && mobileNav) {
+    menuToggle.addEventListener('click', () => {
+        mobileNav.classList.toggle('active');
+    });
+
+    // Close mobile nav when a size is selected
+    sizeListItems.forEach(item => {
+        item.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+        });
+    });
 }
 
 init();
