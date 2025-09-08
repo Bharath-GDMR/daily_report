@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Calendar Scheduler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .month-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .print-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .print-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            margin-bottom: 1px;
+            background-color: #e5e7eb;
+        }
+
+        .day-header {
+            background-color: #f9fafb;
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e5e7eb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .calendar-day {
+            background-color: white;
+            min-height: 120px;
+            padding: 0.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .calendar-day:hover {
+            background-color: #f9fafb;
+        }
+
+        .calendar-day.today {
+            background-color: #eff6ff;
+            border: 2px solid #3b82f6;
+        }
+
+        .calendar-day.empty {
+            background-color: #f9fafb;
+            cursor: default;
+        }
+
+        .calendar-day.empty:hover {
+            background-color: #f9fafb;
+        }
+
+        .day-number {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .today .day-number {
+            color: #3b82f6;
+        }
+
+        .task-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-preview {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .task-item {
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            margin-bottom: 2px;
+            border-radius: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .task-item.completed {
+            background-color: #dcfce7;
+            color: #166534;
+            text-decoration: line-through;
+        }
+
+        .task-item.incomplete {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .add-icon {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            color: #9ca3af;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #374151;
+        }
+
+        .tasks-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .task-row {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-title.completed {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+
+        .task-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .action-btn.complete {
+            color: #059669;
+        }
+
+        .action-btn.delete {
+            color: #dc2626;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            background-color: white;
+        }
+
+        .add-task-btn {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .add-task-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .add-task-btn:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.25rem;
+            }
+
+            .day-header {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.75rem;
+            }
+
+            .task-preview {
+                max-height: 40px;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-day {
+                min-height: 60px;
+                padding: 0.25rem;
+            }
+
+            .day-number {
+                font-size: 0.75rem;
+            }
+
+            .task-item {
+                font-size: 0.625rem;
+            }
+
+            .task-count {
+                font-size: 0.625rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .print-btn {
+                display: none;
+            }
+            
+            .modal {
+                display: none !important;
+            }
+            
+            .calendar-day {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .container {
+                max-width: none;
+                padding: 0;
+            }
+            
+            .calendar-grid {
+                gap: 1px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Monthly Scheduler</h1>
+            <div class="nav-controls">
+                <div class="month-nav">
+                    <button class="nav-btn" id="prevMonth">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15,18 9,12 15,6"></polyline>
+                        </svg>
+                    </button>
+                    <h2 class="month-title" id="monthTitle">January 2025</h2>
+                    <button class="nav-btn" id="nextMonth">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9,18 15,12 9,6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <button class="print-btn" onclick="window.print()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                        <path d="M6,18H4a2,2 0,0,1-2-2V11a2,2 0,0,1,2-2H20a2,2 0,0,1,2,2v5a2,2 0,0,1-2,2H18"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Print PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="days-header">
+            <div class="day-header">Sun</div>
+            <div class="day-header">Mon</div>
+            <div class="day-header">Tue</div>
+            <div class="day-header">Wed</div>
+            <div class="day-header">Thu</div>
+            <div class="day-header">Fri</div>
+            <div class="day-header">Sat</div>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar days will be generated here -->
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Tasks for Date</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+
+            <div class="tasks-list" id="tasksList">
+                <!-- Existing tasks will be displayed here -->
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-input" id="taskTitle" placeholder="Task title">
+            </div>
+            <div class="form-group">
+                <input type="time" class="form-input" id="taskTime">
+            </div>
+            <div class="form-group">
+                <select class="form-select" id="taskReminder">
+                    <option value="">No reminder</option>
+                    <option value="5">5 minutes before</option>
+                    <option value="15">15 minutes before</option>
+                    <option value="30">30 minutes before</option>
+                    <option value="60">1 hour before</option>
+                </select>
+            </div>
+            <button class="add-task-btn" id="addTaskBtn">Add Task</button>
+        </div>
+    </div>
+
+    <script>
+        class MonthlyScheduler {
+            constructor() {
+                this.currentDate = new Date();
+                this.tasks = {};
+                this.selectedDate = null;
+                
+                this.months = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.renderCalendar();
+            }
+
+            bindEvents() {
+                document.getElementById('prevMonth').addEventListener('click', () => this.navigateMonth(-1));
+                document.getElementById('nextMonth').addEventListener('click', () => this.navigateMonth(1));
+                document.getElementById('closeModal').addEventListener('click', () => this.closeModal());
+                document.getElementById('addTaskBtn').addEventListener('click', () => this.addTask());
+                
+                // Close modal when clicking outside
+                document.getElementById('taskModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'taskModal') {
+                        this.closeModal();
+                    }
+                });
+
+                // Enter key to add task
+                document.getElementById('taskTitle').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.addTask();
+                    }
+                });
+            }
+
+            formatDateKey(year, month, day) {
+                return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            }
+
+            navigateMonth(direction) {
+                this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+                this.renderCalendar();
+            }
+
+            renderCalendar() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                
+                document.getElementById('monthTitle').textContent = 
+                    `${this.months[month]} ${year}`;
+
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDay = new Date(year, month, 1).getDay();
+                
+                const calendarGrid = document.getElementById('calendarGrid');
+                calendarGrid.innerHTML = '';
+
+                // Empty cells for days before first day of month
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day empty';
+                    calendarGrid.appendChild(emptyDay);
+                }
+
+                // Days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const dateKey = this.formatDateKey(year, month + 1, day);
+                    const dayTasks = this.tasks[dateKey] || [];
+                    
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    
+                    // Check if it's today
+                    const today = new Date();
+                    if (date.toDateString() === today.toDateString()) {
+                        dayElement.classList.add('today');
+                    }
+
+                    dayElement.innerHTML = this.renderDayContent(day, dayTasks);
+                    dayElement.addEventListener('click', () => this.openTaskModal(date));
+                    
+                    calendarGrid.appendChild(dayElement);
+                }
+            }
+
+            renderDayContent(day, tasks) {
+                const completedTasks = tasks.filter(task => task.completed).length;
+                const totalTasks = tasks.length;
+
+                let content = `<div class="day-number">${day}</div>`;
+                
+                if (totalTasks > 0) {
+                    content += `<div class="task-count">${completedTasks}/${totalTasks} tasks</div>`;
+                    content += '<div class="task-preview">';
+                    
+                    tasks.slice(0, 2).forEach(task => {
+                        const taskClass = task.completed ? 'completed' : 'incomplete';
+                        const timePrefix = task.time ? `${task.time} ` : '';
+                        content += `<div class="task-item ${taskClass}">${timePrefix}${task.title}</div>`;
+                    });
+                    
+                    if (tasks.length > 2) {
+                        content += `<div class="task-item incomplete">+${tasks.length - 2} more</div>`;
+                    }
+                    
+                    content += '</div>';
+                }
+                
+                content += `
+                    <svg class="add-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                `;
+                
+                return content;
+            }
+
+            openTaskModal(date) {
+                this.selectedDate = date;
+                const dateKey = this.formatDateKey(date.getFullYear(), date.getMonth() + 1, date.getDate());
+                
+                document.getElementById('modalTitle').textContent = `Tasks for ${date.toDateString()}`;
+                this.renderTasksList(dateKey);
+                
+                // Clear form
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskTime').value = '';
+                document.getElementById('taskReminder').value = '';
+                
+                document.getElementById('taskModal').classList.add('active');
+                document.getElementById('taskTitle').focus();
+            }
+
+            closeModal() {
+                document.getElementById('taskModal').classList.remove('active');
+                this.selectedDate = null;
+            }
+
+            renderTasksList(dateKey) {
+                const tasksList = document.getElementById('tasksList');
+                const tasks = this.tasks[dateKey] || [];
+                
+                if (tasks.length === 0) {
+                    tasksList.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 1rem;">No tasks for this day</p>';
+                    return;
+                }
+
+                tasksList.innerHTML = tasks.map(task => `
+                    <div class="task-row">
+                        <div class="task-content">
+                            <div class="task-title ${task.completed ? 'completed' : ''}">${task.title}</div>
+                            <div class="task-meta">
+                                ${task.time ? `
+                                    <span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12,6 12,12 16,14"></polyline>
+                                        </svg>
+                                        ${task.time}
+                                    </span>
+                                ` : ''}
+                                ${task.reminder ? `
+                                    <span style="color: #3b82f6;">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                        </svg>
+                                        ${task.reminder}m reminder
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn complete" onclick="scheduler.toggleTaskComplete('${dateKey}', ${task.id})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20,6 9,17 4,12"></polyline>
+                                </svg>
+                            </button>
+                            <button class="action-btn delete" onclick="scheduler.deleteTask('${dateKey}', ${task.id})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            addTask() {
+                const title = document.getElementById('taskTitle').value.trim();
+                if (!title || !this.selectedDate) return;
+
+                const dateKey = this.formatDateKey(
+                    this.selectedDate.getFullYear(),
+                    this.selectedDate.getMonth() + 1,
+                    this.selectedDate.getDate()
+                );
+
+                const task = {
+                    id: Date.now(),
+                    title: title,
+                    time: document.getElementById('taskTime').value,
+                    reminder: document.getElementById('taskReminder').value,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+
+                if (!this.tasks[dateKey]) {
+                    this.tasks[dateKey] = [];
+                }
+
+                this.tasks[dateKey].push(task);
+
+                // Set reminder if specified
+                if (task.reminder) {
+                    const reminderTime = parseInt(task.reminder);
+                    setTimeout(() => {
+                        alert(`Reminder: ${task.title} on ${this.selectedDate.toDateString()}`);
+                    }, reminderTime * 60 * 1000);
+                }
+
+                // Clear form
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskTime').value = '';
+                document.getElementById('taskReminder').value = '';
+
+                this.renderTasksList(dateKey);
+                this.renderCalendar();
+            }
+
+            toggleTaskComplete(dateKey, taskId) {
+                if (!this.tasks[dateKey]) return;
+                
+                const task = this.tasks[dateKey].find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.renderTasksList(dateKey);
+                    this.renderCalendar();
+                }
+            }
+
+            deleteTask(dateKey, taskId) {
+                if (!this.tasks[dateKey]) return;
+                
+                this.tasks[dateKey] = this.tasks[dateKey].filter(t => t.id !== taskId);
+                this.renderTasksList(dateKey);
+                this.renderCalendar();
+            }
+        }
+
+        // Initialize the scheduler
+        const scheduler = new MonthlyScheduler();
+    </script>
+</body>
+</html>
