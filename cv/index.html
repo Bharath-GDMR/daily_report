@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharath Kumar Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+            font-size: 11px;
+        }
+        
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: white;
+            min-height: 11in;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2c5aa0;
+        }
+        
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .contact-info {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .section {
+            margin-bottom: 18px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c5aa0;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #ddd;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary {
+            text-align: justify;
+            line-height: 1.5;
+            color: #444;
+        }
+        
+        .job {
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        
+        .job-header {
+            margin-bottom: 6px;
+        }
+        
+        .job-title {
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .company {
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+        
+        .job-details {
+            font-size: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .achievements {
+            margin-top: 5px;
+        }
+        
+        .achievements li {
+            margin-bottom: 3px;
+            line-height: 1.4;
+            list-style-type: none;
+            position: relative;
+            padding-left: 12px;
+        }
+        
+        .achievements li:before {
+            content: "•";
+            color: #2c5aa0;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .education-item {
+            margin-bottom: 8px;
+        }
+        
+        .degree {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .institution {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+        
+        .year {
+            color: #666;
+            font-size: 10px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .skill-category {
+            margin-bottom: 10px;
+        }
+        
+        .skill-category-title {
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+        
+        .skill-list {
+            color: #444;
+            line-height: 1.4;
+        }
+        
+        .certifications {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        
+        .cert-item {
+            font-size: 10px;
+            margin-bottom: 3px;
+            color: #444;
+        }
+        
+        .languages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .language {
+            font-size: 10px;
+            color: #444;
+        }
+        
+        .highlight {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+        
+        @media print {
+            body {
+                font-size: 10px;
+            }
+            .container {
+                padding: 0.3in;
+            }
+            .section {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="name">BHARATH KUMAR</div>
+            <div class="contact-info">
+                Chennai, India | bharath@vmsd.in | +91-8787545171 | vmsd.in<br>
+                Visual Merchandising & Retail Design Professional
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">Professional Summary</h2>
+            <div class="summary">
+                <strong>Visual Merchandising & Retail Projects Leader</strong> with <strong>15+ years of experience</strong> transforming retail environments across India. Proven track record of driving <strong>brand growth, operational efficiency, and creative innovation</strong>. Currently <strong>Founder of VMSD.in</strong>, developing next-generation retail design platforms integrating <strong>IoT, Generative AI, and Analytics</strong>. Expert in scaling visual merchandising functions, leading cross-functional teams, and delivering measurable business impact with <strong>20-30% execution time reduction</strong> and <strong>25% sales growth</strong>.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Professional Experience</h2>
+            
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Founder | <span class="company">VMSD.in</span></div>
+                    <div class="job-details">October 2022 – Present | Chennai, India</div>
+                </div>
+                <ul class="achievements">
+                    <li>Built retail design and visual merchandising studio focused on technology-driven store innovation</li>
+                    <li>Introduced <span class="highlight">IoT, Generative AI, and Analytics</span> into store design projects, reducing execution time by <span class="highlight">20-30%</span></li>
+                    <li>Delivered comprehensive store design, fit-out projects, and VM campaigns for brands across India</li>
+                    <li>Designed <span class="highlight">SaaS-based vendor & execution management solution</span> to streamline rollouts</li>
+                    <li>Scaled operations with <span class="highlight">50+ vendors pan-India</span> ensuring on-time, cost-optimized execution</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Head of Visual Merchandising | <span class="company">Royal Classic Mills</span></div>
+                    <div class="job-details">August 2021 – September 2022</div>
+                </div>
+                <ul class="achievements">
+                    <li>Directed VM & Projects for <span class="highlight">32+ exclusive stores and 400+ multi-brand outlets</span></li>
+                    <li>Executed <span class="highlight">12+ seasonal campaigns</span> and introduced SOPs that cut inefficiencies by <span class="highlight">40%</span></li>
+                    <li>Ensured brand consistency nationwide in collaboration with marketing, retail, and design teams</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Visual Merchandising Manager | <span class="company">Miniklub</span></div>
+                    <div class="job-details">August 2019 – August 2021</div>
+                </div>
+                <ul class="achievements">
+                    <li>Managed <span class="highlight">50+ premium stores</span>, boosting sales by <span class="highlight">25%</span></li>
+                    <li>Led <span class="highlight">12-member creative team</span>; authored VM guidelines adopted across the brand</li>
+                    <li>Enhanced customer journey through experience-focused store layouts and visual strategies</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Projects & Visual Merchandising Manager | <span class="company">VIP Industries</span></div>
+                    <div class="job-details">March 2017 – December 2018</div>
+                </div>
+                <ul class="achievements">
+                    <li>Executed brand campaigns across <span class="highlight">25+ stores</span> with standardized visual consistency</li>
+                    <li>Implemented visual merchandising standards across diverse retail formats</li>
+                    <li>Mentored junior VM staff and developed team capabilities</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Regional Visual Merchandiser | <span class="company">Flemingo Duty Free</span></div>
+                    <div class="job-details">June 2015 – February 2017</div>
+                </div>
+                <ul class="achievements">
+                    <li>Designed promotional displays, increasing footfall by <span class="highlight">30%</span></li>
+                    <li>Balanced budgets with innovative, high-impact visual solutions</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">Visual Merchandiser | <span class="company">Hasbro Clothing Pvt Ltd</span></div>
+                    <div class="job-details">February 2013 – July 2015</div>
+                </div>
+                <ul class="achievements">
+                    <li>Developed seasonal window displays and comprehensive VM collaterals</li>
+                    <li>Implemented brand-consistent visual strategies across multiple locations</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <div class="job-title">VM Executive | <span class="company">Future Value Retail Ltd</span></div>
+                    <div class="job-details">April 2012 – February 2013</div>
+                </div>
+                <ul class="achievements">
+                    <li>Gained foundational VM experience in high-volume retail environments</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <div class="degree">MBA - Finance & Marketing (Distinction)</div>
+                <div class="institution">Dayanand Sagar University</div>
+                <div class="year">2019 – 2021</div>
+            </div>
+            <div class="education-item">
+                <div class="degree">B.Sc - Fashion & Apparel Design (Top Ranker)</div>
+                <div class="institution">Bangalore University</div>
+                <div class="year">2006 – 2010</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications">
+                <div class="cert-item">• Luxury Brand Management - Bocconi University</div>
+                <div class="cert-item">• Strategic Leadership - IIM Bangalore</div>
+                <div class="cert-item">• Sustainability & Fashion - University of Illinois</div>
+                <div class="cert-item">• Business Strategy - University of Colorado Boulder</div>
+                <div class="cert-item">• Communication for Impact - LinkedIn Learning</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Core Skills & Technical Competencies</h2>
+            <div class="skills-grid">
+                <div>
+                    <div class="skill-category">
+                        <div class="skill-category-title">Visual Merchandising & Design</div>
+                        <div class="skill-list">Visual Merchandising • Retail Store Design • Customer Experience Design • 3D Visualization • Brand Strategy</div>
+                    </div>
+                    <div class="skill-category">
+                        <div class="skill-category-title">Project & Operations Management</div>
+                        <div class="skill-list">Project Management • Fit-out Management • Campaign Rollouts • Vendor Management • Retail Analytics</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="skill-category">
+                        <div class="skill-category-title">Technology & Tools</div>
+                        <div class="skill-list">AutoCAD • SketchUp • Adobe Photoshop • Adobe Illustrator • Generative AI • Canva • IoT Integration</div>
+                    </div>
+                    <div class="skill-category">
+                        <div class="skill-category-title">Business & Strategy</div>
+                        <div class="skill-list">SaaS Development • Team Leadership • Budget Management • Process Optimization • Cross-functional Collaboration</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Languages</h2>
+            <div class="languages">
+                <span class="language"><strong>English:</strong> Fluent</span>
+                <span class="language"><strong>Tamil:</strong> Native</span>
+                <span class="language"><strong>Hindi:</strong> Professional</span>
+                <span class="language"><strong>Kannada & Malayalam:</strong> Conversational</span>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Print functionality available via Ctrl+P or browser menu
+        // Clean resume output without any overlay buttons
+    </script>
+</body>
+</html>

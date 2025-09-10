@@ -1,0 +1,135 @@
+{
+    "shoppers": {
+        "101": {
+            "name": "Andheri",
+            "address": "Shoppers Stop Ltd, 211, D. S. V Road, Andheri - West, Mumbai - 400 058.",
+            "phone": "+91 22 6662 7777",
+            "manager": "Rajesh Kumar",
+            "email": "andheri@shoppersstop.com",
+            "assets": [
+                {
+                    "id": "SS-ANH-001",
+                    "type": "Light Box",
+                    "title": "Main Entrance Display",
+                    "size": "8ft x 4ft",
+                    "location": "Main Entrance",
+                    "status": "Active",
+                    "installation": "2024-01-15",
+                    "maintenance": "2024-06-15",
+                    "image": null,
+                    "measurements": {
+                        "width": "8 feet",
+                        "height": "4 feet",
+                        "depth": "8 inches",
+                        "weight": "25 kg"
+                    }
+                },
+                {
+                    "id": "SS-ANH-002",
+                    "type": "SOH Display",
+                    "title": "Beauty Counter SOH",
+                    "size": "3ft x 2ft",
+                    "location": "Beauty Section",
+                    "status": "Active",
+                    "installation": "2024-02-01",
+                    "maintenance": "2024-07-01",
+                    "image": null,
+                    "measurements": {
+                        "width": "3 feet",
+                        "height": "2 feet",
+                        "depth": "6 inches",
+                        "weight": "8 kg"
+                    }
+                },
+                {
+                    "id": "SS-ANH-003",
+                    "type": "Digital Screen",
+                    "title": "Fashion Zone Display",
+                    "size": "55 inch",
+                    "location": "Fashion Zone",
+                    "status": "Maintenance",
+                    "installation": "2024-03-10",
+                    "maintenance": "2024-08-10",
+                    "image": null,
+                    "measurements": {
+                        "width": "48.5 inches",
+                        "height": "27.3 inches",
+                        "depth": "2.4 inches",
+                        "weight": "15.8 kg"
+                    }
+                }
+            ]
+        },
+        "102": {
+            "name": "Bangalore 1",
+            "address": "Shoppers Stop Ltd, Garuda Mall, Magrath Road, Ashok Nagar, Bangalore-560 025",
+            "phone": "+91 80 4567 8901",
+            "manager": "Priya Sharma",
+            "email": "bangalore1@shoppersstop.com",
+            "assets": [
+                {
+                    "id": "SS-BLR1-001",
+                    "type": "Light Box",
+                    "title": "Window Display Left",
+                    "size": "6ft x 3ft",
+                    "location": "Front Window",
+                    "status": "Active",
+                    "installation": "2024-01-20",
+                    "maintenance": "2024-06-20",
+                    "image": null,
+                    "measurements": {
+                        "width": "6 feet",
+                        "height": "3 feet",
+                        "depth": "6 inches",
+                        "weight": "18 kg"
+                    }
+                },
+                {
+                    "id": "SS-BLR1-002",
+                    "type": "Standee",
+                    "title": "Promotional Standee",
+                    "size": "6ft x 2ft",
+                    "location": "Center Aisle",
+                    "status": "Active",
+                    "installation": "2024-02-15",
+                    "maintenance": "2024-07-15",
+                    "image": null,
+                    "measurements": {
+                        "width": "2 feet",
+                        "height": "6 feet",
+                        "depth": "1 foot",
+                        "weight": "5 kg"
+                    }
+                }
+            ]
+        }
+    },
+    "lifestyle": {
+        "201": {
+            "name": "Mumbai Central",
+            "address": "Lifestyle Store, Phoenix Mills, Lower Parel, Mumbai - 400 013",
+            "phone": "+91 22 5566 7788",
+            "manager": "Amit Patel",
+            "email": "mumbaicentral@lifestyle.com",
+            "assets": [
+                {
+                    "id": "LS-MUM-001",
+                    "type": "Light Box",
+                    "title": "Lifestyle Main Display",
+                    "size": "10ft x 5ft",
+                    "location": "Main Entrance",
+                    "status": "Active",
+                    "installation": "2024-01-10",
+                    "maintenance": "2024-06-10",
+                    "image": null,
+                    "measurements": {
+                        "width": "10 feet",
+                        "height": "5 feet",
+                        "depth": "10 inches",
+                        "weight": "35 kg"
+                    }
+                }
+            ]
+        }
+    }
+}
