@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABP Retailer Directory - Kolkata</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(235, 38, 39, 0.2);
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(255, 255, 255, 0.1) 10px,
+          rgba(255, 255, 255, 0.1) 20px
+        );
+        animation: shimmer 20s linear infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+        }
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+      }
+
+      .search-bar {
+        margin-bottom: 2rem;
+        position: relative;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 3px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #eb2627;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(235, 38, 39, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .retailer-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        border-left: 5px solid #eb2627;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease, border-left-width 0.3s ease;
+      }
+
+      .retailer-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .retailer-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(235, 38, 39, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .retailer-card:hover::before {
+        left: 100%;
+      }
+
+      .retailer-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-left-width: 8px;
+      }
+
+      .retailer-number {
+        display: inline-block;
+        background: linear-gradient(135deg, #eb2627, #bc1313);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 5px 15px rgba(235, 38, 39, 0.3);
+      }
+
+      .retailer-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #bc1313;
+        margin-bottom: 0.8rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .retailer-area {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+      }
+
+      .location-icon {
+        margin-right: 0.5rem;
+        color: #eb2627;
+      }
+
+      .stats {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      .stats h3 {
+        color: #bc1313;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.05);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #eb2627;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header .subtitle {
+          font-size: 1rem;
+        }
+
+        .retailers-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .retailer-card {
+          margin: 0 0.5rem;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .retailer-card {
+          padding: 1rem;
+        }
+      }
+
+      /* Loading animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #eb2627;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>ABP All & TT All Editions</h1>
+        <div class="subtitle">KOLKATA CITY</div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon">🔍</div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search retailers by name or area..."
+          id="searchInput"
+        />
+      </div>
+
+      <div class="retailers-grid" id="retailersGrid">
+        <!-- Retailer cards will be populated by JavaScript -->
+      </div>
+
+      <div class="no-results hidden" id="noResults">
+        <h3>No retailers found</h3>
+        <p>Try adjusting your search terms</p>
+      </div>
+
+      <div class="stats">
+        <h3>Directory Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="totalRetailers">36</div>
+            <div class="stat-label">Total Retailers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalAreas">12</div>
+            <div class="stat-label">Areas Covered</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="visibleRetailers">36</div>
+            <div class="stat-label">Currently Showing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample retailer data - you can replace this with your CSV data
+      const retailers = [
+        { name: "Shankar watch Care", area: "Belghoria Feeder road" },
+        { name: "ORIENTAL", area: "BASDRONI" },
+        { name: "M/S Ghose cousin", area: "Shyambazar" },
+        { name: "GOLDEN WATCH", area: "GARIA" },
+        { name: "Standard Watch", area: "Dum Dum Cantonment" },
+        { name: "DAYAL JEWELLERY MUSEUM", area: "GARIAHAT" },
+        { name: "Shambhu Nath Ghose & Othrs", area: "Shyambazar" },
+        { name: "TIME COLLECTION", area: "GARIA HAT" },
+        { name: "KAMALA ENTERPRISE", area: "Baranagar" },
+        { name: "GLORY", area: "JADAVPUR" },
+        { name: "J-Watch", area: "Dum Dum" },
+        { name: "ANGLO SWISS", area: "RADHA BAZAR" },
+        { name: "Dey's Time", area: "B K Paul Avenue" },
+        { name: "TOTCO", area: "HAZRA" },
+        { name: "CHOWDHURY WATCH MUSEUM", area: "BELGHARIA" },
+        { name: "ROY WATCH", area: "RANIKUTHI" },
+        { name: "New Orient Watch", area: "Baguihati" },
+        { name: "KALPATARU", area: "RANIKUTI" },
+        { name: "MA SHITALA WATCH & ELECTRONICS", area: "Airport Gate" },
+        { name: "JHALAK TIMES", area: "BHAWANIPORE" },
+        { name: "KALITARA WATCH REPAIRING SHOP", area: "Manicktala" },
+        { name: "FAST MOBILE", area: "HILAND PARK" },
+        { name: "WATCH PALACE (T)", area: "ALAMBAZAR" },
+        { name: "BAHURUPI", area: "KUDGHAT" },
+        { name: "The Time", area: "Theatre Road" },
+        { name: "KALYANI YIMES", area: "NARENDRA PUR" },
+        { name: "PRITAM FASHION", area: "MADHYAMGRAM" },
+        { name: "H M Watch", area: "Radhabazar" },
+        { name: "New M. Y. watch", area: "Radhabazar" },
+        { name: "New Standard", area: "Radhabazar" },
+        { name: "Urfee's", area: "Lindsay Street" },
+        { name: "Selection", area: "Lindsay street" },
+        { name: "Eye Time", area: "Lindsay Street" },
+        { name: "Impex", area: "Garia More" },
+        { name: "Bardhan's", area: "Jadavpur" },
+        { name: "Time House", area: "Jadavpur" },
+      ];
+
+      let filteredRetailers = [...retailers];
+
+      function renderRetailers(retailerList = filteredRetailers) {
+        const grid = document.getElementById("retailersGrid");
+        const noResults = document.getElementById("noResults");
+
+        if (retailerList.length === 0) {
+          grid.innerHTML = "";
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        noResults.classList.add("hidden");
+
+        grid.innerHTML = retailerList
+          .map(
+            (retailer, index) => `
+                <div class="retailer-card" style="transition-delay: ${
+                  index * 0.05
+                }s">
+                    <div class="retailer-number">Retailer ${index + 1}</div>
+                    <div class="retailer-name">${retailer.name}</div>
+                    <div class="retailer-area">
+                        <span class="location-icon">📍</span>
+                        ${retailer.area}
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        // Update visible retailers count
+        document.getElementById("visibleRetailers").textContent =
+          retailerList.length;
+        
+        observeCards();
+      }
+
+      function searchRetailers(query) {
+        const searchTerm = query.toLowerCase().trim();
+
+        if (!searchTerm) {
+          filteredRetailers = [...retailers];
+        } else {
+          filteredRetailers = retailers.filter(
+            (retailer) =>
+              retailer.name.toLowerCase().includes(searchTerm) ||
+              retailer.area.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        renderRetailers(filteredRetailers);
+      }
+
+      // Event listeners
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchRetailers(e.target.value);
+      });
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", () => {
+        renderRetailers();
+
+        // Count unique areas for stats
+        const uniqueAreas = [...new Set(retailers.map((r) => r.area))];
+        document.getElementById("totalAreas").textContent = uniqueAreas.length;
+        document.getElementById("totalRetailers").textContent = retailers.length;
+      });
+
+      // Add smooth scroll behavior
+      document.documentElement.style.scrollBehavior = "smooth";
+
+      const observeCards = () => {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        });
+
+        document.querySelectorAll(".retailer-card:not(.is-visible)").forEach((card) => {
+          observer.observe(card);
+        });
+      };
+    </script>
+  </body>
+</html>

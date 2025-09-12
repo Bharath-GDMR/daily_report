@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>India Vendor Directory — Map + Search</title>
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha512-sA+gIY6GkQm8vYb1YqgF0bVJb1p8b1Q6bY5q5oQ1k1s7YzQjFq4k5D7D1Q1n7Z4+6a3p1s9v1l1p1a1Q=="
+      crossorigin=""
+    />
+    <style>
+      :root {
+        --sidebar-width: 360px;
+        --gap: 12px;
+      }
+      html,
+      body,
+      #map {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+      }
+      .container {
+        display: flex;
+        height: 100vh;
+        gap: var(--gap);
+      }
+      #map {
+        flex: 1 1 auto;
+      }
+      .sidebar {
+        width: var(--sidebar-width);
+        max-width: 40%;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        padding: 16px;
+        background: #fff;
+        overflow: auto;
+      }
+      .search-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .search-row input[type="text"] {
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+      .search-row button {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: none;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+      }
+      .controls {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+      }
+      h3 {
+        margin: 12px 0 6px;
+        font-size: 16px;
+      }
+      .vendor-list {
+        margin-top: 8px;
+      }
+      .vendor-item {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+      .small {
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .layer-toggle {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .footer-note {
+        margin-top: 16px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+      /* mobile tweaks */
+      @media (max-width: 900px) {
+        .sidebar {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          z-index: 1000;
+          width: 92%;
+          max-width: unset;
+        }
+        .container {
+          padding-right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="map"></div>
+      <aside class="sidebar" aria-label="Search & results pane">
+        <div class="search-row">
+          <input
+            id="placeInput"
+            type="text"
+            placeholder="Search place (city, district, area)..."
+          />
+          <button id="searchBtn" title="Search">🔍</button>
+        </div>
+        <div class="controls">
+          <div class="btn" id="btnStates">Toggle States</div>
+          <div class="btn" id="btnCapitals">Load Capitals</div>
+          <div class="btn" id="btnDistricts">Toggle Districts</div>
+          <div class="btn" id="btnLocate">Go to my location</div>
+        </div>
+
+        <h3>Search radius</h3>
+        <div>
+          <input id="radiusRange" type="range" min="1" max="200" value="20" />
+          <span id="radiusLabel">20 km</span>
+        </div>
+
+        <h3>Nearby vendors</h3>
+        <div id="vendors" class="vendor-list">
+          <!-- vendor list populated here -->
+        </div>
+
+        <div class="footer-note">
+          Example vendor data is embedded. Replace with your vendor dataset
+          (CSV/JSON) and adjust search.
+        </div>
+      </aside>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- turf for geospatial helpers (distance) -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+    <script>
+      // --- Basic map ---
+      const map = L.map("map", { minZoom: 5 }).setView([22.0, 79.0], 5);
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      }).addTo(map);
+
+      // Layers
+      const statesLayer = L.geoJSON(null, {
+        style: { color: "#1f2937", weight: 1, fillOpacity: 0.05 },
+        onEachFeature: (f, layer) => {
+          const name =
+            f.properties &&
+            (f.properties.st_nm ||
+              f.properties.NAME ||
+              f.properties.State ||
+              f.properties.state);
+          layer.bindPopup(`<b>${name || "Unknown"}</b>`);
+        },
+      });
+      const districtsLayer = L.geoJSON(null, {
+        style: { color: "#6b7280", weight: 0.8, fillOpacity: 0.02 },
+      });
+      const capitalsLayer = L.layerGroup();
+      const vendorLayer = L.layerGroup().addTo(map);
+
+      let statesLoaded = false,
+        districtsLoaded = false,
+        capitalsLoaded = false;
+
+      // --- Load GeoJSON for India states (replace URL if you prefer another source) ---
+      const statesGeoJSONUrl =
+        "https://raw.githubusercontent.com/Project-Open-Data/Indian-States-And-Districts-GeoJSON/master/india_states.geojson";
+      fetch(statesGeoJSONUrl)
+        .then((r) => r.json())
+        .then((data) => {
+          statesLayer.addData(data);
+          // fit map to india bounds
+          map.fitBounds(statesLayer.getBounds(), { padding: [20, 20] });
+          // don't add by default; user toggles
+        })
+        .catch((err) => {
+          console.warn(
+            "Could not load states GeoJSON. You can replace statesGeoJSONUrl with your own file."
+          );
+        });
+
+      // Districts GeoJSON placeholder - user can replace with full districts file URL
+      const districtsGeoJSONUrl =
+        "https://raw.githubusercontent.com/Project-Open-Data/Indian-States-And-Districts-GeoJSON/master/india_districts.geojson";
+
+      // --- Capitals list (state/union territory -> capital name). We'll geocode them on demand to avoid shipping coordinates here. ---
+      const capitals = [
+        { state: "Andhra Pradesh", capital: "Amaravati" },
+        { state: "Arunachal Pradesh", capital: "Itanagar" },
+        { state: "Assam", capital: "Dispur" },
+        { state: "Bihar", capital: "Patna" },
+        { state: "Chhattisgarh", capital: "Raipur" },
+        { state: "Goa", capital: "Panaji" },
+        { state: "Gujarat", capital: "Gandhinagar" },
+        { state: "Haryana", capital: "Chandigarh" },
+        { state: "Himachal Pradesh", capital: "Shimla" },
+        { state: "Jharkhand", capital: "Ranchi" },
+        { state: "Karnataka", capital: "Bengaluru" },
+        { state: "Kerala", capital: "Thiruvananthapuram" },
+        { state: "Madhya Pradesh", capital: "Bhopal" },
+        { state: "Maharashtra", capital: "Mumbai" },
+        { state: "Manipur", capital: "Imphal" },
+        { state: "Meghalaya", capital: "Shillong" },
+        { state: "Mizoram", capital: "Aizawl" },
+        { state: "Nagaland", capital: "Kohima" },
+        { state: "Odisha", capital: "Bhubaneswar" },
+        { state: "Punjab", capital: "Chandigarh" },
+        { state: "Rajasthan", capital: "Jaipur" },
+        { state: "Sikkim", capital: "Gangtok" },
+        { state: "Tamil Nadu", capital: "Chennai" },
+        { state: "Telangana", capital: "Hyderabad" },
+        { state: "Tripura", capital: "Agartala" },
+        { state: "Uttar Pradesh", capital: "Lucknow" },
+        { state: "Uttarakhand", capital: "Dehradun" },
+        { state: "West Bengal", capital: "Kolkata" },
+        // UTs
+        { state: "Andaman & Nicobar Islands", capital: "Port Blair" },
+        { state: "Chandigarh", capital: "Chandigarh" },
+        { state: "Dadra and Nagar Haveli and Daman and Diu", capital: "Daman" },
+        { state: "Delhi", capital: "New Delhi" },
+        { state: "Jammu & Kashmir", capital: "Srinagar" },
+        { state: "Ladakh", capital: "Leh" },
+        { state: "Lakshadweep", capital: "Kavaratti" },
+        { state: "Puducherry", capital: "Puducherry" },
+      ];
+
+      // --- Sample vendor dataset ---
+      // In production you'll replace this with your full vendor list (CSV/JSON) and load it.
+      const vendors = [
+        {
+          id: 1,
+          name: "Bannerghatta Print Works",
+          address: "Bannerghatta Road, Bengaluru",
+          lat: 12.9076,
+          lon: 77.5848,
+          category: "Printing",
+        },
+        {
+          id: 2,
+          name: "Mumbai Signage Pvt Ltd",
+          address: "Andheri West, Mumbai",
+          lat: 19.1197,
+          lon: 72.8469,
+          category: "Signage",
+        },
+        {
+          id: 3,
+          name: "Kolkata Display Studio",
+          address: "Salt Lake, Kolkata",
+          lat: 22.5726,
+          lon: 88.3639,
+          category: "Display",
+        },
+        {
+          id: 4,
+          name: "Chennai EcoSigns",
+          address: "Guindy, Chennai",
+          lat: 13.0105,
+          lon: 80.2089,
+          category: "Eco Sol",
+        },
+      ];
+
+      // render vendor markers
+      const vendorMarkers = {};
+      function renderAllVendors() {
+        vendorLayer.clearLayers();
+        vendors.forEach((v) => {
+          const m = L.marker([v.lat, v.lon]).bindPopup(
+            `<b>${v.name}</b><div class=\"small\">${v.address}<br/>Category: ${v.category}</div>`
+          );
+          m.addTo(vendorLayer);
+          vendorMarkers[v.id] = m;
+        });
+      }
+      renderAllVendors();
+
+      // --- search & geocode using Nominatim ---
+      async function geocode(q) {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          q
+        )}, India&limit=5`;
+        const res = await fetch(url, {
+          headers: {
+            "User-Agent":
+              "India-Vendor-Directory/1.0 (contact: youremail@example.com)",
+          },
+        });
+        const data = await res.json();
+        return data; // array of results
+      }
+
+      // calculate haversine distance (km)
+      function distanceKm(aLat, aLon, bLat, bLon) {
+        return turf.distance([aLon, aLat], [bLon, bLat], {
+          units: "kilometers",
+        });
+      }
+
+      // find nearby vendors given lat lon and radiusKm
+      function findNearbyVendors(lat, lon, radiusKm) {
+        const matches = vendors
+          .map((v) => {
+            return { ...v, dist: distanceKm(lat, lon, v.lat, v.lon) };
+          })
+          .filter((v) => v.dist <= radiusKm)
+          .sort((a, b) => a.dist - b.dist);
+        return matches;
+      }
+
+      // populate vendor list in sidebar
+      function showVendorList(list, center) {
+        const el = document.getElementById("vendors");
+        el.innerHTML = "";
+        if (!list.length) {
+          el.innerHTML =
+            '<div class="small">No vendors found within the search radius.</div>';
+          return;
+        }
+        list.forEach((v) => {
+          const div = document.createElement("div");
+          div.className = "vendor-item";
+          div.innerHTML = `<strong>${v.name}</strong><div class=\"small\">${
+            v.address
+          }</div><div class=\"small\">${v.dist.toFixed(2)} km</div>`;
+          div.onclick = () => {
+            map.setView([v.lat, v.lon], 14);
+            vendorMarkers[v.id].openPopup();
+          };
+          el.appendChild(div);
+        });
+      }
+
+      // --- UI bindings ---
+      document
+        .getElementById("searchBtn")
+        .addEventListener("click", async () => {
+          const q = document.getElementById("placeInput").value.trim();
+          if (!q) return alert("Enter a place to search");
+          const results = await geocode(q);
+          if (!results || !results.length) return alert("Place not found");
+          const first = results[0];
+          const lat = parseFloat(first.lat),
+            lon = parseFloat(first.lon);
+          map.setView([lat, lon], 12);
+
+          const radiusKm = Number(document.getElementById("radiusRange").value);
+          const nearby = findNearbyVendors(lat, lon, radiusKm);
+          showVendorList(nearby, { lat, lon });
+
+          // draw search circle & popup
+          if (window._searchCircle) map.removeLayer(window._searchCircle);
+          if (window._searchMarker) map.removeLayer(window._searchMarker);
+          window._searchCircle = L.circle([lat, lon], {
+            radius: radiusKm * 1000,
+            color: "#2563eb",
+            fillOpacity: 0.05,
+          }).addTo(map);
+          window._searchMarker = L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup(`<b>${first.display_name}</b>`)
+            .openPopup();
+        });
+
+      document.getElementById("radiusRange").addEventListener("input", (e) => {
+        document.getElementById("radiusLabel").textContent =
+          e.target.value + " km";
+      });
+
+      document.getElementById("btnStates").addEventListener("click", () => {
+        if (map.hasLayer(statesLayer)) {
+          map.removeLayer(statesLayer);
+        } else {
+          map.addLayer(statesLayer);
+        }
+      });
+
+      document
+        .getElementById("btnDistricts")
+        .addEventListener("click", async () => {
+          if (map.hasLayer(districtsLayer)) {
+            map.removeLayer(districtsLayer);
+            return;
+          }
+          if (!districtsLoaded) {
+            try {
+              const r = await fetch(districtsGeoJSONUrl);
+              const data = await r.json();
+              districtsLayer.addData(data);
+              districtsLoaded = true;
+              map.addLayer(districtsLayer);
+            } catch (e) {
+              alert(
+                "Could not load districts GeoJSON. Replace districtsGeoJSONUrl with a valid file."
+              );
+            }
+          } else {
+            map.addLayer(districtsLayer);
+          }
+        });
+
+      document
+        .getElementById("btnCapitals")
+        .addEventListener("click", async () => {
+          if (capitalsLoaded) {
+            // toggle
+            if (map.hasLayer(capitalsLayer)) map.removeLayer(capitalsLayer);
+            else map.addLayer(capitalsLayer);
+            return;
+          }
+          capitalsLoaded = true;
+          // geocode each capital and place marker
+          for (const c of capitals) {
+            try {
+              const results = await geocode(c.capital + ", " + c.state);
+              if (results && results[0]) {
+                const lat = parseFloat(results[0].lat),
+                  lon = parseFloat(results[0].lon);
+                const marker = L.circleMarker([lat, lon], {
+                  radius: 6,
+                }).bindPopup(
+                  `<b>${c.capital}</b><div class=\"small\">${c.state}</div>`
+                );
+                marker.addTo(capitalsLayer);
+              }
+            } catch (e) {
+              console.warn("geocode failed for", c);
+            }
+          }
+          map.addLayer(capitalsLayer);
+        });
+
+      document.getElementById("btnLocate").addEventListener("click", () => {
+        map.locate({ setView: true, maxZoom: 12 });
+      });
+
+      map.on("locationfound", (e) => {
+        const { lat, lng } = e.latlng;
+        const radiusKm = Number(document.getElementById("radiusRange").value);
+        const nearby = findNearbyVendors(lat, lng, radiusKm);
+        showVendorList(nearby);
+        if (window._searchCircle) map.removeLayer(window._searchCircle);
+        if (window._searchMarker) map.removeLayer(window._searchMarker);
+        window._searchCircle = L.circle([lat, lng], {
+          radius: radiusKm * 1000,
+        }).addTo(map);
+        window._searchMarker = L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup("You are here")
+          .openPopup();
+      });
+
+      map.on("locationerror", () => {
+        alert("Could not get your location. Grant permission or try again.");
+      });
+
+      // --- Helpful utilities for production ---
+      /*
+      To integrate your real vendor dataset:
+      1. Export as JSON array with fields: id, name, address, lat, lon, category
+      2. Replace the `vendors` array above or load it with fetch('/assets/vendors.json')
+      3. If you have many vendors (tens of thousands), consider server-side spatial indexing (PostGIS) or use a spatial tiling service.
+
+      Districts GeoJSON - high resolution files are large; host them on your CDN and set `districtsGeoJSONUrl`.
+      Capitals - we geocode on demand using Nominatim. For heavy production usage, use a paid geocoding service or precache coordinates.
+    */
+    </script>
+  </body>
+</html>
