@@ -80,11 +80,19 @@ function searchStore() {
 
 let cart = [];
 
+function showToast(message) {
+    const toast = document.getElementById("toast-notification");
+    toast.textContent = message;
+    toast.className = "toast-notification show";
+    setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+}
+
 function addToCart(assetId) {
     const asset = findAsset(assetId);
     if (asset && !cart.find(item => item.id === asset.id)) {
         cart.push(asset);
         updateCartIcon();
+        showToast(`Added ${asset.spaceCode} (${asset.category}) to cart!`);
     }
 }
 

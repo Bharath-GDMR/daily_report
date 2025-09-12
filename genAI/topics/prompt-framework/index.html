@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROMPT Framework - Interactive Guide | VMSD.in</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #ff0055;
+        --secondary: #00ff88;
+        --background: #121212;
+        --text: #ffffff;
+        --cards: #1e1e1e;
+        --card-hover: #2a2a2a;
+        --gradient-primary: linear-gradient(135deg, #ff0055, #ff3377);
+        --gradient-secondary: linear-gradient(135deg, #00ff88, #33ffaa);
+        --shadow: 0 10px 30px rgba(255, 0, 85, 0.2);
+        --shadow-hover: 0 20px 40px rgba(255, 0, 85, 0.3);
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Animated background particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+          opacity: 0;
+        }
+        50% {
+          transform: translateY(-100px) rotate(180deg);
+          opacity: 1;
+        }
+      }
+
+      /* Header */
+      .header {
+        background: var(--cards);
+        padding: 1rem 2rem;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 0, 85, 0.2);
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .score-display {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .score {
+        background: var(--gradient-secondary);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+        color: var(--background);
+      }
+
+      /* Main container */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 6rem 2rem 2rem;
+      }
+
+      /* Hero section */
+      .hero {
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        margin-bottom: 1rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: slideInDown 0.8s ease-out;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+        animation: slideInUp 0.8s ease-out 0.2s both;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--cards);
+        border-radius: 3px;
+        margin: 2rem 0;
+        overflow: hidden;
+        animation: slideInUp 0.8s ease-out 0.4s both;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient-primary);
+        width: 0%;
+        transition: width 0.5s ease;
+        border-radius: 3px;
+      }
+
+      /* Framework cards */
+      .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      .framework-card {
+        background: var(--cards);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 0, 85, 0.1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      .framework-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary);
+      }
+
+      .framework-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .framework-card:hover::before,
+      .framework-card.active::before {
+        transform: scaleX(1);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--background);
+        background: var(--gradient-primary);
+      }
+
+      .card-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .card-description {
+        opacity: 0.8;
+        margin-bottom: 1rem;
+      }
+
+      .card-example {
+        background: rgba(0, 255, 136, 0.1);
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 3px solid var(--secondary);
+        margin-top: 1rem;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+
+      .framework-card:hover .card-example,
+      .framework-card.active .card-example {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Interactive builder */
+      .prompt-builder {
+        background: var(--cards);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 3rem 0;
+        border: 1px solid rgba(255, 0, 85, 0.1);
+      }
+
+      .builder-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .builder-header h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        background: var(--gradient-secondary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .builder-form {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        background: var(--background);
+        border: 2px solid rgba(255, 0, 85, 0.2);
+        border-radius: 10px;
+        padding: 0.8rem;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+      }
+
+      .generated-prompt {
+        background: rgba(0, 255, 136, 0.1);
+        border: 2px solid var(--secondary);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        min-height: 100px;
+        font-family: "Monaco", "Menlo", monospace;
+        line-height: 1.6;
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--secondary);
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem;
+        color: var(--background);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .copy-btn:hover {
+        transform: scale(1.1);
+      }
+
+      /* Examples section */
+      .examples-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 3rem 0;
+      }
+
+      .example-card {
+        background: var(--cards);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 1px solid rgba(0, 255, 136, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .example-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        border-color: var(--secondary);
+      }
+
+      .example-title {
+        font-weight: 600;
+        color: var(--secondary);
+        margin-bottom: 1rem;
+      }
+
+      .example-prompt {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        line-height: 1.5;
+      }
+
+      /* Gamification elements */
+      .achievement {
+        position: fixed;
+        top: 100px;
+        right: 2rem;
+        background: var(--gradient-primary);
+        padding: 1rem;
+        border-radius: 15px;
+        color: var(--text);
+        transform: translateX(300px);
+        transition: transform 0.5s ease;
+        z-index: 1000;
+      }
+
+      .achievement.show {
+        transform: translateX(0);
+      }
+
+      .btn-primary {
+        background: var(--gradient-primary);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        color: var(--text);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      /* Animations */
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 5rem 1rem 2rem;
+        }
+
+        .framework-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav {
+          padding: 0 1rem;
+        }
+
+        .score-display {
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="particles" id="particles"></div>
+
+    <header class="header">
+      <nav class="nav">
+        <div class="logo">VMSD.in</div>
+        <div class="score-display">
+          <div class="score" id="score">Score: 0</div>
+          <div class="score" id="level">Level: 1</div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>PROMPT Framework</h1>
+        <p>
+          Master the art of AI prompting with our interactive, gamified guide
+        </p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </section>
+
+      <section class="framework-section">
+        <div class="framework-grid" id="frameworkGrid">
+          <!-- Framework cards will be generated by JavaScript -->
+        </div>
+      </section>
+
+      <section class="prompt-builder">
+        <div class="builder-header">
+          <h2>🎯 Interactive Prompt Builder</h2>
+          <p>Create your perfect AI prompt using the PROMPT framework</p>
+        </div>
+
+        <form class="builder-form" id="promptForm">
+          <div class="form-group">
+            <label for="purpose"
+              >🎯 Purpose - What do you want the AI to do?</label
+            >
+            <input
+              type="text"
+              id="purpose"
+              placeholder="e.g., Write a summary, Create a plan, Generate ideas..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="role"
+              >👤 Role - What persona should the AI adopt?</label
+            >
+            <select id="role">
+              <option value="">Select a role...</option>
+              <option value="expert consultant">Expert Consultant</option>
+              <option value="friendly teacher">Friendly Teacher</option>
+              <option value="creative writer">Creative Writer</option>
+              <option value="data analyst">Data Analyst</option>
+              <option value="marketing specialist">Marketing Specialist</option>
+              <option value="technical advisor">Technical Advisor</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="output"
+              >📝 Output - What format should the response be?</label
+            >
+            <select id="output">
+              <option value="">Select output format...</option>
+              <option value="bullet points">Bullet Points</option>
+              <option value="detailed paragraph">Detailed Paragraph</option>
+              <option value="numbered list">Numbered List</option>
+              <option value="table format">Table Format</option>
+              <option value="step-by-step guide">Step-by-step Guide</option>
+              <option value="email format">Email Format</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="markers"
+              >🎯 Markers - Any constraints or requirements?</label
+            >
+            <input
+              type="text"
+              id="markers"
+              placeholder="e.g., Keep under 200 words, Include specific keywords..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="patterns"
+              >📋 Patterns - Any specific template or style?</label
+            >
+            <input
+              type="text"
+              id="patterns"
+              placeholder="e.g., Business report style, Academic format..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="tone">🎭 Tone - What style should the AI use?</label>
+            <select id="tone">
+              <option value="">Select tone...</option>
+              <option value="professional">Professional</option>
+              <option value="casual and friendly">Casual & Friendly</option>
+              <option value="enthusiastic">Enthusiastic</option>
+              <option value="formal">Formal</option>
+              <option value="humorous">Humorous</option>
+              <option value="empathetic">Empathetic</option>
+            </select>
+          </div>
+        </form>
+
+        <div class="generated-prompt" id="generatedPrompt">
+          <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+            📋
+          </button>
+          Your generated prompt will appear here as you fill out the form
+          above...
+        </div>
+      </section>
+
+      <section class="examples-section">
+        <h2
+          style="
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00ff88, #33ffaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          "
+        >
+          📚 Example Prompts
+        </h2>
+        <div class="examples-grid" id="examplesGrid">
+          <!-- Examples will be generated by JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <div class="achievement" id="achievement">🏆 Achievement Unlocked!</div>
+
+    <script>
+      // Framework data
+      const frameworkData = [
+        {
+          letter: "P",
+          title: "Purpose",
+          description: "Define what you want the AI to accomplish",
+          examples: [
+            "Write",
+            "Summarize",
+            "Translate",
+            "Brainstorm",
+            "Analyze",
+          ],
+          icon: "🎯",
+        },
+        {
+          letter: "R",
+          title: "Role",
+          description: "Specify the persona or expertise the AI should adopt",
+          examples: [
+            "Expert consultant",
+            "Friendly teacher",
+            "Creative writer",
+          ],
+          icon: "👤",
+        },
+        {
+          letter: "O",
+          title: "Output",
+          description: "Determine the format and structure of the response",
+          examples: ["Bullet points", "Paragraph", "Table", "Email format"],
+          icon: "📝",
+        },
+        {
+          letter: "M",
+          title: "Markers",
+          description: "Set constraints, requirements, and limitations",
+          examples: ["Word count", "Keywords to include", "Topics to avoid"],
+          icon: "🎯",
+        },
+        {
+          letter: "P",
+          title: "Patterns",
+          description: "Specify templates, styles, or formats to follow",
+          examples: ["Business report", "Academic paper", "Casual blog post"],
+          icon: "📋",
+        },
+        {
+          letter: "T",
+          title: "Tone",
+          description: "Choose the communication style and voice",
+          examples: ["Professional", "Casual", "Enthusiastic", "Formal"],
+          icon: "🎭",
+        },
+      ];
+
+      const examplePrompts = [
+        {
+          title: "🗺️ Travel Itinerary",
+          prompt:
+            "Create a 3-day travel itinerary for Paris. Act as an experienced travel agent. Provide a day-by-day plan with activities and restaurant suggestions. The budget is mid-range, focus on art museums and landmarks. Use an enthusiastic tone.",
+        },
+        {
+          title: "📧 Professional Email",
+          prompt:
+            "Write a formal email to a client apologizing for a service delay. Use a professional and empathetic tone. Include a brief explanation and next steps.",
+        },
+        {
+          title: "📰 Article Summary",
+          prompt:
+            "Summarize this article about artificial intelligence in three bullet points. Focus on the main benefits and challenges mentioned.",
+        },
+        {
+          title: "🧠 Concept Explanation",
+          prompt:
+            "Explain blockchain technology as if talking to a 10-year-old. Act as a friendly teacher. Use simple, clear language with everyday examples.",
+        },
+      ];
+
+      // Game state
+      let gameState = {
+        score: 0,
+        level: 1,
+        completedCards: new Set(),
+        achievements: [],
+      };
+
+      // Initialize particles
+      function initParticles() {
+        const particlesContainer = document.getElementById("particles");
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 6 + "s";
+          particle.style.animationDuration = Math.random() * 3 + 3 + "s";
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Generate framework cards
+      function generateFrameworkCards() {
+        const grid = document.getElementById("frameworkGrid");
+        grid.innerHTML = "";
+
+        frameworkData.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "framework-card";
+          card.style.animationDelay = `${index * 0.1}s`;
+
+          card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-icon">${item.icon}</div>
+                        <div>
+                            <div class="card-title">${item.letter} - ${
+            item.title
+          }</div>
+                        </div>
+                    </div>
+                    <div class="card-description">${item.description}</div>
+                    <div class="card-example">
+                        <strong>Examples:</strong> ${item.examples.join(", ")}
+                    </div>
+                `;
+
+          card.addEventListener("click", () => {
+            card.classList.add("active");
+            if (!gameState.completedCards.has(index)) {
+              gameState.completedCards.add(index);
+              updateScore(10);
+              updateProgress();
+            }
+          });
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Generate example cards
+      function generateExampleCards() {
+        const grid = document.getElementById("examplesGrid");
+        grid.innerHTML = "";
+
+        examplePrompts.forEach((example, index) => {
+          const card = document.createElement("div");
+          card.className = "example-card";
+
+          card.innerHTML = `
+                    <div class="example-title">${example.title}</div>
+                    <div class="example-prompt">${example.prompt}</div>
+                `;
+
+          card.addEventListener("click", () => {
+            navigator.clipboard.writeText(example.prompt);
+            showAchievement("Example copied to clipboard!");
+            updateScore(5);
+          });
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Update prompt builder
+      function updatePromptBuilder() {
+        const form = document.getElementById("promptForm");
+        const generatedPrompt = document.getElementById("generatedPrompt");
+        const copyBtn = document.getElementById("copyBtn");
+
+        function generatePrompt() {
+          const purpose = document.getElementById("purpose").value;
+          const role = document.getElementById("role").value;
+          const output = document.getElementById("output").value;
+          const markers = document.getElementById("markers").value;
+          const patterns = document.getElementById("patterns").value;
+          const tone = document.getElementById("tone").value;
+
+          let prompt = "";
+
+          if (purpose) prompt += purpose;
+          if (role) prompt += `. Act as ${role}`;
+          if (output) prompt += `. Provide the response in ${output}`;
+          if (markers) prompt += `. ${markers}`;
+          if (patterns) prompt += `. Follow ${patterns}`;
+          if (tone) prompt += `. Use a ${tone} tone`;
+
+          if (prompt) {
+            prompt += ".";
+            generatedPrompt.innerHTML = `<button class="copy-btn" id="copyBtn" title="Copy to clipboard">📋</button>${prompt}`;
+
+            // Re-attach copy event listener
+            document.getElementById("copyBtn").addEventListener("click", () => {
+              navigator.clipboard.writeText(prompt);
+              showAchievement("Prompt copied to clipboard!");
+              updateScore(15);
+            });
+          } else {
+            generatedPrompt.innerHTML =
+              '<button class="copy-btn" id="copyBtn" title="Copy to clipboard">📋</button>Your generated prompt will appear here as you fill out the form above...';
+          }
+        }
+
+        // Add event listeners to all form elements
+        const formElements = form.querySelectorAll("input, select, textarea");
+        formElements.forEach((element) => {
+          element.addEventListener("input", generatePrompt);
+          element.addEventListener("change", generatePrompt);
+        });
+      }
+
+      // Update score
+      function updateScore(points) {
+        gameState.score += points;
+        document.getElementById(
+          "score"
+        ).textContent = `Score: ${gameState.score}`;
+
+        // Level up logic
+        const newLevel = Math.floor(gameState.score / 100) + 1;
+        if (newLevel > gameState.level) {
+          gameState.level = newLevel;
+          document.getElementById(
+            "level"
+          ).textContent = `Level: ${gameState.level}`;
+          showAchievement(`🎉 Level ${gameState.level} reached!`);
+        }
+      }
+
+      // Update progress
+      function updateProgress() {
+        const totalCards = frameworkData.length;
+        const completedCards = gameState.completedCards.size;
+        const progress = (completedCards / totalCards) * 100;
+        document.getElementById("progressFill").style.width = `${progress}%`;
+
+        if (completedCards === totalCards) {
+          showAchievement("🏆 Framework Master! All cards completed!");
+          updateScore(50);
+        }
+      }
+
+      // Show achievement notification
+      function showAchievement(message) {
+        const achievement = document.getElementById("achievement");
+        achievement.textContent = message;
+        achievement.classList.add("show");
+
+        setTimeout(() => {
+          achievement.classList.remove("show");
+        }, 3000);
+      }
+
+      // Initialize the application
+      function init() {
+        initParticles();
+        generateFrameworkCards();
+        generateExampleCards();
+        updatePromptBuilder();
+
+        // Add some initial animations
+        setTimeout(() => {
+          showAchievement("🚀 Welcome to the PROMPT Framework!");
+        }, 1000);
+      }
+
+      // Start the app when DOM is loaded
+      document.addEventListener("DOMContentLoaded", init);
+
+      // Add scroll animations
+      function handleScroll() {
+        const elements = document.querySelectorAll(
+          ".framework-card, .example-card"
+        );
+        const windowHeight = window.innerHeight;
+
+        elements.forEach((element) => {
+          const elementTop = element.getBoundingClientRect().top;
+          if (elementTop < windowHeight - 50) {
+            element.style.opacity = "1";
+            element.style.transform = "translateY(0)";
+          }
+        });
+      }
+
+      window.addEventListener("scroll", handleScroll);
+      handleScroll(); // Initial check
+    </script>
+  </body>
+</html>

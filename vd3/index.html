@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Vendor Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+      }
+      .container-shadow {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      /* Custom scrollbar for vendor list */
+      .vendor-list::-webkit-scrollbar {
+        width: 8px;
+      }
+      .vendor-list::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 4px;
+      }
+      .vendor-list::-webkit-scrollbar-track {
+        background-color: #f9fafb;
+      }
+      #map {
+        background-color: #aadaff; /* Light blue background for custom map */
+        border-radius: 0.75rem;
+      }
+      .state-tooltip {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col items-center p-4 md:p-10">
+    <!-- Main Application Container -->
+    <div
+      class="bg-white rounded-2xl w-full max-w-7xl container-shadow overflow-hidden flex flex-col lg:flex-row min-h-[80vh]"
+    >
+      <!-- Left Panel: Map Section -->
+      <div
+        class="flex-1 p-6 md:p-10 flex flex-col items-center justify-center relative bg-gray-100"
+      >
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">
+          Explore Vendors Across India
+        </h1>
+        <div id="map" class="w-full h-full min-h-[400px] lg:min-h-full"></div>
+      </div>
+
+      <!-- Right Panel: Search & Results Section -->
+      <div class="flex-1 p-6 md:p-10 flex flex-col bg-white overflow-y-auto">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Search Vendors</h2>
+
+        <!-- User ID Display -->
+        <div class="mb-6 bg-blue-50 p-3 rounded-xl border border-blue-200">
+          <p class="text-sm font-medium text-blue-800">Your User ID:</p>
+          <code id="user-id" class="text-xs text-blue-600 truncate"
+            >Signing in...</code
+          >
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mb-6">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search by location (e.g., Bengaluru) or vendor name"
+            class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 text-sm md:text-base"
+          />
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          >
+            <svg
+              class="h-5 w-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Vendor List -->
+        <div
+          id="vendor-list"
+          class="flex-1 overflow-y-auto pr-2 vendor-list space-y-4"
+        >
+          <div class="text-center text-gray-500 p-6 rounded-xl bg-gray-50">
+            <p class="mb-2">
+              Start typing or click a state on the map to find vendors.
+            </p>
+            <p class="text-xs">Initial vendors will load automatically.</p>
+          </div>
+          <!-- Vendor cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden text-center text-gray-500 mt-6">
+          <div
+            class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full border-indigo-500 border-t-transparent"
+            role="status"
+          ></div>
+          <p class="mt-2">Searching for vendors...</p>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInWithCustomToken,
+        signInAnonymously,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        onSnapshot,
+        query,
+        getDocs,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // IMPORTANT: These global variables are provided by the canvas environment. Do not change their names.
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfig = JSON.parse(
+        typeof __firebase_config !== "undefined" ? __firebase_config : "{}"
+      );
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined"
+          ? __initial_auth_token
+          : null;
+
+      // Set log level for Firebase
+      setLogLevel("debug");
+
+      // Initialize Firebase
+      let app, db, auth;
+      try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+      } catch (error) {
+        console.error("Firebase initialization failed:", error);
+        document.getElementById(
+          "vendor-list"
+        ).innerHTML = `<div class="p-4 bg-red-100 text-red-800 rounded-xl">Error: Failed to initialize Firebase. Check console for details.</div>`;
+      }
+
+      let currentUserId = null;
+      let vendors = [];
+      const vendorListElement = document.getElementById("vendor-list");
+      const searchInput = document.getElementById("search-input");
+      const loadingElement = document.getElementById("loading");
+      const userIdElement = document.getElementById("user-id");
+      const vendorCollectionPath = `/artifacts/${appId}/public/data/vendors`;
+
+      // --- Leaflet Map Variables ---
+      let map, geojsonLayer, selectedStateLayer;
+
+      // Function to render vendor cards
+      const renderVendors = (vendorData) => {
+        vendorListElement.innerHTML = "";
+        if (vendorData.length === 0) {
+          vendorListElement.innerHTML = `<div class="p-6 bg-gray-50 text-gray-500 rounded-xl text-center">
+                                                    No vendors found for this location.
+                                               </div>`;
+          return;
+        }
+        vendorData.forEach((vendor) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow duration-300";
+          card.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-900">${
+                      vendor.name
+                    }</h3>
+                    <p class="text-sm text-gray-600 mt-1">${vendor.address}</p>
+                    <p class="text-xs text-indigo-500 mt-2 font-medium">Serving: ${
+                      vendor.city
+                    }, ${vendor.state}</p>
+                    <p class="text-xs text-gray-400 mt-1">Services: ${vendor.services.join(
+                      ", "
+                    )}</p>
+                `;
+          vendorListElement.appendChild(card);
+        });
+      };
+
+      // Function to handle search logic
+      const handleSearch = (searchTerm) => {
+        const normalizedTerm = searchTerm.trim().toLowerCase();
+        loadingElement.classList.remove("hidden");
+
+        const filteredVendors = vendors.filter(
+          (vendor) =>
+            vendor.city.toLowerCase().includes(normalizedTerm) ||
+            vendor.state.toLowerCase().includes(normalizedTerm) ||
+            vendor.name.toLowerCase().includes(normalizedTerm) ||
+            vendor.services.some((service) =>
+              service.toLowerCase().includes(normalizedTerm)
+            )
+        );
+
+        setTimeout(() => {
+          loadingElement.classList.add("hidden");
+          renderVendors(filteredVendors);
+        }, 300); // Simulate a small delay
+      };
+
+      // Function to seed initial mock vendor data if the collection is empty
+      const seedInitialVendors = async () => {
+        const vendorRef = collection(db, vendorCollectionPath);
+        const q = query(vendorRef);
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.log("Seeding initial vendor data.");
+          const mockVendors = [
+            { name: "Tech Solutions", city: "Bengaluru", state: "Karnataka", address: "123 Silicon Valley Road", services: ["IT Services", "Web Development"] },
+            { name: "Creative Designs", city: "Mumbai", state: "Maharashtra", address: "456 Gateway of India St", services: ["Graphic Design", "Marketing"] },
+            { name: "Crafts & Co", city: "Jaipur", state: "Rajasthan", address: "789 Fort Road", services: ["Handicrafts", "Art Supplies"] },
+            { name: "Future Electronics", city: "Chennai", state: "Tamil Nadu", address: "101 Marina Blvd", services: ["Electronics Repair", "Gadgets"] },
+            { name: "Urban Farmers Co-op", city: "New Delhi", state: "Delhi", address: "202 Garden Path", services: ["Organic Produce", "Farming Tools"] },
+            { name: "IT Pros", city: "Bengaluru", state: "Karnataka", address: "321 Tech Park Ave", services: ["Networking", "Cyber Security"] },
+          ];
+
+          for (const vendor of mockVendors) {
+            await addDoc(vendorRef, vendor);
+          }
+        }
+      };
+
+      // Set up real-time listener for vendors
+      const setupVendorListener = (dbInstance) => {
+        const vendorsRef = collection(dbInstance, vendorCollectionPath);
+        onSnapshot(
+          vendorsRef,
+          (snapshot) => {
+            vendors = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            handleSearch(searchInput.value);
+          },
+          (error) => {
+            console.error("Error fetching vendors:", error);
+            vendorListElement.innerHTML = `<div class="p-4 bg-red-100 text-red-800 rounded-xl">Error loading vendors. Please try again.</div>`;
+          }
+        );
+      };
+
+      // --- Leaflet Map Functions ---
+      const setupMap = () => {
+        map = L.map("map");
+
+        const defaultStyle = { fillColor: "#60a5fa", weight: 1, opacity: 1, color: "white", fillOpacity: 0.7 };
+        const hoverStyle = { weight: 2, color: "#374151", fillOpacity: 0.9 };
+        const selectedStyle = { fillColor: "#3b82f6", weight: 3, color: "#1f2937", fillOpacity: 1 };
+
+        const geoJSONUrl = "https://raw.githubusercontent.com/Project-Open-Data/Indian-States-And-Districts-GeoJSON/master/india_states.geojson";
+
+        fetch(geoJSONUrl)
+          .then((res) => res.json())
+          .then((data) => {
+            geojsonLayer = L.geoJSON(data, {
+              style: defaultStyle,
+              onEachFeature: (feature, layer) => {
+                layer.on({
+                  mouseover: (e) => {
+                    if (e.target !== selectedStateLayer) e.target.setStyle(hoverStyle);
+                  },
+                  mouseout: (e) => {
+                    if (e.target !== selectedStateLayer) geojsonLayer.resetStyle(e.target);
+                  },
+                  click: (e) => {
+                    selectState(e.target);
+                  }
+                });
+                layer.bindTooltip(feature.properties.st_nm, {
+                    permanent: false, direction: 'center', className: 'state-tooltip'
+                });
+              },
+            }).addTo(map);
+            map.fitBounds(geojsonLayer.getBounds());
+          });
+
+        const selectState = (layer) => {
+            if (selectedStateLayer) {
+                geojsonLayer.resetStyle(selectedStateLayer);
+            }
+            selectedStateLayer = layer;
+            layer.setStyle(selectedStyle);
+            map.fitBounds(layer.getBounds(), { padding: [50, 50] });
+
+            const stateName = layer.feature.properties.st_nm;
+            searchInput.value = stateName;
+            handleSearch(stateName);
+        };
+        
+        // Link search input to map
+        searchInput.addEventListener('input', () => {
+            const term = searchInput.value.toLowerCase();
+            if (!term) {
+                 if (selectedStateLayer) {
+                    geojsonLayer.resetStyle(selectedStateLayer);
+                    selectedStateLayer = null;
+                }
+                return;
+            }
+            if (geojsonLayer) {
+                let foundLayer = null;
+                geojsonLayer.eachLayer(layer => {
+                    if (layer.feature.properties.st_nm.toLowerCase().includes(term)) {
+                        foundLayer = layer;
+                    }
+                });
+                if(foundLayer) {
+                    selectState(foundLayer);
+                }
+            }
+        });
+      };
+
+
+      // Main App Initialization
+      window.onload = async () => {
+        try {
+          if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              currentUserId = user.uid;
+              userIdElement.textContent = currentUserId;
+              
+              // Initialize the map
+              setupMap();
+
+              // Seed data and set up real-time listener
+              await seedInitialVendors();
+              setupVendorListener(db);
+
+            } else {
+              console.log("No user signed in.");
+              userIdElement.textContent = "Not signed in";
+            }
+          });
+        } catch (error) {
+          console.error("Authentication or setup failed:", error);
+          vendorListElement.innerHTML = `<div class="p-4 bg-red-100 text-red-800 rounded-xl">Error during app initialization. See console for details.</div>`;
+        }
+      };
+    </script>
+  </body>
+</html>

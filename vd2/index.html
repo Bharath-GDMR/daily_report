@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>India Vendor Directory</title>
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        min-height: 600px;
+      }
+
+      .map-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        background-color: #aadaff; /* Light blue background */
+      }
+
+      .search-section {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        height: fit-content;
+      }
+
+      .search-container {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 15px 50px 15px 20px;
+        font-size: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 25px;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .results-section {
+        margin-top: 20px;
+      }
+
+      .results-title {
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #667eea;
+      }
+
+      .vendor-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+      }
+
+      .vendor-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .vendor-name {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .vendor-category {
+        color: #667eea;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      .vendor-location {
+        color: #666;
+        font-size: 0.85em;
+        margin-bottom: 5px;
+      }
+
+      .vendor-contact {
+        color: #333;
+        font-size: 0.85em;
+      }
+
+      .location-info {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      .location-info h3 {
+        margin-bottom: 10px;
+      }
+
+      .location-details {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .no-results {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 20px;
+      }
+      
+      .state-tooltip {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .map-section {
+          height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🇮🇳 India Vendor Directory</h1>
+        <p>
+          An interactive map and business directory for all states and union
+          territories
+        </p>
+      </div>
+
+      <div class="main-content">
+        <div class="map-section">
+          <div id="map"></div>
+        </div>
+
+        <div class="search-section">
+          <div class="search-container">
+            <input
+              type="text"
+              class="search-input"
+              id="searchInput"
+              placeholder="Search for location or vendor..."
+            />
+            <span class="search-icon">🔍</span>
+          </div>
+
+          <div class="location-info" id="locationInfo" style="display: none">
+            <h3 id="locationName">Select a location</h3>
+            <div class="location-details" id="locationDetails"></div>
+          </div>
+
+          <div class="results-section">
+            <div class="results-title">Vendor Results</div>
+            <div id="vendorResults">
+              <div class="no-results">
+                Click on a state/UT on the map or search for a location to find
+                vendors
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      // Sample vendor data
+      const vendorData = {
+        Maharashtra: [
+          {
+            name: "TechCorp Solutions",
+            category: "IT Services",
+            location: "Mumbai, Maharashtra",
+            contact: "+91 98765 43210",
+            email: "info@techcorp.com",
+          },
+          {
+            name: "Mumbai Catering Services",
+            category: "Food & Catering",
+            location: "Pune, Maharashtra",
+            contact: "+91 98765 43211",
+            email: "orders@mumbaicatering.com",
+          },
+        ],
+        Karnataka: [
+          {
+            name: "Bangalore Tech Hub",
+            category: "Software Development",
+            location: "Bengaluru, Karnataka",
+            contact: "+91 98765 43213",
+            email: "contact@blrtechhub.com",
+          },
+        ],
+        "Tamil Nadu": [
+          {
+            name: "Chennai Auto Parts",
+            category: "Automotive",
+            location: "Chennai, Tamil Nadu",
+            contact: "+91 98765 43215",
+            email: "parts@chennaiauto.com",
+          },
+        ],
+        Gujarat: [
+          {
+            name: "Gujarat Chemicals",
+            category: "Chemical Industry",
+            location: "Ahmedabad, Gujarat",
+            contact: "+91 98765 43217",
+            email: "chemicals@gujarat.com",
+          },
+        ],
+        Delhi: [
+          {
+            name: "Capital IT Solutions",
+            category: "IT Services",
+            location: "New Delhi, Delhi",
+            contact: "+91 98765 43219",
+            email: "delhi@capitalit.com",
+          },
+        ],
+        Rajasthan: [
+          {
+            name: "Desert Tourism Services",
+            category: "Tourism",
+            location: "Jaipur, Rajasthan",
+            contact: "+91 98765 43221",
+            email: "tours@desert.com",
+          },
+        ],
+        Kerala: [
+          {
+            name: "Spice Garden Exports",
+            category: "Export/Import",
+            location: "Kochi, Kerala",
+            contact: "+91 98765 43223",
+            email: "exports@spicegarden.com",
+          },
+        ],
+      };
+
+      // District data for major states
+      const districtData = {
+        Maharashtra: ["Mumbai", "Pune", "Nashik", "Nagpur"],
+        Karnataka: ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi"],
+        "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Salem"],
+        Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+        Rajasthan: ["Jaipur", "Jodhpur", "Kota", "Bikaner"],
+        Kerala: ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur"],
+        "National Capital Territory of Delhi": ["New Delhi", "Central Delhi", "South Delhi"]
+      };
+      
+      const stateCapitalMap = {
+        'Andaman & Nicobar Islands': 'Port Blair', 'Andhra Pradesh': 'Amaravati', 'Arunachal Pradesh': 'Itanagar', 'Assam': 'Dispur', 'Bihar': 'Patna', 'Chandigarh': 'Chandigarh', 'Chhattisgarh': 'Raipur', 'Dadra and Nagar Haveli and Daman and Diu': 'Daman', 'Goa': 'Panaji', 'Gujarat': 'Gandhinagar', 'Haryana': 'Chandigarh', 'Himachal Pradesh': 'Shimla', 'Jammu & Kashmir': 'Srinagar', 'Jharkhand': 'Ranchi', 'Karnataka': 'Bengaluru', 'Kerala': 'Thiruvananthapuram', 'Ladakh': 'Leh', 'Lakshadweep': 'Kavaratti', 'Madhya Pradesh': 'Bhopal', 'Maharashtra': 'Mumbai', 'Manipur': 'Imphal', 'Meghalaya': 'Shillong', 'Mizoram': 'Aizawl', 'Nagaland': 'Kohima', 'Odisha': 'Bhubaneswar', 'Puducherry': 'Puducherry', 'Punjab': 'Chandigarh', 'Rajasthan': 'Jaipur', 'Sikkim': 'Gangtok', 'Tamil Nadu': 'Chennai', 'Telangana': 'Hyderabad', 'Tripura': 'Agartala', 'Uttar Pradesh': 'Lucknow', 'Uttarakhand': 'Dehradun', 'West Bengal': 'Kolkata',
+        // Handle variations in GeoJSON
+        'National Capital Territory of Delhi': 'New Delhi'
+      };
+
+
+      // DOM elements
+      const searchInput = document.getElementById("searchInput");
+      const locationInfo = document.getElementById("locationInfo");
+      const locationName = document.getElementById("locationName");
+      const locationDetails = document.getElementById("locationDetails");
+      const vendorResults = document.getElementById("vendorResults");
+
+      // --- Initialize Leaflet Map ---
+      const map = L.map("map").setView([22.5, 82.5], 4.5);
+      // Tile layer removed to create a custom, self-contained map.
+
+      let geojsonLayer;
+      let selectedStateLayer = null;
+
+      // --- Styling ---
+      const defaultStyle = {
+        fillColor: "#ff6b6b",
+        weight: 1,
+        opacity: 1,
+        color: "white",
+        fillOpacity: 0.7,
+      };
+
+      const hoverStyle = {
+        weight: 3,
+        color: "#666",
+        fillOpacity: 0.9,
+      };
+
+      const selectedStyle = {
+        fillColor: "#4caf50",
+        weight: 3,
+        color: "#333",
+        fillOpacity: 1,
+      };
+
+      // --- Load GeoJSON Data ---
+      const geoJSONUrl =
+        "https://raw.githubusercontent.com/Project-Open-Data/Indian-States-And-Districts-GeoJSON/master/india_states.geojson";
+
+      fetch(geoJSONUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          geojsonLayer = L.geoJSON(data, {
+            style: defaultStyle,
+            onEachFeature: onEachFeature,
+          }).addTo(map);
+          map.fitBounds(geojsonLayer.getBounds());
+        });
+
+      function onEachFeature(feature, layer) {
+        layer.on({
+          mouseover: highlightFeature,
+          mouseout: resetHighlight,
+          click: selectFeature,
+        });
+        const stateName = feature.properties.st_nm;
+        layer.bindTooltip(stateName, {
+            permanent: false,
+            direction: 'center',
+            className: 'state-tooltip'
+        });
+      }
+
+      function highlightFeature(e) {
+        const layer = e.target;
+        if (layer !== selectedStateLayer) {
+          layer.setStyle(hoverStyle);
+        }
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+        }
+      }
+
+      function resetHighlight(e) {
+        if (e.target !== selectedStateLayer) {
+          geojsonLayer.resetStyle(e.target);
+        }
+      }
+
+      function selectFeature(e) {
+        const layer = e.target;
+        const stateName = layer.feature.properties.st_nm;
+        
+        // Normalize Delhi name
+        const vendorStateName = (stateName === 'National Capital Territory of Delhi') ? 'Delhi' : stateName;
+
+        if (selectedStateLayer) {
+          geojsonLayer.resetStyle(selectedStateLayer);
+        }
+
+        selectedStateLayer = layer;
+        layer.setStyle(selectedStyle);
+
+        map.fitBounds(layer.getBounds(), { padding: [50, 50] });
+
+        showLocationInfo(stateName);
+        showVendors(vendorStateName);
+      }
+      
+      function showLocationInfo(stateName) {
+        const capital = stateCapitalMap[stateName] || 'N/A';
+
+        locationName.textContent = stateName;
+
+        let details = `<strong>Capital:</strong> ${capital}<br>`;
+
+        if (districtData[stateName]) {
+          details += `<strong>Major Districts:</strong> ${districtData[
+            stateName
+          ]
+            .slice(0, 4)
+            .join(", ")}`;
+          if (districtData[stateName].length > 4) {
+            details += ` and ${districtData[stateName].length - 4} more`;
+          }
+        }
+
+        locationDetails.innerHTML = details;
+        locationInfo.style.display = "block";
+      }
+
+      function showVendors(location) {
+        const vendors = vendorData[location] || [];
+
+        if (vendors.length === 0) {
+          vendorResults.innerHTML = `
+            <div class="no-results">
+                No vendors found for ${location}.<br>
+                This is a demo - vendors would be loaded from your database.
+            </div>
+          `;
+          return;
+        }
+
+        let html = "";
+        vendors.forEach((vendor) => {
+          html += `
+            <div class="vendor-card">
+                <div class="vendor-name">${vendor.name}</div>
+                <div class="vendor-category">${vendor.category}</div>
+                <div class="vendor-location">📍 ${vendor.location}</div>
+                <div class="vendor-contact">📞 ${vendor.contact}</div>
+                <div class="vendor-contact">✉️ ${vendor.email}</div>
+            </div>
+          `;
+        });
+
+        vendorResults.innerHTML = html;
+      }
+      
+      searchInput.addEventListener("input", function () {
+        const query = this.value.toLowerCase().trim();
+
+        if (query === "") {
+          vendorResults.innerHTML =
+            '<div class="no-results">Click on a state/UT on the map or search for a location to find vendors</div>';
+          locationInfo.style.display = "none";
+          if (selectedStateLayer) {
+            geojsonLayer.resetStyle(selectedStateLayer);
+            selectedStateLayer = null;
+          }
+          return;
+        }
+
+        // Search in states/UTs
+        let foundLayer = null;
+        if (geojsonLayer) {
+            geojsonLayer.eachLayer(layer => {
+                const stateName = layer.feature.properties.st_nm.toLowerCase();
+                if (stateName.includes(query)) {
+                    foundLayer = layer;
+                }
+            });
+        }
+
+        if (foundLayer) {
+            selectFeature({ target: foundLayer });
+            return;
+        }
+        
+        searchVendors(query);
+      });
+
+
+      function searchVendors(query) {
+        let matchedVendors = [];
+        let matchedLocation = "";
+
+        Object.keys(vendorData).forEach((location) => {
+          vendorData[location].forEach((vendor) => {
+            if (
+              vendor.name.toLowerCase().includes(query) ||
+              vendor.category.toLowerCase().includes(query) ||
+              vendor.location.toLowerCase().includes(query)
+            ) {
+              matchedVendors.push(vendor);
+              if (!matchedLocation) matchedLocation = location;
+            }
+          });
+        });
+
+        if (matchedVendors.length === 0) {
+          vendorResults.innerHTML = `
+            <div class="no-results">
+                No vendors found matching "${query}".<br>
+                Try searching for a state name or vendor category.
+            </div>
+          `;
+          locationInfo.style.display = "none";
+          return;
+        }
+
+        if (matchedLocation) {
+            let foundLayer = null;
+            if (geojsonLayer) {
+                geojsonLayer.eachLayer(layer => {
+                    let stateName = layer.feature.properties.st_nm;
+                    if (stateName === 'National Capital Territory of Delhi') stateName = 'Delhi';
+                    if (stateName === matchedLocation) {
+                        foundLayer = layer;
+                    }
+                });
+            }
+            if (foundLayer) {
+                selectFeature({ target: foundLayer });
+            }
+        }
+
+        let html = "";
+        matchedVendors.forEach((vendor) => {
+          html += `
+            <div class="vendor-card">
+                <div class="vendor-name">${vendor.name}</div>
+                <div class="vendor-category">${vendor.category}</div>
+                <div class="vendor-location">📍 ${vendor.location}</div>
+                <div class="vendor-contact">📞 ${vendor.contact}</div>
+                <div class="vendor-contact">✉️ ${vendor.email}</div>
+            </div>
+          `;
+        });
+
+        vendorResults.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>

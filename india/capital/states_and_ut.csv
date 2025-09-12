@@ -1,0 +1,37 @@
+Name,Type,ISO,Vehicle Code,Zone,Capital,Largest City,Statehood,Population,Area (sq. km),Official Languages,Additional Official Languages
+Andhra Pradesh,State,IN-AP,AP,Southern,Amaravati,Visakhapatnam,1956-11-01,49506799,162975,Telugu,Urdu
+Arunachal Pradesh,State,IN-AR,AR,North-Eastern,North-Eastern,Itanagar,1987-02-20,1383727,83743,English,—
+Assam,State,IN-AS,AS,North-Eastern,Dispur,Guwahati,1950-01-26,31205576,78438,"Assamese,Boro","Bengali,Meitei"
+Bihar,State,IN-BR,BR,Eastern,Eastern,Patna,1950-01-26,104099452,94163,Hindi,Urdu
+Chhattisgarh,State,IN-CG,CG,Central,Central,Raipur,2000-11-01,25545198,135194,Hindi,Chhattisgarhi
+Goa,State,IN-GA,GA,Western,Panaji,Vasco da Gama,1987-05-30,1458545,3702,Konkani,Marathi
+Gujarat,State,IN-GJ,GJ,Western,Gandhinagar,Ahmedabad,1960-05-01,60439692,196024,"Gujarati,Hindi",—
+Haryana,State,IN-HR,HR,Northern,Chandigarh,Faridabad,1966-11-01,25351462,44212,Hindi,Punjabi
+Himachal Pradesh,State,IN-HP,HP,Northern,Shimla(Summer)Dharamshala(Winter),Shimla,1971-01-25,6864602,55673,Hindi,Sanskrit
+Jharkhand,State,IN-JH,JH,Eastern,Ranchi,Jamshedpur,2000-11-15,32988134,79714,Hindi,"Angika,Bengali,Bhojpuri,Bhumij,Ho,Kharia,Khortha,Kurmali,Kurukh,Magahi,Maithili,Mundari,Nagpuri,Odia,Santali,Urdu"
+Karnataka,State,IN-KA,KA,Southern,Southern,Bengaluru,1956-11-01,61095297,191791,Kannada,—
+Kerala,State,IN-KL,KL,Southern,Thiruvananthapuram,Kochi,1956-11-01,33406061,38863,Malayalam,English
+Madhya Pradesh,State,IN-MP,MP,Central,Bhopal,Indore,1956-11-01,72626809,308252,Hindi,—
+Maharashtra,State,IN-MH,MH,Western,Mumbai(Summer)Nagpur(Winter),Mumbai,1960-05-01,112374333,307713,Marathi,—
+Manipur,State,IN-MN,MN,North-Eastern,North-Eastern,Imphal,1972-01-21,2855794,22327,Meitei,English
+Meghalaya,State,IN-ML,ML,North-Eastern,North-Eastern,Shillong,1972-01-21,2966889,22429,English,—
+Mizoram,State,IN-MZ,MZ,North-Eastern,North-Eastern,Aizawl,1987-02-20,1097206,21081,"Mizo,English",—
+Nagaland,State,IN-NL,NL,North-Eastern,Kohima,Dimapur,1963-12-01,1978502,16579,English,—
+Odisha,State,IN-OD,OD,Eastern,Eastern,Bhubaneswar,1950-01-26,41974218,155707,Odia,—
+Punjab,State,IN-PB,PB,Northern,Chandigarh,Ludhiana,1966-11-01,27743338,50362,Punjabi,—
+Rajasthan,State,IN-RJ,RJ,Northern,Northern,Jaipur,1950-01-26,68548437,342239,Hindi,English
+Sikkim,State,IN-SK,SK,North-Eastern,North-Eastern,Gangtok,1975-05-16,610577,7096,"Nepali,Sikkimese,Lepcha,English","Gurung,Limbu,Magar,Mukhia,Newari,Rai,Sherpa,Tamang"
+Tamil Nadu,State,IN-TN,TN,Southern,Southern,Chennai,1956-11-01,72147030,130058,Tamil,English
+Telangana,State,IN-TS,TG,Southern,Southern,Hyderabad,2014-06-02,35193978,112077,Telugu,Urdu
+Tripura,State,IN-TR,TR,North-Eastern,North-Eastern,Agartala,1972-01-21,3673917,10491,"Bengali,English,Kokborok",—
+Uttar Pradesh,State,IN-UP,UP,Central,Central,Lucknow,1950-01-26,199812341,240928,Hindi,Urdu
+Uttarakhand,State,IN-UK,UK,Central,Bhararisain(Summer)Dehradun(Winter),Dehradun,2000-11-09,10086292,53483,Hindi,Sanskrit
+West Bengal,State,IN-WB,WB,Eastern,Eastern,Kolkata,1950-01-26,91276115,88752,"Bengali,English","Nepali,Hindi,Odia,Punjabi,Santali,Telugu,Urdu,Kamatapuri,Rajbanshi,Kurmali,Kurukh"
+Andaman and Nicobar Islands,Union Territories,IN-AN,AN,Eastern,Eastern,Port Blair,1956-11-01,380581,8249,"Hindi,English",—
+Chandigarh,Union Territories,IN-CH,CH,Northern,Northern,Chandigarh,1966-11-01,1055450,114,English,—
+Dadra and Nagar Haveli and Daman and Diu,Union Territories,IN-DH,DD,Western,Daman,Silvassa,2020-01-26,587106,603,"Hindi, English",Gujarati
+Delhi,Union Territories,IN-DL,DL,Northern,New Delhi,Delhi,1956-11-01,16787941,1484,"Hindi,English","Urdu,Punjabi"
+Jammu and Kashmir,Union Territories,IN-JK,JK,Northern,Srinagar(Summer)Jammu(Winter),Srinagar,2019-10-31,12258433,42241,"Dogri, English, Hindi,Kashmiri,Urdu",—
+Ladakh,Union Territories,IN-LA,LA,Northern,Leh(Summer)Kargil(Winter),Leh,2019-10-31,290492,59146,"Hindi,English",—
+Lakshadweep,Union Territories,IN-LD,LD,Southern,Southern,Kavaratti,1956-11-01,64473,32,English,Malayalam
+Puducherry,Union Territories,IN-PY,PY,Southern,Southern,Pondicherry,1962-08-16,1247953,479,"Tamil,Telugu,Malayalam","English,French"
