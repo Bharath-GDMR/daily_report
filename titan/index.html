@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>West Bengal Explorer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        min-height: 100vh;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="50" r="1" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .hero-image {
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+        display: block;
+        margin: 0 auto 2rem auto;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .section {
+        background: white;
+        margin: 2rem 0;
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #eb2627, #bc1313);
+      }
+
+      .section h2 {
+        font-size: 2.5rem;
+        color: #bc1313;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: 700;
+        position: relative;
+      }
+
+      .section h2::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #eb2627, #bc1313);
+        border-radius: 2px;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(235, 38, 39, 0.1),
+          transparent
+        );
+        transition: left 0.6s ease;
+      }
+
+      .card:hover::before {
+        left: 100%;
+      }
+
+      .card:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(188, 19, 19, 0.2);
+        border-color: #eb2627;
+      }
+
+      .qr-placeholder {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
+        border: 2px dashed #bc1313;
+        border-radius: 8px;
+        margin: 0 auto 1.5rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        padding: 5px;
+      }
+
+      .card:hover .qr-placeholder {
+        background: linear-gradient(135deg, #eb2627, #bc1313);
+        color: white;
+        border-color: #eb2627;
+        transform: scale(1.05);
+      }
+
+      .card h3 {
+        font-size: 1.4rem;
+        color: #333;
+        text-align: center;
+        font-weight: 600;
+        line-height: 1.3;
+        transition: color 0.3s ease;
+      }
+
+      .card:hover h3 {
+        color: #bc1313;
+      }
+
+      .stats {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      .stats h3 {
+        color: #bc1313;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.01);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #eb2627;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+        margin-top: 4rem;
+      }
+
+      .collapsible-header {
+        cursor: pointer;
+        user-select: none;
+      }
+      .arrow {
+        display: inline-block;
+        margin-right: 10px;
+        transition: transform 0.2s ease;
+      }
+      .header-collapsed .arrow {
+        transform: rotate(-90deg);
+      }
+      .row-collapsed {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .section h2 {
+          font-size: 2rem;
+        }
+
+        .cards-grid {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .container {
+          padding: 0 1rem;
+        }
+
+        .section {
+          padding: 2rem 1rem;
+          margin: 1rem 0;
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(235, 38, 39, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 20px rgba(235, 38, 39, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(235, 38, 39, 0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="container">
+        <h1>Titan MBR</h1>
+        <img src="image.jpeg" alt="Sonata Chronos Watch" class="hero-image" />
+        <p>Find all the QR details</p>
+      </div>
+    </div>
+
+    <!-- Section hero: three -->
+    <div class="section">
+      <h2>West Bengal</h2>
+      <div class="cards-grid">
+        <div class="section">
+          <h2>Final</h2>
+          <div class="cards-grid">
+            <div class="card" onclick="navigateTo('kolkata/')">
+              <div class="qr-placeholder">
+                <img
+                  src="kolkata/kolkata.svg"
+                  alt="Kolkata City QR Code"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    padding: 5px;
+                  "
+                />
+              </div>
+              <h3>Kolkata City</h3>
+            </div>
+
+          <div class="card" onclick="navigateTo('south/')">
+            <div class="qr-placeholder">
+              <img
+                src="south/south.svg"
+                alt="South 24 Parganas QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>South Bengal</h3>
+          </div>
+
+        <div class="card" onclick="navigateTo('north/')">
+          <div class="qr-placeholder">
+            <img
+              src="north/north.svg"
+              alt="South 24 Parganas QR Code"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+              "
+            />
+          </div>
+          <h3>North Bengal</h3>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Section 1: Kolkata City -->
+      <div class="section">
+        <h2>Kolkata City</h2>
+        <div class="cards-grid">
+          <div class="card" onclick="navigateTo('kolkata/')">
+            <div class="qr-placeholder">
+              <img
+                src="kolkata/kolkata.svg"
+                alt="Kolkata City QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Kolkata City</h3>
+          </div>
+          <div class="card" onclick="navigateTo('howrah/')">
+            <div class="qr-placeholder">
+              <img
+                src="howrah/howrah.svg"
+                alt="Howrah QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Howrah</h3>
+          </div>
+          <div class="card" onclick="navigateTo('hooghly/')">
+            <div class="qr-placeholder">
+              <img
+                src="hooghly/hooghly.svg"
+                alt="Hooghly QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Hooghly</h3>
+          </div>
+          <div class="card" onclick="navigateTo('s24p/')">
+            <div class="qr-placeholder">
+              <img
+                src="s24p/s24p.svg"
+                alt="South 24 Parganas QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>South 24 Parganas</h3>
+          </div>
+          <div class="card" onclick="navigateTo('n24p/')">
+            <div class="qr-placeholder">
+              <img
+                src="n24p/n24p.svg"
+                alt="North 24 Parganas QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>North 24 Parganas</h3>
+          </div>
+        </div>
+        <div class="card" onclick="navigateTo('south/')">
+          <div class="qr-placeholder">
+            <img
+              src="south/south.svg"
+              alt="South 24 Parganas QR Code"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+              "
+            />
+          </div>
+          <h3>South Bengal</h3>
+        </div>
+      </div>
+
+      <!-- Section 2: South Bengal -->
+      <div class="section">
+        <h2>South Bengal</h2>
+        <div class="cards-grid">
+          <div class="card" onclick="navigateTo('bardhaman/')">
+            <div class="qr-placeholder">
+              <img
+                src="bardhaman/bardhaman.svg"
+                alt="Bardhaman QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Bardhaman</h3>
+          </div>
+
+          <div class="card" onclick="navigateTo('purulia/')">
+            <div class="qr-placeholder">
+              <img
+                src="purulia/purulia.svg"
+                alt="Purulia QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Purulia</h3>
+          </div>
+          <div class="card" onclick="navigateTo('nadia/')">
+            <div class="qr-placeholder">
+              <img
+                src="nadia/nadia.svg"
+                alt="Nadia QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Nadia</h3>
+          </div>
+          <div class="card" onclick="navigateTo('murshidabad/')">
+            <div class="qr-placeholder">
+              <img
+                src="murshidabad/murshidabad.svg"
+                alt="Murshidabad QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Murshidabad</h3>
+          </div>
+          <div class="card" onclick="navigateTo('medinipur/')">
+            <div class="qr-placeholder">
+              <img
+                src="medinipur/medinipur.svg"
+                alt="Medinipur QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Medinipur</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: North Bengal -->
+      <div class="section">
+        <h2>North Bengal</h2>
+        <div class="cards-grid">
+          <div class="card" onclick="navigateTo('darjeeling/')">
+            <div class="qr-placeholder">
+              <img
+                src="darjeeling/darjeeling.svg"
+                alt="Darjeeling District - Siliguri QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Darjeeling District - Siliguri</h3>
+          </div>
+          <div class="card" onclick="navigateTo('jalpaiguri/')">
+            <div class="qr-placeholder">
+              <img
+                src="jalpaiguri/jalpaiguri.svg"
+                alt="Jalpaiguri QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Jalpaiguri</h3>
+          </div>
+          <div class="card" onclick="navigateTo('cooch-behar/')">
+            <div class="qr-placeholder">
+              <img
+                src="cooch-behar/cooch-behar.svg"
+                alt="Cooch Behar QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Cooch Behar</h3>
+          </div>
+          <div class="card" onclick="navigateTo('malda/')">
+            <div class="qr-placeholder">
+              <img
+                src="malda/malda.svg"
+                alt="Malda QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Malda</h3>
+          </div>
+          <div class="card" onclick="navigateTo('dinajpur/')">
+            <div class="qr-placeholder">
+              <img
+                src="dinajpur/dinajpur.svg"
+                alt="Dinajpur QR Code"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  padding: 5px;
+                "
+              />
+            </div>
+            <h3>Dinajpur</h3>
+          </div>
+        </div>
+
+        <div class="card" onclick="navigateTo('north/')">
+          <div class="qr-placeholder">
+            <img
+              src="north/north.svg"
+              alt="South 24 Parganas QR Code"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+              "
+            />
+          </div>
+          <h3>North Bengal</h3>
+        </div>
+      </div>
+
+      <!-- Section 4: MBR Contact List -->
+      <div class="section">
+        <h2>MBR Contact List</h2>
+        <input
+          type="text"
+          id="mbrSearchInput"
+          onkeyup="filterMbrTable()"
+          placeholder="Search for names or areas.."
+          style="
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+          "
+        />
+        <div style="overflow-x: auto">
+          <table id="mbrTable" style="width: 100%; border-collapse: collapse">
+            <thead>
+              <tr style="background-color: #f2f2f2">
+                <th
+                  style="
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                  "
+                >
+                  Name
+                </th>
+                <th
+                  style="
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                  "
+                >
+                  Area
+                </th>
+                <th
+                  style="
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                  "
+                >
+                  Contact
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MBR Stats Section -->
+      <div class="stats">
+        <h3>MBR Directory Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="totalMbrRetailers">0</div>
+            <div class="stat-label">Total Retailers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalMbrAreas">0</div>
+            <div class="stat-label">Unique Areas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalMbrContacts">0</div>
+            <div class="stat-label">Contacts Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="container">
+        <p>Have a Great Event !!!</p>
+      </div>
+    </div>
+
+    <script>
+      function navigateTo(url) {
+        if (url) {
+          window.open(url, "_blank");
+        } else {
+          console.log("URL will be added later");
+        }
+      }
+
+      const mbrData = [
+        { isHeader: true, title: "KOLKATA CITY" },
+        {
+          name: "Shankar watch Care",
+          area: "Belghoria Feeder road",
+          contact: "7980046159",
+        },
+        { name: "M/S Ghose cousin", area: "Shyambazar", contact: "9830315386" },
+        {
+          name: "Standard Watch",
+          area: "Dum Dum Cantonment",
+          contact: "9330958290",
+        },
+        {
+          name: "Shambhu Nath Ghose & Othrs",
+          area: "Shyambazar",
+          contact: "9875584974",
+        },
+        { name: "KAMALA ENTERPRISE", area: "Baranagar", contact: "830273056" },
+        { name: "J-Watch", area: "Dum Dum", contact: "9836958815" },
+        { name: "Dey's Time", area: "B K Paul Avenue", contact: "" },
+        {
+          name: "CHOWDHURY WATCH MUSEUM",
+          area: "BELGHARIA",
+          contact: "7980551300",
+        },
+        { name: "New Orient Watch", area: "Baguihati", contact: "9830201070" },
+        {
+          name: "MA SHITALA WATCH & ELECTRONICS",
+          area: "Airport Gate",
+          contact: "8777541564",
+        },
+        {
+          name: "KALITARA WATCH REPAIRING SHOP",
+          area: "Manicktala",
+          contact: "9830862030",
+        },
+        { name: "WATCH PALACE (T)", area: "ALAMBAZAR", contact: "7003744258" },
+        { name: "The Time", area: "Theatre Road", contact: "" },
+        { name: "PRITAM FASHION", area: "MADHYAMGRAM", contact: "9830916917" },
+        { name: "H M Watch", area: "Radhabazar", contact: "9830839012" },
+        { name: "New M. Y. watch", area: "Radhabazar", contact: "8444851155" },
+        { name: "New Standard", area: "Radhabazar", contact: "9163623554" },
+        { name: "Urfee's", area: "Lindsay Street", contact: "9836656119" },
+        { name: "Selection", area: "Lindsay street", contact: "9831657487" },
+        { name: "Eye Time", area: "Lindsay Street", contact: "9830457170" },
+        { name: "Impex", area: "Garia More", contact: "7003480834" },
+        { name: "Bardhan's", area: "Jadavpur", contact: "9830521990" },
+        { name: "Time House", area: "Jadavpur", contact: "7980509230" },
+        {
+          name: "Unique Electronics",
+          area: "Behal Tramdepot",
+          contact: "983084447",
+        },
+        { name: "RAM'S", area: "Kolkata", contact: "" },
+        { name: "GABA TIMES PVT LTD", area: "Kolkata", contact: "" },
+        { name: "PASHUPATI RETAIL", area: "KOLKATA", contact: "" },
+        { name: "HASAMPURIA TIME CENTRE", area: "Kolkata", contact: "" },
+        {
+          name: "SURYA TIMES TRADING PRIVATE LIMITED",
+          area: "Kolkata",
+          contact: "",
+        },
+        { name: "GRAND OPTIX", area: "Kolkata", contact: "" },
+        { name: "DEY ENTERPRISES", area: "SEALDHA", contact: "" },
+        { name: "RAINBOW TIMES PVT.LTD.", area: "SEALDHA", contact: "" },
+        { name: "JANATA WATCH CO.", area: "DUMDUM", contact: "" },
+        { name: "SPECTRUM HOSPITALITY", area: "Kolkata", contact: "" },
+        { name: "NEW SHANKAR WATCH CO.", area: "BELGORIA", contact: "" },
+        { name: "GLORY", area: "JADAVPUR", contact: "" },
+        { name: "ANGLO SWISS", area: "RADHA BAZAR", contact: "" },
+        { name: "TOTCO", area: "HAZRA", contact: "" },
+        { name: "ROY WATCH", area: "RANIKUTHI", contact: "" },
+        { name: "KALPATARU", area: "RANIKUTI", contact: "" },
+        { name: "JHALAK TIMES", area: "BHAWANIPORE", contact: "" },
+        { name: "FAST MOBILE", area: "HILAND PARK", contact: "" },
+        { name: "BAHURUPI", area: "KUDGHAT", contact: "" },
+        { name: "KALYANI YIMES", area: "NARENDRA PUR", contact: "" },
+        { name: "ORIENTAL", area: "BASDRONI", contact: "" },
+        { name: "GOLDEN WATCH", area: "GARIA", contact: "" },
+        { name: "DAYAL JEWELLERY MUSEUM", area: "GARIAHAT", contact: "" },
+        { name: "TIME COLLECTION", area: "GARIA HAT", contact: "" },
+        { isHeader: true, title: "Howrah" },
+        { name: "Roy watch", area: "N S Road", contact: "9231887224" },
+        {
+          name: "R D Watch",
+          area: "Ramcharan Seth Road",
+          contact: "6289503032",
+        },
+        {
+          name: "New Ramraja Watch",
+          area: "Ramrajatala",
+          contact: "9433928330",
+        },
+        { name: "New Koley Watch", area: "Kadamtala", contact: "8583086565" },
+        { name: "Srimani watch", area: "Andul", contact: "9830804261" },
+        { name: "Srimani brothers", area: "Andul", contact: "6290754632" },
+        { name: "New Manorama", area: "Uluberia", contact: "9143037536" },
+        { isHeader: true, title: "Hooghly" },
+        {
+          name: "Mandakini Watch House",
+          area: "Near Serampore Municipality",
+          contact: "8013861643",
+        },
+        {
+          name: "Mandakini Watch House",
+          area: "Chinsurah Water Tank",
+          contact: "9883507010",
+        },
+        {
+          name: "M S Hussain",
+          area: "Chinsurah Gharir More",
+          contact: "9433920274",
+        },
+        {
+          name: "Calcutta Watch",
+          area: "Sheoraphully Udayan Cinema Hall",
+          contact: "8013945156",
+        },
+        { name: "Time Centre", area: "Singur Bazar", contact: "8240912062" },
+        {
+          name: "Prince watch",
+          area: "Serampore N S avenue",
+          contact: "9830807281",
+        },
+        { name: "STAR ELECTRONICS", area: "ARAMBAG", contact: "9932252203" },
+        { name: "SANJAY WATCH", area: "TARAKESHWAR", contact: "" },
+        { name: "GLORY ELECTRONICS", area: "CHINSURAH", contact: "7044532364" },
+        { name: "NU TIME", area: "KONNAGAR", contact: "" },
+        { name: "CLASSIC", area: "KONNAGAR", contact: "" },
+        { name: "TIME CO.", area: "UTTARPARA", contact: "9830921175" },
+        { name: "DASS & CO.", area: "TRIBENI", contact: "" },
+        { name: "Tarama Watch Centre", area: "Hooghly", contact: "" },
+        { name: "SURUCHI SADAN", area: "CHANDANAGAR", contact: "" },
+        { isHeader: true, title: "South 24 Parganas" },
+        { name: "SUR SANGAM", area: "BARUIPUR", contact: "" },
+        { name: "NEW FRIENDS", area: "SONARPUR", contact: "" },
+        { name: "MUNNA WATCH", area: "DIAMOND HARNOUR", contact: "" },
+        { name: "MODERN WATCH", area: "BARUIPUR", contact: "" },
+        { name: "TIMEX WATCH", area: "SONARPUR", contact: "" },
+        { name: "M MONDAL", area: "AAMTALA", contact: "" },
+        { name: "JANTRIK", area: "BUDGEBUDGE", contact: "" },
+        { name: "GHARI GHAR", area: "KAKDWEEP", contact: "" },
+        { name: "FRIENDS WATCH", area: "CANNING", contact: "" },
+        { name: "BHARAT TIMES", area: "BARUIPUR", contact: "" },
+        { name: "TIME HOUSE", area: "DIAMOND HARBOUR", contact: "" },
+        { name: "JYOTI EMPORIUM", area: "KAKDWEEP", contact: "" },
+        { name: "NEW STAR", area: "BARUIPUR", contact: "" },
+        { name: "POPULAR WATCH", area: "BARUIPUR", contact: "" },
+        { name: "TIME HOUSE", area: "BARUIPUR", contact: "" },
+        { name: "FRIENDS WATCH CO", area: "BARUYIPUR", contact: "" },
+        { name: "GOLDEN WATCH", area: "BARUIPUR", contact: "" },
+        { name: "ROYAL WATCH", area: "BARUIPUR", contact: "" },
+        { isHeader: true, title: "North 24 Parganas" },
+        {
+          name: "BHABANI STORES",
+          area: "Ranaghat Subhas Avenue",
+          contact: "8777429658",
+        },
+        {
+          name: "Tara Watch House",
+          area: "Kanchrapara KGR Path",
+          contact: "9831096861",
+        },
+        {
+          name: "Titan House",
+          area: "Ranaghat Subhas Avenue",
+          contact: "9333726459",
+        },
+        {
+          name: "Unique Watch & Optical",
+          area: "Ranaghat Subhas Avenue",
+          contact: "9333124386",
+        },
+        { name: "Nath & sons", area: "Basirhat", contact: "7001171467" },
+        { name: "Riky eletronics", area: "Hingalganj", contact: "9933833683" },
+        { name: "Sura Jhankar", area: "Habra", contact: "9733600455" },
+        {
+          name: "PATTRA WATCH HOUSE",
+          area: "Kanchrapara",
+          contact: "9883116776",
+        },
+        { name: "ANGEL WATCH CO.", area: "SODEPUR", contact: "9143015064" },
+        { name: "TIME HOUSE", area: "Sodepur", contact: "9433629572" },
+        { name: "SODEPUR TIME ZONE", area: "SODEPUR", contact: "7439391562" },
+        { name: "TIME KING", area: "RANAGHAT", contact: "" },
+        {
+          name: "CHAKRABORTY WATCH HOUSE",
+          area: "SHYAMNAGAR",
+          contact: "7003467184",
+        },
+        { name: "Time House", area: "Khardah", contact: "8910140588" },
+        {
+          name: "NEW SREEGURU WATCH & OPTICS",
+          area: "ICHAPUR",
+          contact: "8820069753",
+        },
+        { name: "DEY WATCH CO", area: "BARASAT", contact: "" },
+        { name: "MODERN WATCH CO", area: "BARASAT", contact: "" },
+        { name: "NEW SANKAR WATCH", area: "BELGHARIA", contact: "" },
+        { name: "NEW SHITALA WATCH CO", area: "BIRATI", contact: "" },
+        { name: "SHITALA WATCH", area: "BIRATI", contact: "" },
+        { name: "INDIAN WATCH", area: "HABRA", contact: "" },
+        { name: "BISWAKARMA WATCH", area: "KAANCHRPARA", contact: "" },
+        { name: "Roy Optical & Watch Co.", area: "BARECKPORE", contact: "" },
+        { name: "TIME CORNER", area: "KOLKATA", contact: "" },
+        { name: "NEW TIME CORNER", area: "MADHYAMGRAM", contact: "" },
+        { name: "DILIP WATCH CENTRE", area: "SODEPUR", contact: "" },
+        { name: "SAMIR WATCH CENTRE", area: "SODEPUR", contact: "" },
+        { isHeader: true, title: "Bardhaman" },
+        { name: "SUN WATCH& CO,", area: "BURDWAN", contact: "" },
+        { name: "TIME PALACE", area: "BURDWAN", contact: "" },
+        { name: "HALDER TIMES", area: "BURDWAN", contact: "" },
+        { name: "MULLICK INFOCOM,", area: "DURGAPUR", contact: "" },
+        { name: "SREE DURGA WATCH", area: "DURGAPUR", contact: "" },
+        { name: "RAJU WATCH", area: "DURGAPUR", contact: "" },
+        { name: "NEW OK WATCH", area: "ASANSOL", contact: "" },
+        { name: "NEW WATCH WORLD", area: "ASANSOL", contact: "" },
+        { name: "CLEAR EYE", area: "ASANSOL", contact: "" },
+        { name: "KUSUM WATCH", area: "BANKURA", contact: "" },
+        { name: "OM GIRISHA", area: "BANKURA", contact: "" },
+        { name: "HARANATH WATCH", area: "BANKURA", contact: "" },
+        { isHeader: true, title: "Purulia" },
+        { name: "NEW WATCH SERVICE & GIFT", area: "BOLPUR", contact: "" },
+        { name: "DILIP WATCH", area: "SURI", contact: "" },
+        { name: "J T CHATTERJEE", area: "SURI", contact: "" },
+        { name: "SANTOSH WATCH", area: "PURULIA", contact: "" },
+        { isHeader: true, title: "Nadia" },
+        {
+          name: "CLEARSIGHT",
+          area: "Krishnanagar Bejikhali More",
+          contact: "9836840525",
+        },
+        {
+          name: "KRISHNA OPTICS",
+          area: "Nawadwip Paromatala Rd",
+          contact: "9333220767",
+        },
+        {
+          name: "DAS OPTICS",
+          area: "Nawadwip Paromatala more",
+          contact: "9046782589",
+        },
+        { name: "LUCKY WATCH", area: "Bongaon", contact: "7797186838" },
+        { name: "RAJU WATCH & COMMUNICATION", area: "CHAKDAHA", contact: "" },
+        { name: "KAR WATCH", area: "KRISHNA NAGAR", contact: "" },
+        { name: "SWISS WATCH CO.", area: "KRISHNA NAGAR", contact: "" },
+        {
+          name: "PAUL WATCH & MOBILE STORE",
+          area: "TAHERPUR",
+          contact: "9434954190",
+        },
+        { isHeader: true, title: "Murshidabad" },
+        { name: "National watch", area: "Beldanga", contact: "" },
+        {
+          name: "Dhar Watch Museum",
+          area: "Behrampore",
+          contact: "9732524066",
+        },
+        {
+          name: "SAHA WATCH CO. & OPTICAL",
+          area: "RAGHUNATHGANJ",
+          contact: "",
+        },
+        { name: "KRISHNA WATCH CO.", area: "KANDI", contact: "9800154524" },
+        { name: "T.R.T. HOUSE", area: "KARIMPUR", contact: "" },
+        { name: "GHARI CORNER", area: "BERHAMPORE", contact: "" },
+        { name: "NEW GHARI GHAR", area: "BERHAMPORE", contact: "" },
+        { isHeader: true, title: "Medinipur" },
+        { name: "KAR EMPORIUM", area: "Medinipur", contact: "7001751146" },
+        { name: "National Watch", area: "Contai", contact: "9932696531" },
+        {
+          name: "Jaiswal Enterprises",
+          area: "Kharagpur",
+          contact: "9611356323",
+        },
+        { name: "BHUTRA EMPORIUM", area: "MEDINIPUR", contact: "" },
+        { name: "TIME AND SOUNE", area: "HALDIA", contact: "" },
+        { name: "DAS WATCH", area: "TAMLUK", contact: "" },
+        { name: "LEKHANI", area: "TAMLUK", contact: "" },
+        { name: "WATCH PALACE", area: "TAMLUK", contact: "" },
+        { name: "BHUTRA EMPORIUM", area: "MIDNAPORE", contact: "" },
+        { name: "PAPPU WATC H", area: "HALDIA", contact: "" },
+        { name: "DUTTA WATCH AND ELECTRONICS", area: "MEDNIPORE", contact: "" },
+        { name: "TIME SERVICE", area: "MEDNIPORE", contact: "" },
+        { name: "DAS ELECTRANICS", area: "MEDNIPORE", contact: "" },
+        { name: "JAMUNA TIMES", area: "KHARGAPORE", contact: "" },
+        { name: "UNIQUE ELECTRONICS", area: "JHARGRAM", contact: "" },
+        { name: "RAHMAN WATCH", area: "PANSKURA", contact: "" },
+        { name: "NEW DELHI WATCH", area: "CHANDIPUR", contact: "" },
+        { name: "SHRADHANJALI", area: "KOLAGHAT", contact: "" },
+        { name: "K C DAS", area: "Haldia", contact: "9475819333" },
+        { isHeader: true, title: "Darjeeling District- Siliguri" },
+        { name: "The Maple", area: "SILIGURI", contact: "7602414232" },
+        { name: "Sathi Times", area: "SILIGURI", contact: "9434465202" },
+        { name: "Maple Watch World", area: "SILIGURI", contact: "9647755055" },
+        { name: "SWISS WATCH", area: "SILIGURI", contact: "9832471657" },
+        { name: "ROYAL WATCH CO", area: "SILIGURI", contact: "8927824092" },
+        { isHeader: true, title: "Jalpaiguri" },
+        { name: "TIME CENTRE", area: "JALPAIGURI", contact: "9775522650" },
+        {
+          name: "KOHINOOR WATCH MAKERS",
+          area: "JALPAIGURI",
+          contact: "9832017553",
+        },
+        { name: "REGENT WATCH CO.", area: "MAYNAGURI", contact: "" },
+        { isHeader: true, title: "Cooch Behar" },
+        {
+          name: "SREE KRISHNA WATCH CO",
+          area: "COOCHBEHAR",
+          contact: "9474827393",
+        },
+        { name: "GUPTA WATCH CO.", area: "COOCHBEHAR", contact: "9933642539" },
+        { name: "HIND WATCH CO.", area: "COOCHBEHAR", contact: "" },
+        { name: "GANESH WATCH CO", area: "COOCHBEHAR", contact: "" },
+        {
+          name: "ORIENT GLOBAL PRIVATE LIMITED",
+          area: "RAIGANJ",
+          contact: "8918617460",
+        },
+        { name: "HIND WATCH CO.", area: "RAIGANJ", contact: "" },
+        { name: "MODERN WATCH CO", area: "RAIGANJ", contact: "" },
+        { isHeader: true, title: "Malda" },
+        { name: "NEW RUBY WATCH", area: "MALDA", contact: "9434213242" },
+        { name: "PRANAB & BROTHERS", area: "MALDA", contact: "9733206788" },
+        { name: "GHARI MAHAL", area: "MALDA", contact: "9474470142" },
+        { name: "GHARI HOUSE", area: "MALDA", contact: "9232658700" },
+        { isHeader: true, title: "Dinajpur" },
+        {
+          name: "CALCUTTA WATCH TRADING",
+          area: "Dinajpur",
+          contact: "9563166896",
+        },
+      ];
+
+      function populateMbrTable() {
+        const tableBody = document.querySelector("#mbrTable tbody");
+        let html = "";
+        mbrData.forEach((item) => {
+          if (item.isHeader) {
+            html += `<tr onclick="toggleGroup(this)"><th colspan="3" class="collapsible-header" style="background-color: #e0e0e0; padding: 10px; text-align: left; border-bottom: 1px solid #ddd; border-top: 2px solid #bc1313;"><span class="arrow">▼</span>${item.title}</th></tr>`;
+          } else {
+            html += `<tr class="data-row">
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">${
+                          item.name
+                        }</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">${
+                          item.area
+                        }</td>
+                        <td style="padding: 12px; text-align: left; border-bottom: 1px solid #ddd;">${
+                          item.contact || ""
+                        }</td>
+                     </tr>`;
+          }
+        });
+        tableBody.innerHTML = html;
+      }
+
+      function toggleGroup(headerRow) {
+        headerRow.classList.toggle("header-collapsed");
+        let currentRow = headerRow.nextElementSibling;
+        while (currentRow && !currentRow.querySelector("th")) {
+          currentRow.classList.toggle("row-collapsed");
+          currentRow = currentRow.nextElementSibling;
+        }
+      }
+
+      function filterMbrTable() {
+        const input = document.getElementById("mbrSearchInput");
+        const filter = input.value.toUpperCase();
+        const tableBody = document.querySelector("#mbrTable tbody");
+        const rows = tableBody.getElementsByTagName("tr");
+
+        let currentGroupHeader = null;
+        let groupHasVisibleRows = false;
+
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i];
+          const isHeader = row.getElementsByTagName("th").length > 0;
+
+          if (isHeader) {
+            if (currentGroupHeader) {
+              currentGroupHeader.style.display = groupHasVisibleRows
+                ? ""
+                : "none";
+            }
+            currentGroupHeader = row;
+            groupHasVisibleRows = false;
+          } else {
+            // It's a data row
+            if (!row.classList.contains("row-collapsed")) {
+              const nameTd = row.getElementsByTagName("td")[0];
+              const areaTd = row.getElementsByTagName("td")[1];
+
+              if (nameTd && areaTd) {
+                const nameTxt = nameTd.textContent || nameTd.innerText;
+                const areaTxt = areaTd.textContent || areaTd.innerText;
+
+                const isVisible =
+                  nameTxt.toUpperCase().indexOf(filter) > -1 ||
+                  areaTxt.toUpperCase().indexOf(filter) > -1;
+
+                row.style.display = isVisible ? "" : "none";
+
+                if (isVisible) {
+                  groupHasVisibleRows = true;
+                }
+              }
+            }
+          }
+        }
+
+        // Finalize the last group in the table
+        if (currentGroupHeader) {
+          currentGroupHeader.style.display = groupHasVisibleRows ? "" : "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        populateMbrTable();
+
+        // Calculate and display MBR stats
+        const retailerData = mbrData.filter((item) => !item.isHeader);
+
+        const totalRetailers = retailerData.length;
+        document.getElementById("totalMbrRetailers").textContent =
+          totalRetailers;
+
+        const uniqueAreas = [...new Set(retailerData.map((r) => r.area.trim()))]
+          .length;
+        document.getElementById("totalMbrAreas").textContent = uniqueAreas;
+
+        const contactsAvailable = retailerData.filter(
+          (r) => r.contact && r.contact.trim() !== ""
+        ).length;
+        document.getElementById("totalMbrContacts").textContent =
+          contactsAvailable;
+      });
+    </script>
+  </body>
+</html>

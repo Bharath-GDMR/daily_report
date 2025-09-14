@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ABP Retailer Directory - Kolkata</title>
+    <title>ABP Retailer Directory - Birbhum</title>
     <style>
       * {
         margin: 0;
@@ -239,6 +239,13 @@
       .retailer-info {
         margin-top: 1rem;
       }
+      .map-container {
+        margin-top: 1rem;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
       .retailer-separator {
         border: none;
         height: 1px;
@@ -303,7 +310,7 @@
     <div class="container">
       <div class="header">
         <h1>ABP All & TT All Editions</h1>
-        <div class="subtitle">KOLKATA CITY</div>
+        <div class="subtitle">Birbhum</div>
       </div>
 
       <div class="search-bar">
@@ -347,41 +354,184 @@
     <script>
       // Sample retailer data - you can replace this with your CSV data
       const retailers = [
-        { group: 'Retailer 1', stores: [ { name: 'Shankar watch Care', area: 'Belghoria Feeder road' }, { name: 'ORIENTAL', area: 'BASDRONI' } ] },
-        { group: 'Retailer 2', stores: [ { name: 'M/S Ghose cousin', area: 'Shyambazar' }, { name: 'GOLDEN WATCH', area: 'GARIA' } ] },
-        { group: 'Retailer 3', stores: [ { name: 'Standard Watch', area: 'Dum Dum Cantonment' }, { name: 'DAYAL JEWELLERY MUSEUM', area: 'GARIAHAT' } ] },
-        { group: 'Retailer 4', stores: [ { name: 'Shambhu Nath Ghose & Othrs', area: 'Shyambazar' }, { name: 'TIME COLLECTION', area: 'GARIA HAT' } ] },
-        { group: 'Retailer 4', stores: [ { name: 'KAMALA ENTERPRISE', area: 'Baranagar' }, { name: 'GLORY', area: 'JADAVPUR' } ] },
-        { group: 'Retailer 5', stores: [ { name: 'J-Watch', area: 'Dum Dum' }, { name: 'ANGLO SWISS', area: 'RADHA BAZAR' } ] },
-        { group: 'Retailer 6', stores: [ { name: 'Dey\'s Time', area: 'B K Paul Avenue' }, { name: 'TOTCO', area: 'HAZRA' } ] },
-        { group: 'Retailer 7', stores: [ { name: 'CHOWDHURY WATCH MUSEUM', area: 'BELGHARIA' }, { name: 'ROY WATCH', area: 'RANIKUTHI' } ] },
-        { group: 'Retailer 8', stores: [ { name: 'New Orient Watch', area: 'Baguihati' }, { name: 'KALPATARU', area: 'RANIKUTI' } ] },
-        { group: 'Retailer 9', stores: [ { name: 'MA SHITALA WATCH & ELECTRONICS', area: 'Airport Gate' }, { name: 'JHALAK TIMES', area: 'BHAWANIPORE' } ] },
-        { group: 'Retailer 10', stores: [ { name: 'KALITARA WATCH REPAIRING SHOP', area: 'Manicktala' }, { name: 'FAST MOBILE', area: 'HILAND PARK' } ] },
-        { group: 'Retailer 11', stores: [ { name: 'WATCH PALACE (T)', area: 'ALAMBAZAR' }, { name: 'BAHURUPI', area: 'KUDGHAT' } ] },
-        { group: 'Retailer 12', stores: [ { name: 'The Time', area: 'Theatre Road' }, { name: 'KALYANI YIMES', area: 'NARENDRA PUR' } ] },
-        { group: 'Retailer 13', stores: [ { name: 'PRITAM FASHION', area: 'MADHYAMGRAM' } ] },
-        { group: 'Retailer 14', stores: [ { name: 'H M Watch', area: 'Radhabazar' } ] },
-        { group: 'Retailer 15', stores: [ { name: 'New M. Y. watch', area: 'Radhabazar' } ] },
-        { group: 'Retailer 16', stores: [ { name: 'New Standard', area: 'Radhabazar' } ] },
-        { group: 'Retailer 17', stores: [ { name: 'Urfee\'s', area: 'Lindsay Street' } ] },
-        { group: 'Retailer 18', stores: [ { name: 'Selection', area: 'Lindsay street' } ] },
-        { group: 'Retailer 19', stores: [ { name: 'Eye Time', area: 'Lindsay Street' } ] },
-        { group: 'Retailer 20', stores: [ { name: 'Impex', area: 'Garia More' } ] },
-        { group: 'Retailer 21', stores: [ { name: 'Bardhan\'s', area: 'Jadavpur' } ] },
-        { group: 'Retailer 22', stores: [ { name: 'Time House', area: 'Jadavpur' } ] },
-        { group: 'Retailer 23', stores: [ { name: 'Unique Electronics', area: 'Behal Tramdepot' } ] },
-        { group: 'Retailer 24', stores: [ { name: 'RAM\'S', area: 'Kolkata' } ] },
-        { group: 'Retailer 25', stores: [ { name: 'GABA TIMES PVT LTD', area: 'Kolkata' } ] },
-        { group: 'Retailer 26', stores: [ { name: 'PASHUPATI RETAIL', area: 'KOLKATA' } ] },
-        { group: 'Retailer 27', stores: [ { name: 'HASAMPURIA TIME CENTRE', area: 'Kolkata' } ] },
-        { group: 'Retailer 28', stores: [ { name: 'SURYA TIMES TRADING PRIVATE LIMITED', area: 'Kolkata' } ] },
-        { group: 'Retailer 29', stores: [ { name: 'GRAND OPTIX', area: 'Kolkata' } ] },
-        { group: 'Retailer 30', stores: [ { name: 'DEY ENTERPRISES', area: 'SEALDHA' } ] },
-        { group: 'Retailer 31', stores: [ { name: 'RAINBOW TIMES PVT.LTD.', area: 'SEALDHA' } ] },
-        { group: 'Retailer 32', stores: [ { name: 'JANATA WATCH CO.', area: 'DUMDUM' } ] },
-        { group: 'Retailer 33', stores: [ { name: 'SPECTRUM HOSPITALITY', area: 'Kolkata' } ] },
-        { group: 'Retailer 34', stores: [ { name: 'NEW SHANKAR WATCH CO.', area: 'BELGORIA' } ] },
+        {
+          group: "Retailer 1",
+          stores: [
+            { name: "Shankar watch Care", area: "Belghoria Feeder road" },
+            { name: "ORIENTAL", area: "BASDRONI" },
+          ],
+        },
+        {
+          group: "Retailer 2",
+          stores: [
+            { name: "M/S Ghose cousin", area: "Shyambazar" },
+            { name: "GOLDEN WATCH", area: "GARIA" },
+          ],
+        },
+        {
+          group: "Retailer 3",
+          stores: [
+            { name: "Standard Watch", area: "Dum Dum Cantonment" },
+            { name: "DAYAL JEWELLERY MUSEUM", area: "GARIAHAT" },
+          ],
+        },
+        {
+          group: "Retailer 4",
+          stores: [
+            { name: "Shambhu Nath Ghose & Othrs", area: "Shyambazar" },
+            { name: "TIME COLLECTION", area: "GARIA HAT" },
+          ],
+        },
+        {
+          group: "Retailer 4",
+          stores: [
+            { name: "KAMALA ENTERPRISE", area: "Baranagar" },
+            { name: "GLORY", area: "JADAVPUR" },
+          ],
+        },
+        {
+          group: "Retailer 5",
+          stores: [
+            { name: "J-Watch", area: "Dum Dum" },
+            { name: "ANGLO SWISS", area: "RADHA BAZAR" },
+          ],
+        },
+        {
+          group: "Retailer 6",
+          stores: [
+            { name: "Dey's Time", area: "B K Paul Avenue" },
+            { name: "TOTCO", area: "HAZRA" },
+          ],
+        },
+        {
+          group: "Retailer 7",
+          stores: [
+            { name: "CHOWDHURY WATCH MUSEUM", area: "BELGHARIA" },
+            { name: "ROY WATCH", area: "RANIKUTHI" },
+          ],
+        },
+        {
+          group: "Retailer 8",
+          stores: [
+            { name: "New Orient Watch", area: "Baguihati" },
+            { name: "KALPATARU", area: "RANIKUTI" },
+          ],
+        },
+        {
+          group: "Retailer 9",
+          stores: [
+            { name: "MA SHITALA WATCH & ELECTRONICS", area: "Airport Gate" },
+            { name: "JHALAK TIMES", area: "BHAWANIPORE" },
+          ],
+        },
+        {
+          group: "Retailer 10",
+          stores: [
+            { name: "KALITARA WATCH REPAIRING SHOP", area: "Manicktala" },
+            { name: "FAST MOBILE", area: "HILAND PARK" },
+          ],
+        },
+        {
+          group: "Retailer 11",
+          stores: [
+            { name: "WATCH PALACE (T)", area: "ALAMBAZAR" },
+            { name: "BAHURUPI", area: "KUDGHAT" },
+          ],
+        },
+        {
+          group: "Retailer 12",
+          stores: [
+            { name: "The Time", area: "Theatre Road" },
+            { name: "KALYANI YIMES", area: "NARENDRA PUR" },
+          ],
+        },
+        {
+          group: "Retailer 13",
+          stores: [{ name: "PRITAM FASHION", area: "MADHYAMGRAM" }],
+        },
+        {
+          group: "Retailer 14",
+          stores: [{ name: "H M Watch", area: "Radhabazar" }],
+        },
+        {
+          group: "Retailer 15",
+          stores: [{ name: "New M. Y. watch", area: "Radhabazar" }],
+        },
+        {
+          group: "Retailer 16",
+          stores: [{ name: "New Standard", area: "Radhabazar" }],
+        },
+        {
+          group: "Retailer 17",
+          stores: [{ name: "Urfee's", area: "Lindsay Street" }],
+        },
+        {
+          group: "Retailer 18",
+          stores: [{ name: "Selection", area: "Lindsay street" }],
+        },
+        {
+          group: "Retailer 19",
+          stores: [{ name: "Eye Time", area: "Lindsay Street" }],
+        },
+        {
+          group: "Retailer 20",
+          stores: [{ name: "Impex", area: "Garia More" }],
+        },
+        {
+          group: "Retailer 21",
+          stores: [{ name: "Bardhan's", area: "Jadavpur" }],
+        },
+        {
+          group: "Retailer 22",
+          stores: [{ name: "Time House", area: "Jadavpur" }],
+        },
+        {
+          group: "Retailer 23",
+          stores: [{ name: "Unique Electronics", area: "Behal Tramdepot" }],
+        },
+        { group: "Retailer 24", stores: [{ name: "RAM'S", area: "Kolkata" }] },
+        {
+          group: "Retailer 25",
+          stores: [{ name: "GABA TIMES PVT LTD", area: "Kolkata" }],
+        },
+        {
+          group: "Retailer 26",
+          stores: [{ name: "PASHUPATI RETAIL", area: "KOLKATA" }],
+        },
+        {
+          group: "Retailer 27",
+          stores: [{ name: "HASAMPURIA TIME CENTRE", area: "Kolkata" }],
+        },
+        {
+          group: "Retailer 28",
+          stores: [
+            { name: "SURYA TIMES TRADING PRIVATE LIMITED", area: "Kolkata" },
+          ],
+        },
+        {
+          group: "Retailer 29",
+          stores: [{ name: "GRAND OPTIX", area: "Kolkata" }],
+        },
+        {
+          group: "Retailer 30",
+          stores: [{ name: "DEY ENTERPRISES", area: "SEALDHA" }],
+        },
+        {
+          group: "Retailer 31",
+          stores: [{ name: "RAINBOW TIMES PVT.LTD.", area: "SEALDHA" }],
+        },
+        {
+          group: "Retailer 32",
+          stores: [{ name: "JANATA WATCH CO.", area: "DUMDUM" }],
+        },
+        {
+          group: "Retailer 33",
+          stores: [{ name: "SPECTRUM HOSPITALITY", area: "Kolkata" }],
+        },
+        {
+          group: "Retailer 34",
+          stores: [{ name: "NEW SHANKAR WATCH CO.", area: "BELGORIA" }],
+        },
       ];
 
       let filteredRetailers = [...retailers];
@@ -403,23 +553,39 @@
             (retailerGroup) => `
                 <div class="retailer-card">
                     <div class="retailer-number">${retailerGroup.group}</div>
-                    ${retailerGroup.stores.map((store, index) => `
-                        ${index > 0 ? '<hr class="retailer-separator">' : ''}
+                    ${retailerGroup.stores
+                      .map(
+                        (store, index) => `
+                        ${index > 0 ? '<hr class="retailer-separator">' : ""}
                         <div class="retailer-info">
                             <div class="retailer-name">${store.name}</div>
                             <div class="retailer-area">
                                 <span class="location-icon">📍</span>
                                 ${store.area}
                             </div>
+                            <div class="map-container">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235813.786594257!2d88.18263194335937!3d22.535427300000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f882db4908f667%3A0x43e330e68f6c2cbc!2sKolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1678886305919!5m2!1sen!2sin"
+                                    width="100%"
+                                    height="200"
+                                    style="border:0;"
+                                    allowfullscreen=""
+                                ></iframe>
+                            </div>
                         </div>
-                    `).join('')}
+                    `
+                      )
+                      .join("")}
                 </div>
             `
           )
           .join("");
 
         // Update visible retailers count
-        const visibleStores = retailerList.reduce((acc, group) => acc + group.stores.length, 0);
+        const visibleStores = retailerList.reduce(
+          (acc, group) => acc + group.stores.length,
+          0
+        );
         document.getElementById("visibleRetailers").textContent = visibleStores;
       }
 
@@ -429,9 +595,10 @@
         if (!searchTerm) {
           filteredRetailers = [...retailers];
         } else {
-          filteredRetailers = retailers.filter(group => {
+          filteredRetailers = retailers.filter((group) => {
             const groupMatch = group.group.toLowerCase().includes(searchTerm);
-            const storeMatch = group.stores.some(store =>
+            const storeMatch = group.stores.some(
+              (store) =>
                 store.name.toLowerCase().includes(searchTerm) ||
                 store.area.toLowerCase().includes(searchTerm)
             );
@@ -451,10 +618,9 @@
         renderRetailers();
 
         // Count unique areas and total stores for stats
-        const allStores = retailers.flatMap(g => g.stores);
+        const allStores = retailers.flatMap((g) => g.stores);
         const uniqueAreas = [...new Set(allStores.map((s) => s.area))];
-        document.getElementById("totalAreas").textContent = uniqueAreas.length;
-        document.getElementById("totalRetailers").textContent = allStores.length;
+        document.getElementById("totalAreas
       });
 
       // Add smooth scroll behavior
