@@ -1,10 +1,9 @@
-
 import json
 import os
 import re
 
-assets_file_path = "C:\\Users\\bhara\\Desktop\\GDMR\\Report\\asset\\assets.json"
-images_base_path = "C:\\Users\\bhara\\Desktop\\GDMR\\Report\\asset\\SSL_PICTURE_DOCKET"
+assets_file_path = "D:\\GDMR\\GDMR\\Report\\asset\\assets.json"
+images_base_path = "D:\\GDMR\\GDMR\\Report\\asset\\SSL_PICTURE_DOCKET"
 
 with open(assets_file_path, 'r') as f:
     assets_data = json.load(f)
@@ -30,7 +29,7 @@ for root, dirs, files in os.walk(images_base_path):
             if '-' in space_code_from_filename:
                 parts = space_code_from_filename.split('-')
                 if len(parts) == 2:
-                    match = re.match(r"([a-zA-Z0-9_]+?)([0-9]+)$", parts[0])
+                    match = re.match(r"([a-zA-Z0-9_]+?)([0-9]+)", parts[0])
                     if match:
                         prefix = match.group(1)
                         start_num_str = match.group(2)

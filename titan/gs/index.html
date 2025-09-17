@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-84C5CNCZTJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-84C5CNCZTJ");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glimmers & Stellar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(235, 38, 39, 0.2);
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+      }
+
+      .search-bar {
+        margin-bottom: 2rem;
+        position: relative;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 3px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #eb2627;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(235, 38, 39, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .retailer-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        border-left: 5px solid #eb2627;
+        transition: box-shadow 0.3s ease, border-left-width 0.3s ease;
+      }
+
+      .retailer-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(235, 38, 39, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .retailer-card:hover::before {
+        left: 100%;
+      }
+
+      .retailer-card:hover {
+        transform: translateY(-10px) scale(1.001);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-left-width: 8px;
+      }
+
+      .retailer-number {
+        display: inline-block;
+        background: linear-gradient(135deg, #eb2627, #bc1313);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 5px 15px rgba(235, 38, 39, 0.3);
+      }
+
+      .retailer-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #bc1313;
+        margin-bottom: 0.8rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .retailer-area {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+      }
+
+      .location-icon {
+        margin-right: 0.5rem;
+        color: #eb2627;
+      }
+
+      .stats {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      .stats h3 {
+        color: #bc1313;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.01);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #eb2627;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      #kolkataSection h2,
+      #othersSection h2 {
+        text-align: center;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+      }
+
+      .retailer-info {
+        margin-top: 1rem;
+      }
+      .retailer-separator {
+        border: none;
+        height: 1px;
+        background-color: #eee;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header .subtitle {
+          font-size: 1rem;
+        }
+
+        .retailers-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .retailer-card {
+          margin: 0 0.5rem;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .retailer-card {
+          padding: 1rem;
+        }
+      }
+
+      /* Loading animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #eb2627;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Glimmers & Stellar</h1>
+        <div class="subtitle">Retailers Details</div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon"></div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search retailers by name or area..."
+          id="searchInput"
+        />
+      </div>
+
+      <div id="kolkataSection">
+        <h2>Kolkata</h2>
+        <div class="retailers-grid" id="kolkataGrid">
+          <!-- Kolkata retailers will be populated here -->
+        </div>
+      </div>
+
+      <hr class="retailer-separator" />
+
+      <div id="othersSection">
+        <h2>Others</h2>
+        <div class="retailers-grid" id="othersGrid">
+          <!-- Other retailers will be populated here -->
+        </div>
+      </div>
+
+      <div class="no-results hidden" id="noResults">
+        <h3>No retailers found</h3>
+        <p>Try adjusting your search terms</p>
+      </div>
+
+      <div class="stats">
+        <h3>Directory Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="totalRetailers">0</div>
+            <div class="stat-label">Total Retailers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalAreas">0</div>
+            <div class="stat-label">Areas Covered</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="visibleRetailers">0</div>
+            <div class="stat-label">Currently Showing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const kolkataRetailers = [
+        { name: "BARDHANS", area: "Jadavpur" },
+        { name: "BHABANI STORES", area: "Ranaghat Subhas Avenue" },
+        { name: "EYE TIME", area: "New Market" },
+        { name: "GABA TIMES PVT LTD", area: "Kolkata" },
+        { name: "GRAND OPTIX", area: "Kolkata" },
+        { name: "H M WATCH CO", area: "Radhabazar" },
+        { name: "IMPEX WATCH CO. AND ANANDOLOK", area: "Garia More" },
+        { name: "KALYANI TIMES", area: "KOLKATA" },
+        { name: "Mandakini Watch House", area: "Near Serampore Municipality" },
+        { name: "Mandakini Watch House", area: "Chinsurah Water Tank" },
+        { name: "NEW SANKAR WATCH", area: "BELGHARIA" },
+        { name: "NEW STANDARD WATCH CO.", area: "Radhabazar" },
+        { name: "PASHUPATI RETAIL", area: "KOLKATA" },
+        { name: "RAM'S", area: "Kolkata" },
+        { name: "Roy Optical & Watch Co.", area: "Kolkata" },
+        { name: "Selection", area: "New Market" },
+        { name: "Shankar watch Care", area: "Belghoria Feeder road" },
+        { name: "SPECTRUM HOSPITALITY", area: "Kolkata" },
+        { name: "SURUCHI SADAN", area: "CHANDANAGAR" },
+        { name: "Tara Watch House", area: "Kanchrapara KGR Path" },
+        { name: "Unique Electronics", area: "Behala" },
+        { name: "Urfees", area: "New Market" },
+      ];
+
+      const otherRetailers = [
+        { name: "Adiytya Optical", area: "Ramgarh" },
+        { name: "AGARWAL AGENCIES", area: "KATIHAR" },
+        { name: "Bharat Watch Opitical", area: "Godda" },
+        { name: "Calcutta Watch", area: "Sheoraphully Udayan Cinema Hall" },
+        { name: "Capital LLP", area: "Ranchi" },
+        { name: "Chadha time Trader", area: "Ranchi" },
+        { name: "CLEARSIGHT", area: "Krishnanagar Bejikhali More" },
+        { name: "DAS OPTICS", area: "Nawadwip Paromatala more" },
+        { name: "DILIP WATCH", area: "SURI" },
+        { name: "Dipak Agency", area: "Koderma" },
+        { name: "Elorra Watch", area: "Hazaribagh" },
+        { name: "GUPTA WATCH CO", area: "COOCH BEHAR" },
+        { name: "HINDUSTAN WATCH CO.", area: "Sasaram" },
+        { name: "Jay watch", area: "Jamshedpur" },
+        { name: "Jayant watch", area: "Jamshedpur" },
+        { name: "Kailash Ram & Sons", area: "Nawada" },
+        { name: "Kamal Trading", area: "Bokaro" },
+        { name: "KTECH MARKETING", area: "Andaman" },
+        { name: "M S Hussain", area: "Chinsurah Gharir More" },
+        { name: "Maahalaxmi watch", area: "Daltanganj" },
+        { name: "New Godda Optical", area: "Godda" },
+        { name: "NEW OK WATCH", area: "ASANSOL" },
+        { name: "NEW RUBY WATCH", area: "MALDA" },
+        { name: "NEW WATCH SERVICE", area: "BOLPUR" },
+        { name: "NEW WATCH WORLD W", area: "ASANSOL" },
+        { name: "ORIENT GLOBAL", area: "RAIGANJ" },
+        { name: "ORIENT GLOBAL", area: "Dinajpur" },
+        { name: "Parikh watch", area: "Dhanbad" },
+        { name: "Paul watch", area: "Ranchi" },
+        { name: "Rana Times", area: "Muzaffarpur" },
+        { name: "RANCHI OPTICAL", area: "HAZARIBAGH" },
+        { name: "Regal watch", area: "Ranchi" },
+        { name: "ROYAL TIME CENTRE", area: "KISHANGANJ" },
+        { name: "SANTOSH WATCH", area: "PURULIA" },
+        { name: "SATHI TIMES", area: "HILL CART ROAD" },
+        { name: "SUN WATCH AND CO", area: "BURDWAN" },
+        { name: "The Maple", area: "Siliguri" },
+        { name: "Time Centre", area: "Singur Bazar" },
+        { name: "TIME CENTRE", area: "KISHANGANJ" },
+        { name: "TIME CENTRE", area: "PURNIA" },
+        { name: "TIME CENTRE", area: "JALPAIGURI" },
+        { name: "TIME PALACE", area: "BURDWAN" },
+        { name: "Titan House", area: "Ranaghat Subhas Avenue" },
+      ];
+
+      let filteredKolkata = [...kolkataRetailers];
+      let filteredOthers = [...otherRetailers];
+
+      function renderRetailers(
+        kolkataList = filteredKolkata,
+        otherList = filteredOthers
+      ) {
+        const kolkataGrid = document.getElementById("kolkataGrid");
+        const othersGrid = document.getElementById("othersGrid");
+        const noResults = document.getElementById("noResults");
+
+        if (kolkataList.length === 0 && otherList.length === 0) {
+          kolkataGrid.innerHTML = "";
+          othersGrid.innerHTML = "";
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        noResults.classList.add("hidden");
+
+        kolkataGrid.innerHTML = kolkataList
+          .map(
+            (retailer, index) => `
+                <div class="retailer-card">
+                    <div class="retailer-number">Retailer ${index + 1}</div>
+                    <div class="retailer-info">
+                        <div class="retailer-name">${retailer.name}</div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📍</span>
+                            ${retailer.area}
+                        </div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        othersGrid.innerHTML = otherList
+          .map(
+            (retailer, index) => `
+                <div class="retailer-card">
+                    <div class="retailer-number">Retailer ${index + 1}</div>
+                    <div class="retailer-info">
+                        <div class="retailer-name">${retailer.name}</div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📍</span>
+                            ${retailer.area}
+                        </div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        // Update visible retailers count
+        document.getElementById("visibleRetailers").textContent =
+          kolkataList.length + otherList.length;
+      }
+
+      function searchRetailers(query) {
+        const searchTerm = query.toLowerCase().trim();
+
+        if (!searchTerm) {
+          filteredKolkata = [...kolkataRetailers];
+          filteredOthers = [...otherRetailers];
+        } else {
+          filteredKolkata = kolkataRetailers.filter(
+            (retailer) =>
+              retailer.name.toLowerCase().includes(searchTerm) ||
+              retailer.area.toLowerCase().includes(searchTerm)
+          );
+          filteredOthers = otherRetailers.filter(
+            (retailer) =>
+              retailer.name.toLowerCase().includes(searchTerm) ||
+              retailer.area.toLowerCase().includes(searchTerm)
+          );
+        }
+        renderRetailers(filteredKolkata, filteredOthers);
+      }
+
+      // Event listeners
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchRetailers(e.target.value);
+      });
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", () => {
+        renderRetailers();
+
+        // Count unique areas and total stores for stats
+        const allRetailers = [...kolkataRetailers, ...otherRetailers];
+        const uniqueAreas = [...new Set(allRetailers.map((r) => r.area))];
+        document.getElementById("totalAreas").textContent = uniqueAreas.length;
+        document.getElementById("totalRetailers").textContent =
+          allRetailers.length;
+      });
+
+      // Add smooth scroll behavior
+      document.documentElement.style.scrollBehavior = "smooth";
+    </script>
+  </body>
+</html>

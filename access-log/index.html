@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Log Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 15px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .chart-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .chart-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .chart-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .chart-container {
+        position: relative;
+        height: 400px;
+      }
+
+      .data-table-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      .data-table th {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px 10px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .data-table td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #ecf0f1;
+        transition: background-color 0.3s ease;
+      }
+
+      .data-table tr:hover td {
+        background-color: #f8f9fa;
+      }
+
+      .filters {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .filter-group label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      .filter-group select {
+        padding: 10px;
+        border: 2px solid #ecf0f1;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .insights-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .insight-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #667eea;
+      }
+
+      .insight-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .insight-text {
+        color: #7f8c8d;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 768px) {
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filters {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🚀 Access Log Analytics Dashboard</h1>
+        <p>
+          Comprehensive insights into your web traffic patterns and performance
+          metrics
+        </p>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <label>Time Range</label>
+          <select id="timeFilter">
+            <option value="all">All Time</option>
+            <option value="24h">Last 24 Hours</option>
+            <option value="7d">Last 7 Days</option>
+            <option value="30d">Last 30 Days</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Country</label>
+          <select id="countryFilter">
+            <option value="all">All Countries</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Request Type</label>
+          <select id="requestFilter">
+            <option value="all">All Requests</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value" id="totalRequests">0</div>
+          <div class="stat-label">Total Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🌍</div>
+          <div class="stat-value" id="uniqueIPs">0</div>
+          <div class="stat-label">Unique IPs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="avgResponseTime">0ms</div>
+          <div class="stat-label">Avg Response Time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💾</div>
+          <div class="stat-value" id="totalDataTransfer">0KB</div>
+          <div class="stat-label">Total Data Transfer</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" id="topCountry">-</div>
+          <div class="stat-label">Top Country</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📱</div>
+          <div class="stat-value" id="mobilePercentage">0%</div>
+          <div class="stat-label">Mobile Traffic</div>
+        </div>
+      </div>
+
+      <!-- Insights Grid -->
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div class="insight-title">🔥 Peak Traffic Hours</div>
+          <div class="insight-text" id="peakHours">Analysis loading...</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">🏆 Most Popular Endpoints</div>
+          <div class="insight-text" id="popularEndpoints">
+            Analysis loading...
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">⚠️ Performance Issues</div>
+          <div class="insight-text" id="performanceIssues">
+            Analysis loading...
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">📈 Requests Over Time</div>
+          <div class="chart-container">
+            <canvas id="timeChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">🌐 Traffic by Country</div>
+          <div class="chart-container">
+            <canvas id="countryChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">⚡ Response Time Distribution</div>
+          <div class="chart-container">
+            <canvas id="responseTimeChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">📊 Request Size Analysis</div>
+          <div class="chart-container">
+            <canvas id="sizeChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">📱 Device Types</div>
+          <div class="chart-container">
+            <canvas id="deviceChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">🎯 Top Endpoints</div>
+          <div class="chart-container">
+            <canvas id="endpointChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="data-table-container">
+        <div class="chart-title">📋 Recent Access Logs</div>
+        <div style="overflow-x: auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP Address</th>
+                <th>Request</th>
+                <th>Country</th>
+                <th>Size</th>
+                <th>Response Time</th>
+                <th>Device Type</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <!-- Data will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample data based on your provided data
+      const sampleData = [
+        {
+          time: "2025-09-15 08:03:54",
+          ip: "117.214.126.35",
+          request: "GET /mbr/south HTTP/1.1",
+          device:
+            "Mozilla/5.0 (Linux; U; Android 12; en-in; RMX3690 Build/SP1A.210812.016) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.72 Mobile Safari/537.36 HeyTapBrowser/45.13.0.1",
+          country: "India",
+          size: 795,
+          responseTime: 2,
+        },
+        {
+          time: "2025-09-15 02:48:18",
+          ip: "2409:40e0:100e:cba8:9012:c1ff:fefa:e4fc",
+          request: "GET /mbr/south/ HTTP/1.1",
+          device:
+            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+          country: "India",
+          size: 4066,
+          responseTime: 4,
+        },
+        {
+          time: "2025-09-15 02:48:18",
+          ip: "2409:40e0:100e:cba8:9012:c1ff:fefa:e4fc",
+          request: "GET /mbr/south HTTP/1.1",
+          device:
+            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+          country: "India",
+          size: 795,
+          responseTime: 1,
+        },
+        {
+          time: "2025-09-15 01:26:11",
+          ip: "152.58.176.91",
+          request: "GET /mbr/kolkata/ HTTP/1.1",
+          device:
+            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+          country: "India",
+          size: 3537,
+          responseTime: 6,
+        },
+        {
+          time: "2025-09-15 00:57:54",
+          ip: "2409:40e0:5b:51ce:8000::",
+          request: "GET /mbr/kolkata/ HTTP/1.1",
+          device:
+            "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/24.0 Chrome/117.0.0.0 Mobile Safari/537.36",
+          country: "India",
+          size: 3537,
+          responseTime: 3,
+        },
+      ];
+
+      // Generate more sample data for better visualization
+      function generateMoreSampleData() {
+        const countries = [
+          "India",
+          "USA",
+          "UK",
+          "Germany",
+          "Japan",
+          "Australia",
+          "Canada",
+          "Brazil",
+        ];
+        const endpoints = [
+          "/mbr/south",
+          "/mbr/kolkata",
+          "/api/users",
+          "/dashboard",
+          "/login",
+          "/products",
+          "/about",
+        ];
+        const devices = [
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X)",
+          "Mozilla/5.0 (Linux; Android 11; SM-G991B)",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+          "Mozilla/5.0 (X11; Linux x86_64)",
+        ];
+
+        const moreData = [];
+        for (let i = 0; i < 50; i++) {
+          const date = new Date();
+          date.setHours(date.getHours() - Math.floor(Math.random() * 48));
+
+          moreData.push({
+            time: date.toISOString().replace("T", " ").split(".")[0],
+            ip: `${Math.floor(Math.random() * 255)}.${Math.floor(
+              Math.random() * 255
+            )}.${Math.floor(Math.random() * 255)}.${Math.floor(
+              Math.random() * 255
+            )}`,
+            request: `GET ${
+              endpoints[Math.floor(Math.random() * endpoints.length)]
+            } HTTP/1.1`,
+            device: devices[Math.floor(Math.random() * devices.length)],
+            country: countries[Math.floor(Math.random() * countries.length)],
+            size: Math.floor(Math.random() * 5000) + 500,
+            responseTime: Math.floor(Math.random() * 10) + 1,
+          });
+        }
+        return [...sampleData, ...moreData];
+      }
+
+      const allData = generateMoreSampleData();
+      let filteredData = allData;
+      let charts = {};
+
+      // Helper functions
+      function getDeviceType(userAgent) {
+        if (
+          userAgent.toLowerCase().includes("mobile") ||
+          userAgent.toLowerCase().includes("android")
+        ) {
+          return "Mobile";
+        } else if (
+          userAgent.toLowerCase().includes("tablet") ||
+          userAgent.toLowerCase().includes("ipad")
+        ) {
+          return "Tablet";
+        } else {
+          return "Desktop";
+        }
+      }
+
+      function extractEndpoint(request) {
+        const match = request.match(/GET\s+([^\s]+)/);
+        return match ? match[1] : request;
+      }
+
+      function formatBytes(bytes) {
+        if (bytes === 0) return "0 B";
+        const k = 1024;
+        const sizes = ["B", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+      }
+
+      // Update statistics
+      function updateStats() {
+        const totalRequests = filteredData.length;
+        const uniqueIPs = new Set(filteredData.map((d) => d.ip)).size;
+        const avgResponseTime = Math.round(
+          filteredData.reduce((sum, d) => sum + d.responseTime, 0) /
+            totalRequests
+        );
+        const totalDataTransfer = filteredData.reduce(
+          (sum, d) => sum + d.size,
+          0
+        );
+
+        const countryStats = {};
+        filteredData.forEach((d) => {
+          countryStats[d.country] = (countryStats[d.country] || 0) + 1;
+        });
+        const topCountry = Object.keys(countryStats).reduce((a, b) =>
+          countryStats[a] > countryStats[b] ? a : b
+        );
+
+        const mobileCount = filteredData.filter(
+          (d) => getDeviceType(d.device) === "Mobile"
+        ).length;
+        const mobilePercentage = Math.round(
+          (mobileCount / totalRequests) * 100
+        );
+
+        document.getElementById("totalRequests").textContent =
+          totalRequests.toLocaleString();
+        document.getElementById("uniqueIPs").textContent =
+          uniqueIPs.toLocaleString();
+        document.getElementById("avgResponseTime").textContent =
+          avgResponseTime + "ms";
+        document.getElementById("totalDataTransfer").textContent =
+          formatBytes(totalDataTransfer);
+        document.getElementById("topCountry").textContent = topCountry;
+        document.getElementById("mobilePercentage").textContent =
+          mobilePercentage + "%";
+      }
+
+      // Update insights
+      function updateInsights() {
+        // Peak traffic hours
+        const hourlyStats = {};
+        filteredData.forEach((d) => {
+          const hour = new Date(d.time).getHours();
+          hourlyStats[hour] = (hourlyStats[hour] || 0) + 1;
+        });
+        const peakHour = Object.keys(hourlyStats).reduce((a, b) =>
+          hourlyStats[a] > hourlyStats[b] ? a : b
+        );
+        document.getElementById(
+          "peakHours"
+        ).textContent = `Peak traffic occurs at ${peakHour}:00 with ${hourlyStats[peakHour]} requests`;
+
+        // Most popular endpoints
+        const endpointStats = {};
+        filteredData.forEach((d) => {
+          const endpoint = extractEndpoint(d.request);
+          endpointStats[endpoint] = (endpointStats[endpoint] || 0) + 1;
+        });
+        const topEndpoint = Object.keys(endpointStats).reduce((a, b) =>
+          endpointStats[a] > endpointStats[b] ? a : b
+        );
+        document.getElementById(
+          "popularEndpoints"
+        ).textContent = `${topEndpoint} is the most requested endpoint with ${endpointStats[topEndpoint]} requests`;
+
+        // Performance issues
+        const slowRequests = filteredData.filter(
+          (d) => d.responseTime > 5
+        ).length;
+        const percentageSlow = Math.round(
+          (slowRequests / filteredData.length) * 100
+        );
+        document.getElementById(
+          "performanceIssues"
+        ).textContent = `${slowRequests} requests (${percentageSlow}%) had response times > 5ms`;
+      }
+
+      // Create charts
+      function createTimeChart() {
+        const hourlyData = {};
+        filteredData.forEach((d) => {
+          const hour = new Date(d.time).getHours();
+          hourlyData[hour] = (hourlyData[hour] || 0) + 1;
+        });
+
+        const labels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+        const data = labels.map((_, i) => hourlyData[i] || 0);
+
+        const ctx = document.getElementById("timeChart").getContext("2d");
+        if (charts.timeChart) charts.timeChart.destroy();
+        charts.timeChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Requests per Hour",
+                data: data,
+                borderColor: "rgb(102, 126, 234)",
+                backgroundColor: "rgba(102, 126, 234, 0.1)",
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      function createCountryChart() {
+        const countryStats = {};
+        filteredData.forEach((d) => {
+          countryStats[d.country] = (countryStats[d.country] || 0) + 1;
+        });
+
+        const sortedCountries = Object.entries(countryStats)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10);
+
+        const ctx = document.getElementById("countryChart").getContext("2d");
+        if (charts.countryChart) charts.countryChart.destroy();
+        charts.countryChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: sortedCountries.map(([country]) => country),
+            datasets: [
+              {
+                data: sortedCountries.map(([, count]) => count),
+                backgroundColor: [
+                  "#667eea",
+                  "#764ba2",
+                  "#f093fb",
+                  "#f5576c",
+                  "#4facfe",
+                  "#00f2fe",
+                  "#43e97b",
+                  "#38f9d7",
+                  "#ffecd2",
+                  "#fcb69f",
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        });
+      }
+
+      function createResponseTimeChart() {
+        const responseTimes = filteredData.map((d) => d.responseTime);
+        const buckets = {
+          "0-1ms": 0,
+          "2-3ms": 0,
+          "4-5ms": 0,
+          "6-7ms": 0,
+          "8-10ms": 0,
+          ">10ms": 0,
+        };
+
+        responseTimes.forEach((time) => {
+          if (time <= 1) buckets["0-1ms"]++;
+          else if (time <= 3) buckets["2-3ms"]++;
+          else if (time <= 5) buckets["4-5ms"]++;
+          else if (time <= 7) buckets["6-7ms"]++;
+          else if (time <= 10) buckets["8-10ms"]++;
+          else buckets[">10ms"]++;
+        });
+
+        const ctx = document
+          .getElementById("responseTimeChart")
+          .getContext("2d");
+        if (charts.responseTimeChart) charts.responseTimeChart.destroy();
+        charts.responseTimeChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: Object.keys(buckets),
+            datasets: [
+              {
+                label: "Request Count",
+                data: Object.values(buckets),
+                backgroundColor: "rgba(102, 126, 234, 0.8)",
+                borderColor: "rgb(102, 126, 234)",
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      function createSizeChart() {
+        const sizes = filteredData.map((d) => d.size).sort((a, b) => a - b);
+        const percentiles = [50, 75, 90, 95, 99].map((p) => {
+          const index = Math.floor((p / 100) * sizes.length);
+          return sizes[index];
+        });
+
+        const ctx = document.getElementById("sizeChart").getContext("2d");
+        if (charts.sizeChart) charts.sizeChart.destroy();
+        charts.sizeChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["50th", "75th", "90th", "95th", "99th"],
+            datasets: [
+              {
+                label: "Response Size (bytes)",
+                data: percentiles,
+                backgroundColor: [
+                  "#667eea",
+                  "#764ba2",
+                  "#f093fb",
+                  "#f5576c",
+                  "#4facfe",
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: "Response Size Percentiles",
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      function createDeviceChart() {
+        const deviceStats = {};
+        filteredData.forEach((d) => {
+          const deviceType = getDeviceType(d.device);
+          deviceStats[deviceType] = (deviceStats[deviceType] || 0) + 1;
+        });
+
+        const ctx = document.getElementById("deviceChart").getContext("2d");
+        if (charts.deviceChart) charts.deviceChart.destroy();
+        charts.deviceChart = new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: Object.keys(deviceStats),
+            datasets: [
+              {
+                data: Object.values(deviceStats),
+                backgroundColor: ["#667eea", "#764ba2", "#f093fb"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        });
+      }
+
+      function createEndpointChart() {
+        const endpointStats = {};
+        filteredData.forEach((d) => {
+          const endpoint = extractEndpoint(d.request);
+          endpointStats[endpoint] = (endpointStats[endpoint] || 0) + 1;
+        });
+
+        const sortedEndpoints = Object.entries(endpointStats)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 8);
+
+        const ctx = document.getElementById("endpointChart").getContext("2d");
+        if (charts.endpointChart) charts.endpointChart.destroy();
+        charts.endpointChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: sortedEndpoints.map(([endpoint]) => endpoint),
+            datasets: [
+              {
+                label: "Requests",
+                data: sortedEndpoints.map(([, count]) => count),
+                backgroundColor: "rgba(118, 75, 162, 0.8)",
+                borderColor: "rgb(118, 75, 162)",
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: "y",
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      // Update data table
+      function updateDataTable() {
+        const tbody = document.getElementById("logTableBody");
+        tbody.innerHTML = "";
+
+        filteredData.slice(0, 20).forEach((row) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+                    <td>${row.time}</td>
+                    <td>${row.ip}</td>
+                    <td>${extractEndpoint(row.request)}</td>
+                    <td>${row.country}</td>
+                    <td>${formatBytes(row.size)}</td>
+                    <td>${row.responseTime}ms</td>
+                    <td>${getDeviceType(row.device)}</td>
+                `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Update filters
+      function updateFilters() {
+        const countryFilter = document.getElementById("countryFilter");
+        const requestFilter = document.getElementById("requestFilter");
+
+        // Get unique countries
+        const countries = [...new Set(allData.map((d) => d.country))];
+        countryFilter.innerHTML = '<option value="all">All Countries</option>';
+        countries.forEach((country) => {
+          const option = document.createElement("option");
+          option.value = country;
+          option.textContent = country;
+          countryFilter.appendChild(option);
+        });
+
+        // Get unique endpoints
+        const endpoints = [
+          ...new Set(allData.map((d) => extractEndpoint(d.request))),
+        ];
+        requestFilter.innerHTML = '<option value="all">All Requests</option>';
+        endpoints.forEach((endpoint) => {
+          const option = document.createElement("option");
+          option.value = endpoint;
+          option.textContent = endpoint;
+          requestFilter.appendChild(option);
+        });
+      }
+
+      // Apply filters
+      function applyFilters() {
+        const timeFilter = document.getElementById("timeFilter").value;
+        const countryFilter = document.getElementById("countryFilter").value;
+        const requestFilter = document.getElementById("requestFilter").value;
+
+        filteredData = allData.filter((d) => {
+          // Time filter
+          if (timeFilter !== "all") {
+            const now = new Date();
+            const logTime = new Date(d.time);
+            const diff = (now - logTime) / (1000 * 60 * 60); // hours
+
+            if (timeFilter === "24h" && diff > 24) return false;
+            if (timeFilter === "7d" && diff > 168) return false;
+            if (timeFilter === "30d" && diff > 720) return false;
+          }
+
+          // Country filter
+          if (countryFilter !== "all" && d.country !== countryFilter)
+            return false;
+
+          // Request filter
+          if (
+            requestFilter !== "all" &&
+            extractEndpoint(d.request) !== requestFilter
+          )
+            return false;
+
+          return true;
+        });
+
+        updateDashboard();
+      }
+
+      // Update entire dashboard
+      function updateDashboard() {
+        updateStats();
+        updateInsights();
+        createTimeChart();
+        createCountryChart();
+        createResponseTimeChart();
+        createSizeChart();
+        createDeviceChart();
+        createEndpointChart();
+        updateDataTable();
+      }
+
+      // Event listeners
+      document
+        .getElementById("timeFilter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("countryFilter")
+        .addEventListener("change", applyFilters);
+      document
+        .getElementById("requestFilter")
+        .addEventListener("change", applyFilters);
+
+      // Initialize dashboard
+      document.addEventListener("DOMContentLoaded", function () {
+        updateFilters();
+        updateDashboard();
+      });
+
+      // Auto-refresh data every 30 seconds (you can modify this for real data)
+      setInterval(() => {
+        // In a real application, you would fetch new data here
+        // For demo purposes, we'll just refresh the dashboard
+        console.log("Auto-refreshing dashboard...");
+        updateDashboard();
+      }, 30000);
+
+      // Add some interactivity to stat cards
+      document.querySelectorAll(".stat-card").forEach((card) => {
+        card.addEventListener("click", function () {
+          const label = this.querySelector(".stat-label").textContent;
+          alert(`You clicked on: ${label}`);
+        });
+      });
+
+      // Add loading animation on filter changes
+      function showLoading() {
+        document.querySelectorAll(".chart-container").forEach((container) => {
+          container.innerHTML =
+            '<div class="loading"><div class="spinner"></div>Loading...</div>';
+        });
+      }
+
+      // Override applyFilters to show loading
+      const originalApplyFilters = applyFilters;
+      applyFilters = function () {
+        showLoading();
+        setTimeout(() => {
+          originalApplyFilters();
+        }, 500);
+      };
+
+      // Export functionality (bonus feature)
+      function exportToCsv() {
+        const headers = [
+          "Time",
+          "IP Address",
+          "Request",
+          "Country",
+          "Size",
+          "Response Time",
+          "Device Type",
+        ];
+        const csvContent = [
+          headers.join(","),
+          ...filteredData.map((row) =>
+            [
+              row.time,
+              row.ip,
+              `"${extractEndpoint(row.request)}"`,
+              row.country,
+              row.size,
+              row.responseTime,
+              `"${getDeviceType(row.device)}"`,
+            ].join(",")
+          ),
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "access_log_data.csv";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+
+      // Add export button functionality
+      const exportButton = document.createElement("button");
+      exportButton.textContent = "📥 Export CSV";
+      exportButton.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        `;
+      exportButton.addEventListener("mouseover", () => {
+        exportButton.style.transform = "scale(1.05)";
+      });
+      exportButton.addEventListener("mouseout", () => {
+        exportButton.style.transform = "scale(1)";
+      });
+      exportButton.addEventListener("click", exportToCsv);
+      document.body.appendChild(exportButton);
+    </script>
+  </body>
+</html>
