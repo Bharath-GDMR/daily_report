@@ -1,7 +1,6 @@
-
 function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
     const errorElement = document.getElementById('login-error');
 
     if (username === 'gdmr' && password === 'gdmr') {
@@ -87,9 +86,9 @@ function showToast(message) {
     setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
 }
 
-function addToCart(assetId) {
-    const asset = findAsset(assetId);
-    if (asset && !cart.find(item => item.id === asset.id)) {
+function addToCart(storeName, spaceCode) {
+    const asset = assetData.find(asset => asset.storeName === storeName && asset.spaceCode === spaceCode);
+    if (asset && !cart.find(item => item.storeName === asset.storeName && item.spaceCode === asset.spaceCode)) {
         cart.push(asset);
         updateCartIcon();
         showToast(`Added ${asset.spaceCode} (${asset.category}) to cart!`);
@@ -125,7 +124,7 @@ function openCart() {
                     <li><strong>Location:</strong> <span>${asset.location}</span></li>
                     <li><strong>Material:</strong> <span>${asset.material}</span></li>
                 </ul>
-                <button class="remove-from-cart-btn" onclick="removeFromCart('${asset.id}')">Remove</button>
+                <button class="remove-from-cart-btn" onclick="removeFromCart('${asset.storeName}', '${asset.spaceCode}')">Remove</button>
             </div>
         `).join('');
         cartBody.appendChild(cartGrid);
@@ -134,8 +133,8 @@ function openCart() {
     document.getElementById('cart-modal').style.display = 'flex';
 }
 
-function removeFromCart(assetId) {
-    const index = cart.findIndex(item => item.id == assetId);
+function removeFromCart(storeName, spaceCode) {
+    const index = cart.findIndex(item => item.storeName === storeName && item.spaceCode === spaceCode);
     if (index > -1) {
         cart.splice(index, 1);
         updateCartIcon();
@@ -167,8 +166,8 @@ function displayResults(groupedStores) {
                 <div class="assets-grid">
                     ${assets.map(asset => `
                         <div class="asset-card">
-                            <div class="add-to-cart-btn" onclick="addToCart('${asset.id}')">+</div>
-                            <div onclick="openLightbox('${asset.id}')">
+                            <div class="add-to-cart-btn" onclick="addToCart('${asset.storeName}', '${asset.spaceCode}')">+</div>
+                            <div onclick="openLightbox('${asset.storeName}', '${asset.spaceCode}')">
                                 <div class="asset-header">
                                     <span class="asset-type">${asset.inventoryMedium}</span>
                                     <span class="asset-id">${asset.spaceCode}</span>
@@ -193,8 +192,8 @@ function displayResults(groupedStores) {
 }
 
 
-function openLightbox(assetId) {
-    const asset = findAsset(assetId);
+function openLightbox(storeName, spaceCode) {
+    const asset = assetData.find(asset => asset.storeName === storeName && asset.spaceCode === spaceCode);
     if (!asset) return;
     
     document.getElementById('lightboxTitle').textContent = asset.category;
@@ -244,10 +243,6 @@ function openLightbox(assetId) {
 
 function closeLightbox() {
     document.getElementById('lightbox').style.display = 'none';
-}
-
-function findAsset(assetId) {
-    return assetData.find(asset => asset.id == assetId);
 }
 
 // Close lightbox when clicking outside
