@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monochrome</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="hue-input">
+      <input
+        id="hueRange"
+        type="range"
+        min="1"
+        max="360"
+        value="337"
+        step="1"
+        class="slider"
+        list="rangemarkers"
+        oninput="hueRange(this.value)"
+      />
+      <datalist id="rangemarkers">
+        <option value="60" label="60"></option>
+        <option value="120" label="120"></option>
+        <option value="180" label="180"></option>
+        <option value="240" label="240"></option>
+        <option value="300" label="300"></option>
+      </datalist>
+      <h2>HUE: <output class="hue-value" id="hueValue"></output></h2>
+    </div>
+
+    <div class="range-output">
+      <div class="output-row" id="labels">
+        <p>LUMINANCE</p>
+
+        <p>20%</p>
+
+        <p>40%</p>
+
+        <p>60%</p>
+
+        <p>80%</p>
+      </div>
+
+      <div class="output-row" id="sat25">
+        <p>25% SATURATION</p>
+        <div class="output-tile-grp">
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+        </div>
+      </div>
+      <div class="output-row" id="sat50">
+        <p>50% SATURATION</p>
+        <div class="output-tile-grp">
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+          <div class="output-tile"></div>
+        </div>
+      </div>
+      <div class="output-row" id="sat75">
+        <p>75% SATURATION</p>
+        <div class="output-tile-grp">
+          <div class="output-tile" id="tile5"></div>
+          <div class="output-tile" id="tile6"></div>
+          <div class="output-tile" id="tile7"></div>
+          <div class="output-tile" id="tile8"></div>
+        </div>
+      </div>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>

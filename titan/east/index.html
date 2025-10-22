@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TITAN MBR - East</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(235, 38, 39, 0.2);
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+      }
+
+      .search-bar {
+        margin-bottom: 2rem;
+        position: relative;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 3px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #eb2627;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(235, 38, 39, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .retailer-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        border-left: 5px solid #eb2627;
+        transition: box-shadow 0.3s ease, border-left-width 0.3s ease;
+      }
+
+      .retailer-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(235, 38, 39, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .retailer-card:hover::before {
+        left: 100%;
+      }
+
+      .retailer-card:hover {
+        transform: translateY(-10px) scale(1.001);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-left-width: 8px;
+      }
+
+      .retailer-number {
+        display: inline-block;
+        background: linear-gradient(135deg, #eb2627, #bc1313);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 5px 15px rgba(235, 38, 39, 0.3);
+      }
+
+      .retailer-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #bc1313;
+        margin-bottom: 0.8rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .retailer-area {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+      }
+
+      .location-icon {
+        margin-right: 0.5rem;
+        color: #eb2627;
+      }
+
+      .stats {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      .stats h3 {
+        color: #bc1313;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.01);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #eb2627;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailer-info {
+        margin-top: 1rem;
+      }
+      .retailer-separator {
+        border: none;
+        height: 1px;
+        background-color: #eee;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header .subtitle {
+          font-size: 1rem;
+        }
+
+        .retailers-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .retailer-card {
+          margin: 0 0.5rem;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .retailer-card {
+          padding: 1rem;
+        }
+      }
+
+      /* Loading animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #eb2627;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>TITAN MBR</h1>
+        <div class="subtitle">East</div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon"></div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search retailers by name or area..."
+          id="searchInput"
+        />
+      </div>
+
+      <div class="retailers-grid" id="retailersGrid">
+        <!-- Retailer cards will be populated by JavaScript -->
+      </div>
+
+      <div class="no-results hidden" id="noResults">
+        <h3>No retailers found</h3>
+        <p>Try adjusting your search terms</p>
+      </div>
+
+      <div class="stats">
+        <h3>Directory Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="totalRetailers">0</div>
+            <div class="stat-label">Total Retailers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalAreas">0</div>
+            <div class="stat-label">Areas Covered</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="visibleRetailers">0</div>
+            <div class="stat-label">Currently Showing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Data from north.csv
+      const retailers = [
+        {
+          id: 1,
+          name: "Elite Radio",
+          area: "Patna",
+          contact: "8252868899",
+          map: "https://maps.app.goo.gl/Jn2dWKnFkvFByrFk7",
+        },
+        {
+          id: 2,
+          name: "Sprint retailing Pvt LTD",
+          area: "Muzaffarpur",
+          contact: "9608087229",
+          map: "https://maps.app.goo.gl/6PeMdNzp6Sdge3K26",
+        },
+        {
+          id: 3,
+          name: "Ragini",
+          area: "Muzaffarpur",
+          contact: "9431034385",
+          map: "https://maps.app.goo.gl/smQeqEHcDwhQ8Fbd7",
+        },
+        {
+          id: 4,
+          name: "Krishna sales",
+          area: "hajipur",
+          contact: "907410122",
+          map: "https://maps.app.goo.gl/g7CV3ovYGZri2Yx18",
+        },
+        {
+          id: 5,
+          name: "Agarwal watch co",
+          area: "Begusarai",
+          contact: "9472808041",
+          map: "https://maps.app.goo.gl/v1sFEujTHTDTxXDF6",
+        },
+        {
+          id: 6,
+          name: "Time house",
+          area: "DURGA BARI Gaya",
+          contact: "8935884500",
+          map: "https://maps.app.goo.gl/jkrATzpJm64fBLDY7",
+        },
+        {
+          id: 7,
+          name: "Kailash Ram and sons",
+          area: "Nawada",
+          contact: "9835677586",
+          map: "https://maps.app.goo.gl/SUNqKayMN8XrmBbcA",
+        },
+        {
+          id: 8,
+          name: "Ramchand and sons",
+          area: "Muzaffarpur",
+          contact: "7004942700",
+          map: "https://maps.app.goo.gl/4wRN1HupXBeSDYgr8",
+        },
+        {
+          id: 9,
+          name: "Laxmi watch",
+          area: "Madhubani",
+          contact: "8862969151",
+          map: "https://maps.app.goo.gl/njCmBdxKNTcvtQra6",
+        },
+        {
+          id: 10,
+          name: "Rana Time",
+          area: "Muzaffarpur",
+          contact: "7903229452",
+          map: "https://maps.app.goo.gl/R3ew6MF7ctbVg4ru8",
+        },
+        {
+          id: 11,
+          name: "Bihar National Watch co.",
+          area: "Darbhanga",
+          contact: "7991165917",
+          map: "https://maps.app.goo.gl/k6KQfUfTMzw2x4236",
+        },
+        {
+          id: 12,
+          name: "Madan watch",
+          area: "arah",
+          contact: "9430010615",
+          map: "https://maps.app.goo.gl/YQbZ4AfetE9QnBWU7",
+        },
+        {
+          id: 13,
+          name: "Mehta watch maker",
+          area: "Patna",
+          contact: "7781004041",
+          map: "https://maps.app.goo.gl/UST3RJC2GmMKatG46",
+        },
+        {
+          id: 14,
+          name: "Patna Network",
+          area: "Patna",
+          contact: "9661130559",
+          map: "https://maps.app.goo.gl/ugjWuK9B2Q1a1Qcq7",
+        },
+        {
+          id: 15,
+          name: "Jay watch Co.",
+          area: "Jamshedpur",
+          contact: "9386087670",
+          map: "https://maps.app.goo.gl/JxXHuyTNbvLXNFPa7",
+        },
+        {
+          id: 16,
+          name: "Jayant watch Co.",
+          area: "Jamshedpur",
+          contact: "9431343425",
+          map: "https://maps.app.goo.gl/Jvi9wbfd3j36kyfB7",
+        },
+        {
+          id: 17,
+          name: "Capital TRADING LLP",
+          area: "Ranchi",
+          contact: "6513571571",
+          map: "https://maps.app.goo.gl/KCUa7TiFKHTYbN9z7",
+        },
+        {
+          id: 18,
+          name: "Regal watch CORNER",
+          area: "Ranchi",
+          contact: "7992261306",
+          map: "https://maps.app.goo.gl/GzXJSKorXdK4Uhe68",
+        },
+        {
+          id: 19,
+          name: "Chadha time Traders",
+          area: "Ranchi",
+          contact: "9234810225",
+          map: "https://maps.app.goo.gl/ebSGdhnZrMsKxmLF6",
+        },
+        {
+          id: 20,
+          name: "Kamal Trading  CO.",
+          area: "Bokaro",
+          contact: "7004081153",
+          map: "https://maps.app.goo.gl/3KovT5Vob7KVsAb46",
+        },
+        {
+          id: 21,
+          name: "Paul watch",
+          area: "Ranchi",
+          contact: "7004577047",
+          map: "https://maps.app.goo.gl/9mNYabC2KjRRA7QR6",
+        },
+        {
+          id: 22,
+          name: "Time center",
+          area: "Kishanganj",
+          contact: "9801181674",
+          map: "https://maps.app.goo.gl/h8vHFh7x53PZER5E9",
+        },
+        {
+          id: 23,
+          name: "Royal Time center",
+          area: "Kishanganj",
+          contact: "7004421295",
+          map: "https://maps.app.goo.gl/2fGRjctKL3vfAujB8",
+        },
+        {
+          id: 24,
+          name: "Agarwal Agencies",
+          area: "Katihar",
+          contact: "7004205175",
+          map: "https://maps.app.goo.gl/gHTi1KQFE19bzVpA7",
+        },
+        {
+          id: 25,
+          name: "Watch Palace",
+          area: "Saharsha",
+          contact: "9431440034",
+          map: "https://maps.app.goo.gl/ks5SQFSFitKpfibz8",
+        },
+        {
+          id: 26,
+          name: "Arshad watch",
+          area: "Purnia",
+          contact: "9572835786",
+          map: "https://maps.app.goo.gl/zFin1NLGte28JjZ16",
+        },
+        {
+          id: 27,
+          name: "Kashish watch CENTER",
+          area: "Purnia",
+          contact: "9835195926",
+          map: "https://maps.app.goo.gl/nT8KsmqfREHgpw2S8",
+        },
+        {
+          id: 28,
+          name: "TIME CENTRE",
+          area: "Purnia",
+          contact: "9430957780",
+          map: "https://maps.app.goo.gl/AVHvoHdcPiESnmp27",
+        },
+        {
+          id: 29,
+          name: "Parikh WATCH co.",
+          area: "Dhanbad",
+          contact: "9835142829",
+          map: "https://maps.app.goo.gl/Uebv2BbwNUthCo4K7",
+        },
+        {
+          id: 30,
+          name: "Poddar WATCH",
+          area: "Dhanbad",
+          contact: "6202421948",
+          map: "https://maps.app.goo.gl/H9emSzvqaEmZqABN6",
+        },
+        {
+          id: 31,
+          name: "Parikh WATCH CO.",
+          area: "DHANBAD",
+          contact: "9835185755",
+          map: "https://maps.app.goo.gl/mVaYU4g2fj3jVUdr8",
+        },
+        {
+          id: 32,
+          name: "CHETNA WATCH",
+          area: "JAMSHEDPUR",
+          contact: "9304804095",
+          map: "https://maps.app.goo.gl/4zEPYX78giTyD6e69",
+        },
+        {
+          id: 33,
+          name: "MAHALAXMI WATCH STORE",
+          area: "Daltanganj",
+          contact: "7004299324",
+          map: "https://maps.app.goo.gl/gaNAkcCQ2pRJ2UtF8",
+        },
+        {
+          id: 34,
+          name: "RANCHI OPTICAL & TIME CENTRE",
+          area: "Hazaribagh",
+          contact: "7061915551",
+          map: "https://maps.app.goo.gl/Y7Vdx39zo9G68Jo7A",
+        },
+        {
+          id: 35,
+          name: "KRISHNA WATCH",
+          area: "Ranchi",
+          contact: "9334426357",
+          map: "https://maps.app.goo.gl/AnTTNH4cQtG5ivPw6",
+        },
+        {
+          id: 36,
+          name: "ADITYA WATCH & OPTICALS",
+          area: "Ramgarh",
+          contact: "7004805010",
+          map: "https://maps.app.goo.gl/93v2gDPiYXpMvBmA7",
+        },
+        {
+          id: 37,
+          name: "G B SINGH",
+          area: "CHAIBASA",
+          contact: "8407000022",
+          map: "https://maps.app.goo.gl/CWwPzhYbNCz3QNEp6",
+        },
+      ];
+
+      let filteredRetailers = [...retailers];
+
+      function renderRetailers(retailerList = filteredRetailers) {
+        const grid = document.getElementById("retailersGrid");
+        const noResults = document.getElementById("noResults");
+
+        if (retailerList.length === 0) {
+          grid.innerHTML = "";
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        noResults.classList.add("hidden");
+
+        grid.innerHTML = retailerList
+          .map((retailer, index) => {
+            const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
+              retailer.name + "," + retailer.area
+            )}&output=embed`;
+            return `
+                <div class="retailer-card">
+                    <div class="retailer-number">Retailer: ${index + 1}</div>
+                    <div class="retailer-info">
+                        <div class="retailer-name">${retailer.name}</div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📍</span>
+                            ${retailer.area}
+                        </div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📞</span>
+                            ${retailer.contact}
+                        </div>
+                    </div>
+                    <iframe
+                      width="100%"
+                      height="250"
+                      style="border:0; margin-top: 1rem;"
+                      loading="lazy"
+                      allowfullscreen
+                      data-src="${embedUrl}"
+                      class="lazy-map">
+                    </iframe>
+                </div>
+            `;
+          })
+          .join("");
+
+        // Update visible retailers count
+        document.getElementById("visibleRetailers").textContent =
+          retailerList.length;
+
+        lazyLoadMaps();
+      }
+
+      function lazyLoadMaps() {
+        const lazyMaps = [].slice.call(
+          document.querySelectorAll("iframe.lazy-map")
+        );
+
+        if ("IntersectionObserver" in window) {
+          let lazyMapObserver = new IntersectionObserver(function (
+            entries,
+            observer
+          ) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                let lazyMap = entry.target;
+                lazyMap.src = lazyMap.dataset.src;
+                lazyMap.classList.remove("lazy-map");
+                lazyMapObserver.unobserve(lazyMap);
+              }
+            });
+          });
+
+          lazyMaps.forEach(function (lazyMap) {
+            lazyMapObserver.observe(lazyMap);
+          });
+        } else {
+          // Fallback for browsers that don't support IntersectionObserver
+          lazyMaps.forEach(function (lazyMap) {
+            lazyMap.src = lazyMap.dataset.src;
+          });
+        }
+      }
+
+      function searchRetailers(query) {
+        const searchTerm = query.toLowerCase().trim();
+
+        if (!searchTerm) {
+          filteredRetailers = [...retailers];
+        } else {
+          filteredRetailers = retailers.filter(
+            (retailer) =>
+              retailer.name.toLowerCase().includes(searchTerm) ||
+              retailer.area.toLowerCase().includes(searchTerm) ||
+              (retailer.area &&
+                retailer.area.toLowerCase().includes(searchTerm))
+          );
+        }
+        renderRetailers(filteredRetailers);
+      }
+
+      // Event listeners
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchRetailers(e.target.value);
+      });
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", () => {
+        renderRetailers();
+
+        // Count unique areas and total stores for stats
+        const uniqueAreas = [...new Set(retailers.map((r) => r.area))];
+        document.getElementById("totalAreas").textContent = uniqueAreas.length;
+        document.getElementById("totalRetailers").textContent =
+          retailers.length;
+      });
+
+      // Add smooth scroll behavior
+      document.documentElement.style.scrollBehavior = "smooth";
+    </script>
+  </body>
+</html>

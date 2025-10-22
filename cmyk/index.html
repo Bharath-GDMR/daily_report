@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMYK</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- <header>
+      <h1>Recreating CMYK printing using CSS <code>mix-blend-mode</code></h1>
+    </header> -->
+    <main class="wrapper">
+      <div class="eyeball">
+        <div class="svg-container c is-mixed"></div>
+        <div class="svg-container m is-mixed"></div>
+        <div class="svg-container y is-mixed"></div>
+        <div class="svg-container k is-mixed"></div>
+      </div>
+    </main>
+    <footer>
+      <div class="buttons">
+        <button
+          class="button button-c"
+          data-layer="c"
+          aria-label="toggle cyan layer"
+        >
+          C
+        </button>
+        <button
+          class="button button-m"
+          data-layer="m"
+          aria-label="toggle magenta layer"
+        >
+          M
+        </button>
+        <button
+          class="button button-y"
+          data-layer="y"
+          aria-label="toggle yellow layer"
+        >
+          Y
+        </button>
+        <button
+          class="button button-k"
+          data-layer="k"
+          aria-label="toggle black layer"
+        >
+          K
+        </button>
+        <button class="button blend" aria-label="toggle mix blend mode">
+          mix
+          <div role="presentation" class="circle circle-c"></div>
+          <div role="presentation" class="circle circle-m"></div>
+          <div role="presentation" class="circle circle-y"></div>
+        </button>
+        <button class="button smallify" aria-label="toggle">+/-</button>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

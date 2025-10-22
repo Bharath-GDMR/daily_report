@@ -3,13 +3,31 @@ function login() {
     const password = document.getElementById('password').value.trim();
     const errorElement = document.getElementById('login-error');
 
-    if (username === 'gdmr' && password === 'gdmr') {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.querySelector('.header').style.display = 'block';
-        document.querySelector('.container').style.display = 'block';
-    } else {
-        errorElement.textContent = 'Invalid username or password';
-    }
+    errorElement.textContent = ''; // Clear previous errors
+
+    fetch('login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.querySelector('.header').style.display = 'block';
+            document.querySelector('.container').style.display = 'block';
+            // Trigger the initial asset load after successful login
+            loadInitialAssets();
+        } else {
+            errorElement.textContent = data.message || 'Invalid username or password';
+        }
+    })
+    .catch(error => {
+        console.error('Login error:', error);
+        errorElement.textContent = 'An error occurred. Please try again.';
+    });
 }
 
 document.getElementById('password').addEventListener('keyup', function(event) {
@@ -20,61 +38,60 @@ document.getElementById('password').addEventListener('keyup', function(event) {
 
 let assetData = [];
 
-window.addEventListener('load', function() {
-    fetch('assets.json')
-        .then(response => response.json())
-        .then(data => {
-            assetData = data;
+function loadInitialAssets() {
+    // Load all asset data initially for cart and lightbox functionality
+    fetch('api.php')
+        .then(response => {
+            if (response.status === 401) {
+                // If session expired or user is not logged in, redirect to login
+                window.location.href = 'index.html';
+                return;
+            }
+            return response.json();
         })
-        .catch(error => console.error('Error loading asset data:', error));
-});
+        .then(data => {
+            if (data) {
+                assetData = data;
+                // Initially display all assets
+                searchStore();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading initial asset data:', error);
+            document.getElementById('resultsSection').innerHTML = '<div style="text-align: center; padding: 2rem; color: #d9534f;"><h3>Error loading asset data. Please check the backend connection.</h3></div>';
+        });
+}
 
 function searchStore() {
-    const query = document.getElementById('searchQuery').value.trim().toLowerCase();
-    
+    const query = document.getElementById('searchQuery').value.trim();
     const resultsSection = document.getElementById('resultsSection');
-    resultsSection.innerHTML = '';
-    
-    let filteredAssets = assetData;
+    resultsSection.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;"><h3>Searching...</h3></div>';
 
-    if (query) {
-        filteredAssets = assetData.filter(asset => {
-            const storeName = asset.storeName ? asset.storeName.trim().toLowerCase() : '';
-            const spaceCode = asset.spaceCode ? asset.spaceCode.trim().toLowerCase() : '';
-            const category = asset.category ? asset.category.trim().toLowerCase() : '';
-            const location = asset.location ? asset.location.trim().toLowerCase() : '';
-            const material = asset.material ? asset.material.trim().toLowerCase() : '';
-            const inventoryMedium = asset.inventoryMedium ? asset.inventoryMedium.trim().toLowerCase() : '';
-            const inventoryType = asset.inventoryType ? asset.inventoryType.trim().toLowerCase() : '';
+    // Fetch filtered data from the backend
+    fetch(`api.php?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(filteredAssets => {
+            const groupedByStore = filteredAssets.reduce((acc, asset) => {
+                const storeName = asset.storeName;
+                if (!acc[storeName]) {
+                    acc[storeName] = [];
+                }
+                acc[storeName].push(asset);
+                return acc;
+            }, {});
 
-            return (
-                storeName.includes(query) ||
-                spaceCode.includes(query) ||
-                category.includes(query) ||
-                location.includes(query) ||
-                material.includes(query) ||
-                inventoryMedium.includes(query) ||
-                inventoryType.includes(query)
-            );
+            if (Object.keys(groupedByStore).length > 0) {
+                displayResults(groupedByStore);
+                resultsSection.style.display = 'block';
+            } else {
+                resultsSection.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;"><h3>No assets found matching your criteria</h3></div>';
+                resultsSection.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error searching assets:', error);
+            resultsSection.innerHTML = '<div style="text-align: center; padding: 2rem; color: #d9534f;"><h3>Error performing search. Please try again.</h3></div>';
         });
-    }
-
-    const groupedByStore = filteredAssets.reduce((acc, asset) => {
-        const storeName = asset.storeName;
-        if (!acc[storeName]) {
-            acc[storeName] = [];
-        }
-        acc[storeName].push(asset);
-        return acc;
-    }, {});
-
-    if (Object.keys(groupedByStore).length > 0) {
-        displayResults(groupedByStore);
-        resultsSection.style.display = 'block';
-    } else {
-        resultsSection.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;"><h3>No assets found matching your criteria</h3></div>';
-        resultsSection.style.display = 'block';
-    }
 }
 
 let cart = [];

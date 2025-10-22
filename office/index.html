@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>GDMR Office Hub - A Design Company Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,800;1,600&family=Zilla+Slab:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes top-left-reveal {
+          0% {
+            transform: none;
+          }
+          100% {
+            transform: translate(
+              calc(-1 * var(--layer-offset)),
+              calc(-1 * var(--layer-offset))
+            );
+          }
+        }
+        @keyframes bottom-right-reveal {
+          0% {
+            transform: none;
+          }
+          100% {
+            transform: translate(var(--layer-offset), var(--layer-offset));
+          }
+        }
+        #loading-screen {
+          --headline: "print.VMSD.in";
+          --transition-duration: 0.4s;
+          --appearance-duration: 0.8s;
+          --animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          --layer-offset: 0.15em;
+        }
+
+        #loading-screen .headline {
+          position: relative;
+          margin: 0;
+          line-height: 1.01;
+          font-size: 8vh;
+          font-weight: 800;
+        }
+
+        #loading-screen .profession {
+          color: inherit;
+          line-height: 1.4;
+          font-size: 4vh;
+          font-weight: 600;
+          font-style: italic;
+        }
+
+        #loading-screen .e-mail {
+          color: inherit;
+          font: 600 1.5rem "Zilla Slab", monospace;
+          line-height: 1.6;
+        }
+
+        @media screen and (max-aspect-ratio: 3/2) and (max-width: 40rem) {
+          #loading-screen .headline {
+            font-size: 18vw;
+          }
+
+          #loading-screen .profession {
+            font-size: 8vw;
+          }
+        }
+        @media screen and (min-aspect-ratio: 3/2) and (max-height: 40rem) {
+          #loading-screen .headline {
+            font-size: 22vh;
+          }
+
+          #loading-screen .profession {
+            font-size: 11vh;
+          }
+        }
+        @supports (mix-blend-mode: multiply) {
+          #loading-screen .headline {
+            color: magenta;
+            mix-blend-mode: multiply;
+          }
+          #loading-screen .headline::before,
+          #loading-screen .headline::after {
+            content: var(--headline);
+            transition: transform var(--transition-duration)
+              var(--animation-timing-function);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            mix-blend-mode: multiply;
+          }
+          #loading-screen .headline::before {
+            animation: top-left-reveal var(--appearance-duration)
+              var(--animation-timing-function);
+            transform: translate(
+              calc(-1 * var(--layer-offset)),
+              calc(-1 * var(--layer-offset))
+            );
+            color: yellow;
+          }
+          #loading-screen .headline::after {
+            animation: bottom-right-reveal var(--appearance-duration)
+              var(--animation-timing-function);
+            transform: translate(var(--layer-offset), var(--layer-offset));
+            color: cyan;
+          }
+          #loading-screen .headline:not(.animation-in-progress):hover::before,
+          #loading-screen .headline:not(.animation-in-progress):hover::after {
+            transform: none;
+          }
+        }
+
+        #main-content {
+            display: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            color: #eee;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .ui-panel {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 100;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        #instructions {
+            top: 20px;
+            left: 20px;
+            max-width: 280px;
+        }
+
+        #instructions h3 {
+            margin: 0 0 10px 0;
+            color: #00aaff;
+            font-weight: 600;
+        }
+
+        #instructions p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #ccc;
+        }
+        #instructions strong { color: #fff; }
+
+        #quickNav {
+            top: 20px;
+            right: 20px;
+        }
+
+        #quickNav h4 {
+            margin: 0 0 10px 0;
+            color: #00aaff;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px 15px;
+            background: rgba(0, 170, 255, 0.2);
+            border: 1px solid rgba(0, 170, 255, 0.5);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 170, 255, 0.4);
+            transform: scale(1.03);
+        }
+
+        #minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        #chatModal {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            max-width: 500px;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        #chatContent h3 {
+            margin: 0 0 15px 0;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #chatContent p { line-height: 1.6; margin: 10px 0; }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+        #proximity {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00aaff;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: none;
+            font-size: 16px;
+            border: 1px solid #00aaff;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 170, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0); }
+        }
+
+        #queryForm {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #queryInput {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            min-height: 80px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        #queryInput::placeholder { color: #bbb; }
+
+        #queryForm input[type="text"], #queryForm input[type="email"], #queryForm input[type="tel"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #queryForm input::placeholder { color: #bbb; }
+        #queryForm button {
+            padding: 10px 15px;
+            background: rgba(0, 170, 255, 0.3);
+            border: 1px solid rgba(0, 170, 255, 0.6);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        #queryForm button:hover {
+            background: rgba(0, 170, 255, 0.5);
+        }
+        #queryForm button:disabled {
+            background: rgba(128, 128, 128, 0.2);
+            border-color: rgba(128, 128, 128, 0.4);
+            cursor: not-allowed;
+        }
+
+        .action-btn {
+            background: rgba(0, 170, 255, 0.3);
+            border: 1px solid rgba(0, 170, 255, 0.6);
+            color: white;
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            margin-left: 15px;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .action-btn:active {
+             background: rgba(0, 170, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .ui-panel {
+                padding: 15px;
+            }
+            #quickNav {
+                top: 10px;
+                right: 10px;
+                padding: 10px;
+                max-width: 120px;
+            }
+            #quickNav h4 {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+            #minimap {
+                display: none; /* Hidden to save space */
+            }
+            #chatModal {
+                width: calc(100% - 20px);
+                max-width: calc(100% - 20px);
+            }
+            #proximity {
+                font-size: 14px;
+                padding: 8px 15px;
+                bottom: 170px; /* Above joystick */
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <h1 class="headline">print.VMSD.in</h1>
+        <a class="profession" href="vmsd.in">Visual Merchandising & Store Design in India</a>
+        <a class="e-mail" href="mailto:bharath@vmsd.in">bharath@vmsd.in</a>
+    </div>
+
+    <div id="main-content">
+        <div id="gameContainer">
+            <div id="instructions" class="ui-panel">
+                <h3>GDMR Office Hub</h3>
+                <p><strong>WASD / ↑↓:</strong> Move</p>
+                <p><strong>← →:</strong> Look</p>
+                <p><strong>E:</strong> Interact</p>
+                <p><strong>Space:</strong> Dance!</p>
+            </div>
+
+            <div id="quickNav" class="ui-panel">
+                <h4>🚀 Quick Navigation</h4>
+                <button class="nav-btn" onclick="navigateTo('bharath')">Bharath (Projects)</button>
+                <button class="nav-btn" onclick="navigateTo('diya')">Diya (Design)</button>
+                <button class="nav-btn" onclick="navigateTo('githi')">Githi (Founder)</button>
+                <button class="nav-btn" onclick="navigateTo('gina')">Gina (Founder)</button>
+                <button class="nav-btn" onclick="navigateTo('akhil')">Akhil (GM)</button>
+                <button class="nav-btn" onclick="navigateTo('jofin')">Jofin (HR)</button>
+                <button class="nav-btn" onclick="navigateTo('anoop')">Anoop (Accounts)</button>
+                <button class="nav-btn" onclick="navigateTo('prithvi')">Prithvi (BRD)</button>
+            </div>
+
+            <div id="proximity"></div>
+            <div id="minimap"></div>
+
+            <div id="chatModal" class="ui-panel">
+                <button class="close-btn" onclick="closeChat()">×</button>
+                <div id="chatContent"></div>
+            </div>
+        </div>
+
+        <div id="mobileControls" style="display: none;">
+            <div id="joystick" style="position: absolute; bottom: 30px; left: 30px; width: 120px; height: 120px; background: rgba(128,128,128,0.3); border-radius: 50%;">
+                <div id="joystick-stick" style="position: absolute; width: 60px; height: 60px; background: rgba(255,255,255,0.5); border-radius: 50%; left: 30px; top: 30px; transition: transform 0.1s;"></div>
+            </div>
+        </div>
+        <div id="actionButtons" style="display: none; position: absolute; bottom: 40px; right: 20px; z-index: 101;">
+            <button id="danceBtn" class="action-btn">💃</button>
+            <button id="interactBtn" class="action-btn">E</button>
+        </div>
+    </div>
+
+    <script>
+        // --- LOADING SCREEN LOGIC ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            const headline = loadingScreen.querySelector(".headline");
+
+            headline.classList.add("animation-in-progress");
+            setTimeout(() => headline.classList.remove("animation-in-progress"), 1000);
+
+            // Hide loading screen and show main content after a delay
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                mainContent.style.display = 'block';
+            }, 5000); // 5 second delay
+        });
+
+
+        // --- SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x101015);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById("gameContainer").appendChild(renderer.domElement);
+        const clock = new THREE.Clock();
+
+        // --- STATE ---
+        const player = {
+            position: new THREE.Vector3(0, 1.7, 8),
+            rotationY: Math.PI,
+            speed: 0.15,
+            isDancing: false,
+            danceTime: 0,
+        };
+        const keys = {};
+        let activeInteractionZone = null;
+        let characterBeingCalled = null;
+        const mixers = [];
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        keyLight.position.set(30, 50, 30);
+        keyLight.castShadow = true;
+        keyLight.shadow.mapSize.width = 2048;
+        keyLight.shadow.mapSize.height = 2048;
+        scene.add(keyLight);
+
+        // --- MATERIALS ---
+        const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.8, metalness: 0.2 });
+        const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 1 });
+        const glassMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff, transmission: 0.9, roughness: 0.1, transparent: true, opacity: 1, metalness: 0
+        });
+
+        // --- CHARACTER DATA ---
+        const characters = {
+            bharath: { name: "Bharath", role: "Projects", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(-30, 0, -30), color: 0x4285f4, chat: { title: "🚀 Bharath", content: `<p>I turn chaos into beautiful project timelines.</p>`}, movementType: 'patrol', patrolArea: { radius: 5 } },
+            diya: { name: "Diya", role: "Design", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(30, 0, -30), color: 0x9c27b0, chat: { title: "🎨 Diya", content: `<p>I turn boring briefs into visual masterpieces!</p>`}, movementType: 'patrol', patrolArea: { radius: 5 } },
+            githi: { name: "Githi", role: "Founder", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(-4, 0, 30), color: 0xffd700, chat: { title: "👑 Githi", content: `<p>We built this company from a crazy idea and a lot of coffee!</p>`}, movementType: 'patrol', patrolArea: { radius: 4 } },
+            gina: { name: "Gina", role: "Founder", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(4, 0, 30), color: 0xffd700, chat: { title: "👑 Gina", content: `<p>And somehow we haven't killed each other yet!</p>`}, movementType: 'patrol', patrolArea: { radius: 4 } },
+            akhil: { name: "Akhil", role: "GM", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(-30, 0, 30), color: 0xf44336, chat: { title: "⚡ Akhil", content: `<p>I keep this beautiful chaos organized!</p>`}, movementType: 'path', path: [new THREE.Vector3(-30, 0, 30), new THREE.Vector3(-4, 0, 30)] },
+            jofin: { name: "Jofin", role: "HR", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(30, 0, 30), color: 0x4caf50, chat: { title: "🤝 Jofin", content: `<p>People are our greatest asset! Looking to join our team? You can submit your resume through the form below.</p>`}, movementType: 'patrol', patrolArea: { radius: 4 } },
+            anoop: { name: "Anoop", role: "Accounts", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(-30, 0, 0), color: 0xff9800, chat: { title: "💰 Anoop", content: `<p>Numbers don't lie, but they sure know how to tell interesting stories!</p>`}, movementType: 'patrol', patrolArea: { radius: 3 } },
+            prithvi: { name: "Prithvi", role: "BRD", email: "bharath.gdmr@gmail.com", pos: new THREE.Vector3(30, 0, 0), color: 0x009688, chat: { title: "📊 Prithvi", content: `<p>I translate client dreams into actionable reality!</p>`}, movementType: 'path', path: [new THREE.Vector3(30, 0, 0), new THREE.Vector3(30, 0, -30)] },
+        };
+
+        // --- OFFICE CREATION ---
+        function createOffice() {
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), floorMaterial);
+            floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+            const wallHeight = 10;
+            [[0, 50, 100, 1], [0, -50, 100, 1], [50, 0, 1, 100], [-50, 0, 1, 100]].forEach(([x, z, w, d]) => {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(w, wallHeight, d), wallMaterial);
+                wall.position.set(x, wallHeight / 2, z); wall.castShadow = true; scene.add(wall);
+            });
+
+            Object.entries(characters).forEach(([key, char]) => createWorkstation(key, char));
+            createPlant(15, 15); createPlant(-15, -15); createPlant(15, -15); createPlant(-15, 15);
+            createBacklitLogo();
+        }
+
+        function createBacklitLogo() {
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load('../asset/logo.png', (texture) => {
+                const logoWidth = 10;
+                const logoHeight = logoWidth / texture.image.width * texture.image.height;
+                const logoGeo = new THREE.PlaneGeometry(logoWidth, logoHeight);
+                const logoMat = new THREE.MeshStandardMaterial({ 
+                    map: texture, 
+                    transparent: true, 
+                    roughness: 0.4, 
+                    metalness: 0.2
+                });
+                const logo = new THREE.Mesh(logoGeo, logoMat);
+                logo.position.set(0, 6, -48.9); // Slightly in front of the back wall
+                scene.add(logo);
+
+                // Backlight
+                const backlight = new THREE.PointLight(0xffffff, 0.8, 20);
+                backlight.position.set(0, 6, -48);
+                scene.add(backlight);
+            });
+        }
+
+        function createWorkstation(key, character) {
+            const { pos, color, role } = character;
+            const spotLight = new THREE.SpotLight(color, 4, 30, Math.PI / 3, 0.5, 2);
+            spotLight.position.set(pos.x, 12, pos.z); spotLight.target.position.set(pos.x, 0, pos.z);
+            scene.add(spotLight); scene.add(spotLight.target);
+
+            const areaGeo = new THREE.PlaneGeometry(15, 15);
+            const areaMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.2 });
+            const area = new THREE.Mesh(areaGeo, areaMat);
+            area.rotation.x = -Math.PI / 2;
+            area.position.set(pos.x, 0.01, pos.z);
+            scene.add(area);
+
+            const deskTop = new THREE.Mesh(new THREE.BoxGeometry(8, 0.2, 4), new THREE.MeshStandardMaterial({ color: 0xfafafa }));
+            deskTop.position.set(pos.x, 3, pos.z); deskTop.castShadow = true; scene.add(deskTop);
+
+            createSignage(character);
+
+            if (role === 'Design') {
+                const tablet = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.1, 2), new THREE.MeshStandardMaterial({ color: 0x111 }));
+                tablet.position.set(pos.x - 2, 3.1, pos.z); scene.add(tablet);
+            } else if (role === 'Projects') {
+                const board = new THREE.Mesh(new THREE.BoxGeometry(0.2, 6, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }));
+                board.position.set(pos.x - 8, 5, pos.z); scene.add(board);
+            } else if (role === 'Accounts') {
+                for (let i = 0; i < 5; i++) {
+                    const file = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 0.2), new THREE.MeshStandardMaterial({ color: 0xaaaaaa }));
+                    file.position.set(pos.x + 3, 3 + i * 0.2, pos.z + 1); scene.add(file);
+                }
+            }
+        }
+
+        function createSignage(character) {
+            const { pos, name, role, color } = character;
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = 256; canvas.height = 128;
+            ctx.fillStyle = `#${color.toString(16).padStart(6, '0')}`;
+            ctx.fillRect(0, 0, 256, 128);
+            
+            // Use black text for light backgrounds like yellow for better contrast
+            const textColor = (color === 0xffd700) ? "black" : "white";
+            ctx.fillStyle = textColor;
+
+            ctx.font = "bold 30px Poppins"; ctx.textAlign = "center";
+            ctx.fillText(name, 128, 50);
+            ctx.font = "20px Poppins";
+            ctx.fillText(role, 128, 90);
+
+            const sign = new THREE.Mesh(
+                new THREE.BoxGeometry(4, 2, 0.01), // Use a thin box instead of a plane
+                new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(canvas) })
+            );
+            sign.position.set(pos.x, 5, pos.z - 5);
+            scene.add(sign);
+        }
+
+        function createPlant(x, z) {
+            const group = new THREE.Group();
+            const pot = new THREE.Mesh(new THREE.CylinderGeometry(1, 0.8, 1.5), new THREE.MeshStandardMaterial({ color: 0x555555 }));
+            pot.castShadow = true; group.add(pot);
+            const leaves = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), new THREE.MeshStandardMaterial({ color: 0x22aa44 }));
+            leaves.position.y = 1.5; leaves.castShadow = true; group.add(leaves);
+            group.position.set(x, 0.75, z); scene.add(group);
+        }
+
+        // --- CHARACTER CREATION & AI ---
+        function createCharacters() {
+            const loader = new THREE.GLTFLoader();
+            const girlNames = ['githi', 'gina', 'diya'];
+
+            Object.entries(characters).forEach(([key, char]) => {
+                const modelPath = girlNames.includes(key) ? 'gg.glb' : 'boy.glb';
+                
+                loader.load(modelPath, (gltf) => {
+                    const model = gltf.scene;
+                    const scale = girlNames.includes(key) ? 1.0 : 1.0; // Adjusted scale for gg.glb and boy.glb
+                    model.scale.set(scale, scale, scale);
+                    model.position.copy(char.pos);
+                    model.castShadow = true;
+                    model.traverse(node => {
+                        if (node.isMesh) node.castShadow = true;
+                    });
+
+                    // Animation handling
+                    if (gltf.animations && gltf.animations.length && modelPath !== 'boy.glb') { // Skip animation for boy.glb
+                        const mixer = new THREE.AnimationMixer(model);
+                        mixers.push(mixer);
+                        gltf.animations.forEach((clip) => {
+                            mixer.clipAction(clip).play();
+                        });
+                    }
+
+                    // Replace the primitive mesh with the loaded model
+                    if (char.mesh) scene.remove(char.mesh);
+                    char.mesh = model;
+                    scene.add(model);
+                });
+
+                char.targetPosition = char.pos.clone();
+                char.movementState = 'IDLE'; // IDLE, PATROLLING, COMMUNICATING, TALKING, RETURNING
+                char.idleTimer = Math.random() * 5 + 2;
+                char.pathIndex = 0;
+                char.interactionZone = new THREE.Box3().setFromCenterAndSize(char.pos, new THREE.Vector3(15, 10, 15));
+            });
+        }
+
+        function updateCharacters(deltaTime) {
+            const characterList = Object.values(characters);
+            characterList.forEach((char, index) => {
+                if (!char.mesh) return; // Don't update if model not loaded yet
+
+                // --- State Machine ---
+                switch (char.movementState) {
+                    case 'IDLE':
+                        char.idleTimer -= deltaTime;
+                        if (char.idleTimer <= 0) char.movementState = 'PATROLLING';
+                        break;
+                    case 'PATROLLING':
+                        if (char.mesh.position.distanceTo(char.targetPosition) < 0.5) {
+                            char.movementState = 'IDLE';
+                            char.idleTimer = Math.random() * 8 + 4;
+                            if (char.movementType === 'patrol') {
+                                const angle = Math.random() * Math.PI * 2;
+                                const radius = Math.random() * char.patrolArea.radius;
+                                char.targetPosition.set(char.pos.x + Math.cos(angle) * radius, 0, char.pos.z + Math.sin(angle) * radius);
+                            } else if (char.movementType === 'path') {
+                                char.pathIndex = (char.pathIndex + 1) % char.path.length;
+                                char.targetPosition.copy(char.path[char.pathIndex]);
+                            }
+                        }
+                        break;
+                    case 'COMMUNICATING':
+                        if (char.mesh.position.distanceTo(char.targetPosition) < 1.5) {
+                            char.movementState = 'TALKING';
+                            openChat(char);
+                        }
+                        break;
+                    case 'TALKING':
+                        // Character is waiting for chat to close, do nothing.
+                        break;
+                    case 'RETURNING':
+                        if (char.mesh.position.distanceTo(char.targetPosition) < 0.5) {
+                            char.movementState = 'IDLE';
+                            char.idleTimer = 3; // Wait a bit before patrolling again
+                        }
+                        break;
+                }
+
+                // --- Movement ---
+                if (char.movementState === 'PATROLLING' || char.movementState === 'COMMUNICATING' || char.movementState === 'RETURNING') {
+                    const distance = char.mesh.position.distanceTo(char.targetPosition);
+                    const moveSpeed = (char.movementState === 'COMMUNICATING') ? 5 : 1.5; // Move faster to player
+                    if(distance > 0.1) {
+                        const direction = new THREE.Vector3().subVectors(char.targetPosition, char.mesh.position).normalize();
+                        char.mesh.position.add(direction.multiplyScalar(deltaTime * moveSpeed));
+                        char.mesh.lookAt(new THREE.Vector3(char.targetPosition.x, char.mesh.position.y, char.targetPosition.z));
+                    }
+                }
+            });
+        }
+
+        // --- PLAYER & CONTROLS ---
+        document.addEventListener("keydown", (e) => {
+            // Stop game controls from firing when typing in the chat form
+            if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') {
+                if (e.code === 'Escape') {
+                    closeChat();
+                }
+                return;
+            }
+
+            keys[e.code] = true;
+            if (e.code === 'Space') player.isDancing = true;
+            if (e.code === 'KeyE') { interact(); keys['KeyE'] = false; }
+            if (e.code === 'Escape') closeChat();
+        });
+        document.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+        function updatePlayer(deltaTime) {
+            // Close chat window on movement
+            const chatModalOpen = document.getElementById("chatModal").style.display === "block";
+            if (chatModalOpen && (keys["KeyW"] || keys["ArrowUp"] || keys["KeyS"] || keys["ArrowDown"] || keys["KeyA"] || keys["KeyD"] || keys["ArrowLeft"] || keys["ArrowRight"])) {
+                closeChat();
+            }
+
+            if (player.isDancing) {
+                player.danceTime += deltaTime * 5;
+                camera.position.y = 1.7 + Math.sin(player.danceTime) * 0.1;
+                camera.rotation.z = Math.sin(player.danceTime * 0.5) * 0.05;
+                if (!keys['Space']) {
+                    player.isDancing = false;
+                    camera.rotation.z = 0;
+                }
+                return;
+            }
+
+            const moveDirection = new THREE.Vector3(0, 0, 0);
+            if (keys["KeyW"] || keys["ArrowUp"]) moveDirection.z -= 1;
+            if (keys["KeyS"] || keys["ArrowDown"]) moveDirection.z += 1;
+            if (keys["KeyA"]) moveDirection.x -= 1;
+            if (keys["KeyD"]) moveDirection.x += 1;
+
+            if (moveDirection.length() > 0) {
+                moveDirection.normalize().applyAxisAngle(new THREE.Vector3(0, 1, 0), player.rotationY);
+                player.position.add(moveDirection.multiplyScalar(player.speed));
+            }
+
+            if (keys["ArrowLeft"]) player.rotationY += 0.04;
+            if (keys["ArrowRight"]) player.rotationY -= 0.04;
+
+            player.position.x = Math.max(-48, Math.min(48, player.position.x));
+            player.position.z = Math.max(-48, Math.min(48, player.position.z));
+
+            camera.position.copy(player.position);
+            camera.rotation.y = player.rotationY;
+        }
+
+        // --- INTERACTION & UI ---
+        function checkInteractionZones() {
+            const proximityElement = document.getElementById("proximity");
+            activeInteractionZone = null;
+            if (characterBeingCalled) {
+                proximityElement.style.display = "none";
+                return;
+            }
+
+            Object.entries(characters).forEach(([key, char]) => {
+                if (char.interactionZone.containsPoint(player.position)) {
+                    activeInteractionZone = key;
+                }
+            });
+            
+            if (activeInteractionZone) {
+                proximityElement.innerText = `Press E to talk to ${characters[activeInteractionZone].name}`;
+                proximityElement.style.display = "block";
+            } else {
+                proximityElement.style.display = "none";
+            }
+        }
+
+        function interact() {
+            if (activeInteractionZone && !characterBeingCalled) {
+                characterBeingCalled = characters[activeInteractionZone];
+                characterBeingCalled.movementState = 'COMMUNICATING';
+                
+                // Calculate a point 4 units in front of the camera in world space for a natural distance
+                const targetPos = new THREE.Vector3(0, 0, -4);
+                targetPos.applyMatrix4(camera.matrixWorld);
+
+                characterBeingCalled.targetPosition.set(.x, 0, targetPos.z);
+            }
+        }
+
+        function openChat(character) {
+            const modal = document.getElementById("chatModal");
+            const content = document.getElementById("chatContent");
+            const color = `#${character.color.toString(16).padStart(6, '0')}`;
+            modal.style.border = `1px solid ${color}`;
+
+            let formHtml = `
+                <form id="queryForm" onsubmit="submitQuery(event, '${character.name}')">
+                    <input type="text" id="userName" placeholder="Your Name" required>
+                    <input type="email" id="userEmail" placeholder="Your Email" required>
+                    <input type="tel" id="userPhone" placeholder="Your Phone Number" required>
+                    <textarea id="queryInput" placeholder="Type your question for ${character.name}..." required></textarea>
+                    <button type="submit">Submit Query</button>
+                </form>
+            `;
+
+            if (character.name === 'Jofin') {
+                formHtml = `
+                <form id="queryForm" onsubmit="submitQuery(event, '${character.name}')" enctype="multipart/form-data">
+                    <input type="text" id="userName" placeholder="Your Name" required>
+                    <input type="email" id="userEmail" placeholder="Your Email" required>
+                    <input type="tel" id="userPhone" placeholder="Your Phone Number" required>
+                    <textarea id="queryInput" placeholder="Type your message for Jofin..." required></textarea>
+                    <label for="resumeInput" style="margin-top: 15px; display: block; font-size: 14px; color: #ccc;">Attach Resume</label>
+                    <input type="file" id="resumeInput" name="attachment" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="margin-top: 5px; width: 100%; box-sizing: border-box; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                    <div style="font-size: 12px; color: #999; margin-top: 5px;">Max file size: 10MB. Recommended: 5MB.</div>
+                    <button type="submit" style="margin-top: 15px;">Submit Application</button>
+                </form>
+                `;
+            }
+
+            content.innerHTML = `
+                <h3>${character.chat.title}</h3>
+                ${character.chat.content}
+                ${formHtml}
+            `;
+            modal.style.display = "block";
+        }
+
+        function submitQuery(event, characterName) {
+            event.preventDefault();
+            const form = document.getElementById('queryForm');
+            const userName = document.getElementById('userName').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const userPhone = document.getElementById('userPhone').value;
+            const query = document.getElementById('queryInput').value;
+            const button = form.querySelector('button');
+
+            const characterKey = Object.keys(characters).find(key => characters[key].name === characterName);
+            const character = characters[characterKey];
+
+            if (!character || !character.email) {
+                console.error('Could not find character or email for:', characterName);
+                alert('An error occurred: Could not find recipient email.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('to', character.email);
+            formData.append('subject', `Query for ${character.name} from Office Hub`);
+            
+            const messageBody = `
+                A user has a query for ${character.name}:
+
+                Name: ${userName}
+                Email: ${userEmail}
+                Phone: ${userPhone}
+
+                Message:
+                "${query}"
+            `;
+            formData.append('message', messageBody);
+
+            if (character.name === 'Jofin') {
+                const resumeInput = document.getElementById('resumeInput');
+                if (resumeInput.files.length > 0) {
+                    const file = resumeInput.files[0];
+                    const maxFileSize = 10 * 1024 * 1024; // 10MB
+
+                    if (file.size > maxFileSize) {
+                        alert('File is too large. Please select a file smaller than 10MB.');
+                        return;
+                    }
+
+                    const allowedExtensions = /(\.pdf|\.doc|\.docx)$/i;
+                    if (!allowedExtensions.exec(file.name)) {
+                        alert('Invalid file type. Please upload a PDF or Word document.');
+                        return;
+                    }
+                    formData.append('attachment', file);
+                    formData.set('subject', `Job Application from ${userName}`);
+                }
+            }
+
+            button.disabled = true;
+            button.innerText = 'Sending...';
+
+            fetch('send_email.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Expect a JSON response from the server
+            .then(data => {
+                console.log('Server Response:', data);
+                
+                const feedback = document.createElement('p');
+                feedback.style.marginTop = '15px';
+                feedback.style.fontStyle = 'italic';
+
+                if (data.success) {
+                    button.innerText = 'Sent!';
+                    input.disabled = true;
+                    if (character.name === 'Jofin') {
+                        const resumeInput = document.getElementById('resumeInput');
+                        if(resumeInput) resumeInput.disabled = true;
+                    }
+                    feedback.style.color = '#00aaff';
+                    feedback.innerText = data.message || "Thank you! Your query has been sent.";
+                } else {
+                    button.innerText = 'Send Failed';
+                    button.disabled = false; // Allow retry
+                    feedback.style.color = '#ff4444';
+                    feedback.innerText = data.message || "Sorry, there was an error. Please try again.";
+                }
+
+                // Remove any previous feedback message before adding a new one
+                const existingFeedback = form.nextElementSibling;
+                if (existingFeedback && existingFeedback.tagName === 'P') {
+                    form.parentNode.removeChild(existingFeedback);
+                }
+                form.insertAdjacentElement('afterend', feedback);
+            })
+            .catch(error => {
+                console.error('Error sending email:', error);
+                button.innerText = 'Send Failed';
+                button.disabled = false; // Allow retry
+
+                const feedback = document.createElement('p');
+                feedback.style.cssText = "color: #ff4444; margin-top: 15px; font-style: italic;";
+                feedback.innerText = "Sorry, there was an error sending your query. Please try again.";
+                if (form.nextSibling && form.nextSibling.tagName === 'P') {
+                    form.parentNode.removeChild(form.nextSibling);
+                }
+                form.insertAdjacentElement('afterend', feedback);
+            });
+        }
+
+        function closeChat() {
+            document.getElementById("chatModal").style.display = "none";
+            if (characterBeingCalled) {
+                characterBeingCalled.movementState = 'RETURNING';
+                characterBeingCalled.targetPosition.copy(characterBeingCalled.pos); // Go home
+                characterBeingCalled = null;
+            }
+        }
+
+        function navigateTo(characterId) {
+            if (characters[characterId]) {
+                const char = characters[characterId];
+                player.position.set(char.pos.x + 5, 1.7, char.pos.z);
+                player.rotationY = Math.PI / 2;
+            }
+        }
+        
+        function updateMinimap() {
+            const minimap = document.getElementById('minimap');
+            if (!minimap) return; 
+            
+            const mapScale = 2; // 200px map for 100 unit world
+            
+            // --- Draw static elements (workstations, plants) once ---
+            if (!minimap.hasAttribute('data-initialized')) {
+                let staticHTML = '';
+                
+                // Desks
+                Object.values(characters).forEach(char => {
+                    const deskWidth = 8 * mapScale;
+                    const deskHeight = 4 * mapScale;
+                    const deskX = (char.pos.x + 50) * mapScale - deskWidth / 2;
+                    const deskZ = (char.pos.z + 50) * mapScale - deskHeight / 2;
+                    staticHTML += `<div title="${char.name}'s Desk" style="position:absolute; left:${deskX}px; top:${deskZ}px; width:${deskWidth}px; height:${deskHeight}px; background:rgba(255,255,255,0.15); border-radius: 2px;"></div>`;
+                });
+
+                // Plants
+                const plants = [[15, 15], [-15, -15], [15, -15], [-15, 15]];
+                plants.forEach(([x, z]) => {
+                    const plantRadius = 1.2 * mapScale;
+                    const plantX = (x + 50) * mapScale;
+                    const plantZ = (z + 50) * mapScale;
+                    staticHTML += `<div title="Plant" style="position:absolute; left:${plantX}px; top:${plantZ}px; width:${plantRadius*2}px; height:${plantRadius*2}px; background:rgba(34, 170, 68, 0.4); border-radius:50%; transform: translate(-50%, -50%);"></div>`;
+                });
+
+                const staticContainer = document.createElement('div');
+                staticContainer.id = 'static-layout';
+                staticContainer.innerHTML = staticHTML;
+                minimap.appendChild(staticContainer);
+                minimap.setAttribute('data-initialized', 'true');
+            }
+
+            // --- Draw dynamic elements (player and characters) ---
+            let dynamicHTML = '';
+
+            // Player
+            const playerX = (player.position.x + 50) * mapScale;
+            const playerZ = (player.position.z + 50) * mapScale;
+            const playerRotation = -player.rotationY + Math.PI; // Align three.js rotation with CSS rotation
+            dynamicHTML += `<div title="You" style="position:absolute; left:${playerX}px; top:${playerZ}px; width:0; height:0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 11px solid #00aaff; transform-origin: 50% 50%; transform: translate(-50%, -50%) rotate(${playerRotation}rad);"></div>`;
+
+            // Characters
+            Object.values(characters).forEach(char => {
+                const charX = (char.mesh.position.x + 50) * mapScale;
+                const charZ = (char.mesh.position.z + 50) * mapScale;
+                dynamicHTML += `<div title="${char.name}" style="position:absolute; left:${charX}px; top:${charZ}px; width:8px; height:8px; background:#${char.color.toString(16).padStart(6, '0')}; border-radius:50%; border: 1px solid rgba(255,255,255,0.5); transform: translate(-50%, -50%);"></div>`;
+            });
+
+            // Update only the dynamic parts
+            let dynamicContainer = minimap.querySelector('#dynamic-dots');
+            if (!dynamicContainer) {
+                dynamicContainer = document.createElement('div');
+                dynamicContainer.id = 'dynamic-dots';
+                minimap.appendChild(dynamicContainer);
+            }
+            dynamicContainer.innerHTML = dynamicHTML;
+        }
+
+        let characterBeingCalled = null;
+
+        // --- MAIN LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            const deltaTime = clock.getDelta();
+            
+            updatePlayer(deltaTime);
+            updateCharacters(deltaTime);
+            checkInteractionZones();
+            updateMinimap();
+
+            renderer.render(scene, camera);
+
+            // Update all mixers for animations
+            mixers.forEach(mixer => mixer.update(deltaTime));
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+        createOffice();
+        createCharacters();
+        animate();
+    </script>
+</body>
+</html>

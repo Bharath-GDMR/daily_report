@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TITAN MBR - WEST</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(235, 38, 39, 0.2);
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
+      }
+
+      .search-bar {
+        margin-bottom: 2rem;
+        position: relative;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 3px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #eb2627;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(235, 38, 39, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .retailer-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        border-left: 5px solid #eb2627;
+        transition: box-shadow 0.3s ease, border-left-width 0.3s ease;
+      }
+
+      .retailer-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(235, 38, 39, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .retailer-card:hover::before {
+        left: 100%;
+      }
+
+      .retailer-card:hover {
+        transform: translateY(-10px) scale(1.001);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-left-width: 8px;
+      }
+
+      .retailer-number {
+        display: inline-block;
+        background: linear-gradient(135deg, #eb2627, #bc1313);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 5px 15px rgba(235, 38, 39, 0.3);
+      }
+
+      .retailer-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #bc1313;
+        margin-bottom: 0.8rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .retailer-area {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+      }
+
+      .location-icon {
+        margin-right: 0.5rem;
+        color: #eb2627;
+      }
+
+      .stats {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      .stats h3 {
+        color: #bc1313;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.01);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #eb2627;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        font-size: 1.2rem;
+      }
+
+      .retailer-info {
+        margin-top: 1rem;
+      }
+      .retailer-separator {
+        border: none;
+        height: 1px;
+        background-color: #eee;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header .subtitle {
+          font-size: 1rem;
+        }
+
+        .retailers-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .retailer-card {
+          margin: 0 0.5rem;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .retailer-card {
+          padding: 1rem;
+        }
+      }
+
+      /* Loading animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #eb2627;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>TITAN MBR</h1>
+        <div class="subtitle">WEST</div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon"></div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search retailers by name or area..."
+          id="searchInput"
+        />
+      </div>
+
+      <div class="retailers-grid" id="retailersGrid">
+        <!-- Retailer cards will be populated by JavaScript -->
+      </div>
+
+      <div class="no-results hidden" id="noResults">
+        <h3>No retailers found</h3>
+        <p>Try adjusting your search terms</p>
+      </div>
+
+      <div class="stats">
+        <h3>Directory Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number" id="totalRetailers">0</div>
+            <div class="stat-label">Total Retailers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalAreas">0</div>
+            <div class="stat-label">Areas Covered</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="visibleRetailers">0</div>
+            <div class="stat-label">Currently Showing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Data from west.csv
+      const retailers = [
+        {
+          "sapCode": "9000166",
+          "name": "BHARAT TIMES (CHAKAN)",
+          "area": "Chakan",
+          "city": "Pune",
+          "mapLink": "https://share.google/PE1bWGxr3EGhwQWAh",
+          "contact": "074200 08135"
+        },
+        {
+          "sapCode": "9023691",
+          "name": "AROWANA",
+          "area": "WAKAD",
+          "city": "Pune",
+          "mapLink": "https://share.google/6g5xV1E1rBgeqySj4",
+          "contact": "80070 17700"
+        },
+        {
+          "sapCode": "9020629",
+          "name": "F C ENTERPRISES",
+          "area": "Nigdi",
+          "city": "Pune",
+          "mapLink": "https://share.google/5UibJI81waUjVus57",
+          "contact": "020 2765 9200"
+        },
+        {
+          "sapCode": "9040059",
+          "name": "N H LALE ENTERPRISE",
+          "area": "Talwade",
+          "city": "Pune",
+          "mapLink": "https://share.google/Du4zAWTL1NBhoxdyn",
+          "contact": "9960008639"
+        },
+        {
+          "sapCode": "9000164",
+          "name": "SHRI SAMRAT WATCH CO",
+          "area": "Bhosari",
+          "city": "Pune",
+          "mapLink": "https://share.google/LYNdzUWVElbosP143",
+          "contact": ""
+        },
+        {
+          "sapCode": "9036350",
+          "name": "Devkar Watch Co",
+          "area": "MIDC ",
+          "city": "Baramati",
+          "mapLink": "https://share.google/dTbU0colf1SJMJWKw",
+          "contact": "096733 33044"
+        },
+        {
+          "sapCode": "1116296",
+          "name": "THE GOLDEN TIME ",
+          "area": "CG ROAD",
+          "city": "Ahmedabad",
+          "mapLink": "https://share.google/divKFpkwOB5m0fAST",
+          "contact": "9033224641"
+        },
+        {
+          "sapCode": "9003449",
+          "name": "JAY UMIYA WATCH CO",
+          "area": "Gota",
+          "city": "Ahmedabad",
+          "mapLink": "https://share.google/0kSwhCs4uisDk35B7",
+          "contact": "9825233608"
+        },
+        {
+          "sapCode": "9038937",
+          "name": "OM DISTRIBUTORS EBO",
+          "area": "11E,Kingsway,ganesh Chowk",
+          "city": "Nagpur",
+          "mapLink": "https://maps.app.goo.gl/R2Z3uY65Uy8jmc1G8",
+          "contact": "9425158197"
+        },
+        {
+          "sapCode": "1100309",
+          "name": "SAMAY AVADHI",
+          "area": "RNT MARG",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/JkLRsYaZvPydNyPW9",
+          "contact": "9302104175"
+        },
+        {
+          "sapCode": "9024959",
+          "name": "Times  Square",
+          "area": "Opp GTB Complex",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/ooq86XskAUKQyw1C9",
+          "contact": "9826011111"
+        },
+        {
+          "sapCode": "9007195",
+          "name": "Krishna Watch & Electronics",
+          "area": "390,MG ROAD",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/7NE73ezEBqsfb8KV8",
+          "contact": "7000518137"
+        },
+        {
+          "sapCode": "9007191",
+          "name": "King Watch Annex",
+          "area": "25,Dalu Modi Bazaar",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/L49Hq33Rh1y1geSz5",
+          "contact": "7000402763"
+        },
+        {
+          "sapCode": "9038354",
+          "name": "SKY RETAIL",
+          "area": "140, raj Business Park",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/xy6ybQvHD8F4X36s6",
+          "contact": "9893014145"
+        },
+        {
+          "sapCode": "9007192",
+          "name": "King Watch",
+          "area": "148,MG ROAD",
+          "city": "Indore",
+          "mapLink": "https://maps.app.goo.gl/RmthYbLJivkVzVPn6",
+          "contact": "9993823151"
+        },
+        {
+          "sapCode": "9031077",
+          "name": "FIRST LOOK",
+          "area": "Jyoti Talkies",
+          "city": "Bhopal",
+          "mapLink": "https://share.google/BV9BBaFRCUC4k2rdg",
+          "contact": "9981960001"
+        },
+        {
+          "sapCode": "1126450",
+          "name": "BOMBAY WATCH AND RADIO HOUSE",
+          "area": "MP Nagar Zone 1",
+          "city": "Bhopal",
+          "mapLink": "https://maps.app.goo.gl/h6owH8iRoMZKNmPp6",
+          "contact": "7389648777"
+        },
+        {
+          "sapCode": "1116317",
+          "name": "THE GOLDEN TIME ",
+          "area": "Ghoddod road",
+          "city": "Surat",
+          "mapLink": " 202, Ground Floor, Surya Kiran Complex, College Road, Ghoddod Road",
+          "contact": "9512899777"
+        },
+        {
+          "sapCode": "9005027",
+          "name": "ANIL TIME CENTER",
+          "area": "DHEBAR ROAD",
+          "city": "Rajkot",
+          "mapLink": "https://share.google/Qy2G6PTIkuG1GyokV",
+          "contact": "9879700100"
+        },
+        {
+          "sapCode": "9005017",
+          "name": "ADEN & CO.",
+          "area": "YAGNIK ROAD",
+          "city": "Rajkot",
+          "mapLink": "https://share.google/NL8m3FNUNZ0FjXSHN",
+          "contact": "9824245439"
+        },
+        {
+          "sapCode": "9038965",
+          "name": "JAGANNATH TIME",
+          "area": "RAJKOT",
+          "city": "Rajkot",
+          "mapLink": "SPEEDWELL PARTY PLOT CHOWK  RAJKOT 360002",
+          "contact": "9898989365"
+        },
+        {
+          "sapCode": "9006796",
+          "name": "TIME GALLERY",
+          "area": "Nirala Bazar",
+          "city": "Aurangabad",
+          "mapLink": "https://share.google/hgGbBn3A2drdpUtlG",
+          "contact": "98234 60450"
+        },
+        {
+          "sapCode": "9000226",
+          "name": "ATTITUDE THE WATCH STUDIO",
+          "area": "Shahpuri Railway Fatak",
+          "city": "Kolhapur",
+          "mapLink": "https://share.google/uxlaq78IGe80Le2cD",
+          "contact": "0231 661 0280"
+        },
+        {
+          "sapCode": "9021630",
+          "name": "INDIAN SAREES NX PRIVATE LIMITED",
+          "area": "SATANA RD",
+          "city": "Malegaon",
+          "mapLink": "https://share.google/Mm2u6zZwF5DApnW6K",
+          "contact": "8975631133"
+        },
+        {
+          "sapCode": "9006808",
+          "name": "PRINCE AGENCIES",
+          "area": "Vazirabad",
+          "city": "Nanded",
+          "mapLink": "https://share.google/Q9I0YJkdDU7u4SBoQ",
+          "contact": "90962 76265"
+        },
+        {
+          "sapCode": "1100049",
+          "name": "VIJAY TIME",
+          "area": "Golani market",
+          "city": "Jalgaon",
+          "mapLink": "https://share.google/BeYWvFj6ukcNyzRnJ",
+          "contact": "9890520630"
+        },
+        {
+          "sapCode": "9005701",
+          "name": "SANJAY TIMES",
+          "area": "Golani market",
+          "city": "Jalgaon",
+          "mapLink": "https://share.google/HQzglTTXepKeDAvhK",
+          "contact": "9890177811"
+        },
+        {
+          "sapCode": "9005206",
+          "name": "TIME WORLD",
+          "area": "BEDI GATE",
+          "city": "Jamnagar",
+          "mapLink": "https://share.google/ZHta7Q3ISThhNaJqe",
+          "contact": "9898613133"
+        },
+        {
+          "sapCode": "9005079",
+          "name": "JYOTI WATCH ",
+          "area": "BEDI GATE",
+          "city": "Jamnagar",
+          "mapLink": "https://share.google/vVs1zY7YaRcLilTus",
+          "contact": "9924118432"
+        },
+        {
+          "sapCode": "9003539",
+          "name": "WORLD TIME",
+          "area": "KUDASON",
+          "city": "Gandhinagar",
+          "mapLink": "https://share.google/ePo9V65o9WY0ElVp6",
+          "contact": "9879134006"
+        },
+        {
+          "sapCode": "9015800",
+          "name": "KABIR WORLD",
+          "area": "KUDASON",
+          "city": "Gandhinagar",
+          "mapLink": "https://share.google/2xhfolNL9yXTcWRMX",
+          "contact": "9909941888"
+        },
+        {
+          "sapCode": "9030200",
+          "name": "YASH TIME N TUNE HOUSE",
+          "area": "Naya Bazar,Malviya Chowk",
+          "city": "Raipur",
+          "mapLink": "https://share.google/L4fTSMVUNaSO6ZUbK",
+          "contact": "7974933433"
+        },
+        {
+          "sapCode": "9007230",
+          "name": "Prince Marketing",
+          "area": "Tower Chouraha",
+          "city": "Ujjain",
+          "mapLink": "https://share.google/YqSFKzVfTsMGSgCi3",
+          "contact": "9425091064"
+        },
+        {
+          "sapCode": "9014474",
+          "name": "NEW KAMAL WATCH",
+          "area": "Gast ka Tajia",
+          "city": "Ujjain",
+          "mapLink": "https://maps.app.goo.gl/aGdLzUNTj45aqBc78",
+          "contact": "9826283352"
+        },
+        {
+          "sapCode": "9007221",
+          "name": "N. Phoolchand",
+          "area": "Bombay Bazar",
+          "city": "Ujjain",
+          "mapLink": "https://share.google/Jv0mpCtDEjCY34aPs",
+          "contact": "7773050673"
+        },
+        {
+          "sapCode": "9008246",
+          "name": "SAMAY DRASHTI",
+          "area": "Teen Batti",
+          "city": "Ratlam",
+          "mapLink": "https://maps.app.goo.gl/yoKxvSpCPUnFRTrd9",
+          "contact": "9424788000"
+        },
+        {
+          "sapCode": "9008236",
+          "name": "PRATAP WATCH HOUSE",
+          "area": "Station Road",
+          "city": "Ratlam",
+          "mapLink": "https://maps.app.goo.gl/fd5ipyEkiDgA38qj6",
+          "contact": "9827574788"
+        },
+        {
+          "sapCode": "9038351",
+          "name": "SHARDA TIMES",
+          "area": "Tilak Road",
+          "city": "Ahmednagar",
+          "mapLink": "https://share.google/M5y8ziGMcleGsJHgl",
+          "contact": "088303 86199"
+        },
+        {
+          "sapCode": "9022840",
+          "name": "SANKALP TIMES",
+          "area": "Shikshak Colony",
+          "city": "Beed",
+          "mapLink": "https://www.instagram.com/sankalp_watch_beed/?hl=en",
+          "contact": "7776900054"
+        },
+        {
+          "sapCode": "9006809",
+          "name": "BOMBAY WATCH DEPO",
+          "area": "Old Mondha",
+          "city": "Jalna",
+          "mapLink": "https://share.google/H32ZCkYx7K9s8Behq",
+          "contact": "080558 57856"
+        },
+        {
+          "sapCode": "9008186",
+          "name": "ANUPAM WATCH CENTRE",
+          "area": "Fawwara Chowk",
+          "city": "Katni",
+          "mapLink": "https://maps.app.goo.gl/1b3GfLExJkC7VR6t7",
+          "contact": "9407055539"
+        },
+        {
+          "sapCode": "9039795",
+          "name": "SMS BROTHERS",
+          "area": "Behind MLB School",
+          "city": "Shahdol",
+          "mapLink": "https://share.google/Db5VQLGjvyGMGKwv6",
+          "contact": "7974109302"
+        },
+        {
+          "sapCode": "9034089",
+          "name": "S. R Enterprises - Khargone",
+          "area": "12, Jawahar Nagar",
+          "city": "Khargone",
+          "mapLink": "https://maps.app.goo.gl/iRkDooYV3YTpn5R26",
+          "contact": "7489492227"
+        },
+        {
+          "sapCode": "9003170",
+          "name": "JEETEN TIME",
+          "area": "Hospital Road",
+          "city": "Bhuj",
+          "mapLink": "https://share.google/kh5yRoSmaBjEBTdUr",
+          "contact": "9825163068"
+        },
+        {
+          "sapCode": "9003202",
+          "name": "HARSH ENTERPRISE",
+          "area": "MORBI",
+          "city": "Morbi",
+          "mapLink": "AJANTA ORPET SHOWROOM  MORBI 363641",
+          "contact": "8128728888"
+        },
+        {
+          "sapCode": "9003200",
+          "name": "CHINTAMANI",
+          "area": "REVAPAR ROAD",
+          "city": "Morbi",
+          "mapLink": "https://share.google/HMsWNVr1PW91LWNOw",
+          "contact": "8905970001"
+        },
+        {
+          "sapCode": "9003526",
+          "name": "UMIYA WATCH CO ",
+          "area": "PALANPUR",
+          "city": "Palanpur",
+          "mapLink": "https://share.google/00tApiBmUq6aY4g2F",
+          "contact": "9426828244"
+        },
+        {
+          "sapCode": "9003218",
+          "name": "AMAR SALES ",
+          "area": "Bus stand Road",
+          "city": "Amreli",
+          "mapLink": "https://share.google/MEWbbAJDSSHpzygcR",
+          "contact": "9426626442"
+        },
+        {
+          "sapCode": "9018571",
+          "name": "SHAKTI WATCH",
+          "area": "MAIN BAZAAR",
+          "city": "Anjar",
+          "mapLink": "https://share.google/ihTUaFEPXIjrguA88",
+          "contact": "9825523485"
+        },
+        {
+          "sapCode": "9003214",
+          "name": "MANHAR WATCH CO",
+          "area": "MUNDRA",
+          "city": "Mundra",
+          "mapLink": "BANDAR ROAD  MUNDRA 370421",
+          "contact": "9898989365"
+        }
+      ];
+
+      let filteredRetailers = [...retailers];
+
+      function renderRetailers(retailerList = filteredRetailers) {
+        const grid = document.getElementById("retailersGrid");
+        const noResults = document.getElementById("noResults");
+
+        if (retailerList.length === 0) {
+          grid.innerHTML = "";
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        noResults.classList.add("hidden");
+
+        grid.innerHTML = retailerList
+          .map(
+            (retailer, index) => {
+              const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(retailer.name + ',' + retailer.area)}&output=embed`;
+              return `
+                <div class="retailer-card">
+                    <div class="retailer-number">Retailer: ${index + 1}</div>
+                    <div class="retailer-info">
+                        <div class="retailer-name">${retailer.name}</div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📍</span>
+                            ${retailer.area}
+                        </div>
+                        <div class="retailer-area">
+                            <span class="location-icon">📞</span>
+                            ${retailer.contact}
+                        </div>
+                    </div>
+                    <iframe
+                      width="100%"
+                      height="250"
+                      style="border:0; margin-top: 1rem;"
+                      loading="lazy"
+                      allowfullscreen
+                      data-src="${embedUrl}"
+                      class="lazy-map">
+                    </iframe>
+                </div>
+            `
+            }
+          )
+          .join("");
+
+        // Update visible retailers count
+        document.getElementById("visibleRetailers").textContent =
+          retailerList.length;
+        
+        lazyLoadMaps();
+      }
+
+      function lazyLoadMaps() {
+        const lazyMaps = [].slice.call(document.querySelectorAll("iframe.lazy-map"));
+
+        if ("IntersectionObserver" in window) {
+          let lazyMapObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                let lazyMap = entry.target;
+                lazyMap.src = lazyMap.dataset.src;
+                lazyMap.classList.remove("lazy-map");
+                lazyMapObserver.unobserve(lazyMap);
+              }
+            });
+          });
+
+          lazyMaps.forEach(function(lazyMap) {
+            lazyMapObserver.observe(lazyMap);
+          });
+        } else {
+          // Fallback for browsers that don't support IntersectionObserver
+          lazyMaps.forEach(function(lazyMap) {
+            lazyMap.src = lazyMap.dataset.src;
+          });
+        }
+      }
+
+      function searchRetailers(query) {
+        const searchTerm = query.toLowerCase().trim();
+
+        if (!searchTerm) {
+          filteredRetailers = [...retailers];
+        } else {
+          filteredRetailers = retailers.filter(
+            (retailer) =>
+              retailer.name.toLowerCase().includes(searchTerm) ||
+              retailer.area.toLowerCase().includes(searchTerm) ||
+              (retailer.city && retailer.city.toLowerCase().includes(searchTerm))
+          );
+        }
+        renderRetailers(filteredRetailers);
+      }
+
+      // Event listeners
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchRetailers(e.target.value);
+      });
+
+      // Initialize the page
+      document.addEventListener("DOMContentLoaded", () => {
+        renderRetailers();
+
+        // Count unique areas and total stores for stats
+        const uniqueAreas = [...new Set(retailers.map((r) => r.area))];
+        document.getElementById("totalAreas").textContent = uniqueAreas.length;
+        document.getElementById("totalRetailers").textContent =
+          retailers.length;
+      });
+
+      // Add smooth scroll behavior
+      document.documentElement.style.scrollBehavior = "smooth";
+    </script>
+  </body>
+</html>

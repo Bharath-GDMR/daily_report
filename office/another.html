@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Office Simulator - Visual Merchandising Agency</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        font-family: "Arial", sans-serif;
+        overflow: hidden;
+      }
+
+      #gameContainer {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #instructions {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        z-index: 100;
+        max-width: 300px;
+        border: 2px solid #4caf50;
+      }
+
+      #controls {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+      }
+
+      .control-btn {
+        display: block;
+        margin: 5px 0;
+        padding: 10px 15px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .control-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      #quickNav {
+        position: absolute;
+        top: 200px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 100;
+        border: 2px solid #ff9800;
+      }
+
+      #quickNav h4 {
+        margin: 0 0 10px 0;
+        color: #ff9800;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .nav-btn {
+        display: block;
+        width: 100%;
+        margin: 3px 0;
+        padding: 8px 12px;
+        background: linear-gradient(45deg, #4caf50, #45a049);
+        border: none;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+      }
+
+      .nav-btn:hover {
+        transform: scale(1.05);
+        background: linear-gradient(45deg, #45a049, #4caf50);
+      }
+
+      #minimap {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 200px;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.9);
+        border: 3px solid #00bcd4;
+        border-radius: 10px;
+        z-index: 100;
+        overflow: hidden;
+      }
+
+      #minimapCanvas {
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+
+      .minimap-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: 2px solid white;
+        transform: translate(-50%, -50%);
+        z-index: 101;
+      }
+
+      .player-dot {
+        background: #ff4444;
+        animation: playerPulse 1s infinite;
+      }
+
+      .character-dot {
+        background: #44ff44;
+      }
+
+      @keyframes playerPulse {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.3);
+        }
+      }
+
+      #chatModal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        display: none;
+        z-index: 200;
+        max-width: 500px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        animation: modalFadeIn 0.3s ease-out;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      #chatContent h3 {
+        margin: 0 0 15px 0;
+        font-size: 24px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      #chatContent p {
+        line-height: 1.6;
+        margin: 10px 0;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      #proximity {
+        position: absolute;
+        bottom: 240px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #4caf50;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 10px 20px;
+        border-radius: 25px;
+        display: none;
+        font-size: 16px;
+        animation: pulse 1s infinite;
+        border: 2px solid #4caf50;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gameContainer">
+      <div id="instructions">
+        <h3>🏢 Office Simulator</h3>
+        <p><strong>WASD:</strong> Move around</p>
+        <p><strong>← →:</strong> Look left/right</p>
+        <p><strong>E:</strong> Interact with people</p>
+        <p><strong>Minimap:</strong> Track locations</p>
+      </div>
+
+      <div id="controls">
+        <button class="control-btn" onclick="resetPlayer()">
+          🔄 Reset Position
+        </button>
+      </div>
+
+      <div id="quickNav">
+        <h4>🚀 Quick Navigation</h4>
+        <button class="nav-btn" onclick="navigateTo('bharath')">
+          📋 Bharath (Projects)
+        </button>
+        <button class="nav-btn" onclick="navigateTo('diya')">
+          🎨 Diya (Design)
+        </button>
+        <button class="nav-btn" onclick="navigateTo('githi')">
+          👑 Founders Cabin
+        </button>
+        <button class="nav-btn" onclick="navigateTo('akhil')">
+          ⚡ Akhil (GM)
+        </button>
+        <button class="nav-btn" onclick="navigateTo('jofin')">
+          🤝 Jofin (HR)
+        </button>
+        <button class="nav-btn" onclick="navigateTo('anoop')">
+          💰 Anoop (Accounts)
+        </button>
+        <button class="nav-btn" onclick="navigateTo('prithvi')">
+          📊 Prithvi (BRD)
+        </button>
+      </div>
+
+      <div id="proximity">Press E to talk</div>
+
+      <div id="minimap">
+        <canvas id="minimapCanvas" width="200" height="200"></canvas>
+      </div>
+
+      <div id="chatModal">
+        <button class="close-btn" onclick="closeChat()">×</button>
+        <div id="chatContent"></div>
+      </div>
+    </div>
+
+    <script>
+      // Three.js setup
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x87ceeb);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      document.getElementById("gameContainer").appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(50, 100, 50);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
+      scene.add(directionalLight);
+
+      // Player setup
+      const initialPlayerPosition = new THREE.Vector3(0, 1, 0);
+      const player = {
+        position: initialPlayerPosition.clone(),
+        rotation: 0,
+        speed: 0.2,
+      };
+      camera.position.copy(player.position);
+
+      // Controls
+      const keys = {};
+      document.addEventListener("keydown", (e) => (keys[e.code] = true));
+      document.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+      // Minimap setup
+      const minimapCanvas = document.getElementById("minimapCanvas");
+      const minimapCtx = minimapCanvas.getContext("2d");
+      const minimapScale = 100 / 2; // Office is 100x100, minimap is 200x200
+
+      // Office layout
+      function createOffice() {
+        // Floor
+        const floorGeometry = new THREE.PlaneGeometry(100, 100);
+        const floorMaterial = new THREE.MeshLambertMaterial({
+          color: 0xeeeeee,
+        });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // Walls
+        createWalls();
+
+        // Department areas
+        createDepartments();
+      }
+
+      function createWalls() {
+        const wallMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });
+        const wallHeight = 8;
+        const wallThickness = 0.5;
+
+        // Outer walls
+        const walls = [
+          {
+            pos: [0, wallHeight / 2, 50],
+            size: [100, wallHeight, wallThickness],
+          },
+          {
+            pos: [0, wallHeight / 2, -50],
+            size: [100, wallHeight, wallThickness],
+          },
+          {
+            pos: [50, wallHeight / 2, 0],
+            size: [wallThickness, wallHeight, 100],
+          },
+          {
+            pos: [-50, wallHeight / 2, 0],
+            size: [wallThickness, wallHeight, 100],
+          },
+        ];
+
+        walls.forEach((wall) => {
+          const geometry = new THREE.BoxGeometry(...wall.size);
+          const mesh = new THREE.Mesh(geometry, wallMaterial);
+          mesh.position.set(...wall.pos);
+          mesh.castShadow = true;
+          scene.add(mesh);
+        });
+      }
+
+      function createDepartments() {
+        // Projects Department (Bharath) - Blue theme
+        createDepartmentArea(-30, -30, 0x4285f4, "PROJECTS");
+
+        // Design Department (Diya) - Purple theme
+        createDepartmentArea(30, -30, 0x9c27b0, "DESIGN");
+
+        // Founders Cabin (Githi & Gina) - Gold theme
+        createDepartmentArea(0, 30, 0xffd700, "FOUNDERS");
+
+        // GM Office (Akhil) - Red theme
+        createDepartmentArea(-30, 30, 0xf44336, "GM");
+
+        // HR Department (Jofin) - Green theme
+        createDepartmentArea(30, 30, 0x4caf50, "HR");
+
+        // Accounts (Anoop) - Orange theme
+        createDepartmentArea(-30, 0, 0xff9800, "ACCOUNTS");
+
+        // BRD Department (Prithvi) - Teal theme
+        createDepartmentArea(30, 0, 0x009688, "BRD");
+      }
+
+      function createDepartmentArea(x, z, color, label) {
+        // Department floor area
+        const areaGeometry = new THREE.PlaneGeometry(20, 20);
+        const areaMaterial = new THREE.MeshLambertMaterial({
+          color: color,
+          transparent: true,
+          opacity: 0.3,
+        });
+        const area = new THREE.Mesh(areaGeometry, areaMaterial);
+        area.rotation.x = -Math.PI / 2;
+        area.position.set(x, 0.01, z);
+        scene.add(area);
+
+        // Desk
+        const deskGeometry = new THREE.BoxGeometry(8, 2, 4);
+        const deskMaterial = new THREE.MeshLambertMaterial({ color: 0x8b4513 });
+        const desk = new THREE.Mesh(deskGeometry, deskMaterial);
+        desk.position.set(x, 1, z);
+        desk.castShadow = true;
+        scene.add(desk);
+
+        // Chair
+        const chairGeometry = new THREE.BoxGeometry(2, 3, 2);
+        const chairMaterial = new THREE.MeshLambertMaterial({
+          color: 0x333333,
+        });
+        const chair = new THREE.Mesh(chairGeometry, chairMaterial);
+        chair.position.set(x, 1.5, z + 3);
+        chair.castShadow = true;
+        scene.add(chair);
+
+        // Department sign
+        createSign(x, z + 8, label, color);
+      }
+
+      function createSign(x, z, text, color) {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = 256;
+        canvas.height = 64;
+
+        context.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        context.fillStyle = "white";
+        context.font = "bold 24px Arial";
+        context.textAlign = "center";
+        context.fillText(text, canvas.width / 2, canvas.height / 2 + 8);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const signGeometry = new THREE.PlaneGeometry(8, 2);
+        const signMaterial = new THREE.MeshBasicMaterial({ map: texture });
+        const sign = new THREE.Mesh(signGeometry, signMaterial);
+        sign.position.set(x, 4, z);
+        scene.add(sign);
+      }
+
+      // Character data
+      const characters = {
+        bharath: {
+          name: "Bharath",
+          position: [-30, -30],
+          department: "Projects",
+          color: 0x4285f4,
+          mesh: null,
+          chat: {
+            title: "🚀 Bharath - Projects Wizard",
+            content: `
+                        <p><strong>"Hey there! Welcome to the Projects command center!"</strong></p>
+                        <p>I'm like a project juggling ninja - I can keep 47 balls in the air while drinking coffee and debugging client requests simultaneously! ☕</p>
+                        <p><strong>What I do:</strong> Turn chaos into beautiful project timelines, manage client expectations (aka perform miracles), and make sure our creative teams have everything they need.</p>
+                        <p><strong>Fun fact:</strong> I once delivered a project 2 days early AND under budget. The client was so shocked they asked if we were feeling okay! 😄</p>
+                        <p><em>"Remember: A project without a timeline is just a very expensive hobby!"</em></p>
+                    `,
+          },
+        },
+        diya: {
+          name: "Diya",
+          position: [30, -30],
+          department: "Design",
+          color: 0x9c27b0,
+          mesh: null,
+          chat: {
+            title: "🎨 Diya - Design Sorceress",
+            content: `
+                        <p><strong>"Welcome to where magic happens!"</strong></p>
+                        <p>I turn boring briefs into visual masterpieces! I speak fluent Photoshop, dream in color palettes, and can spot a kerning issue from 50 feet away! 👁️</p>
+                        <p><strong>My superpowers:</strong> Making brands look amazing, turning client's "make it pop" into actual good design, and explaining why comic sans is NOT a good font choice.</p>
+                        <p><strong>Design philosophy:</strong> "Good design is like air - you only notice it when it's bad!"</p>
+                        <p><em>Currently working on making the world more beautiful, one pixel at a time! ✨</em></p>
+                    `,
+          },
+        },
+        githi: {
+          name: "Githi & Gina",
+          position: [0, 30],
+          department: "Founders",
+          color: 0xffd700,
+          mesh: null,
+          chat: {
+            title: "👑 Githi & Gina - The Dynamic Duo",
+            content: `
+                        <p><strong>Githi:</strong> "We built this company from a crazy idea and a lot of coffee!"</p>
+                        <p><strong>Gina:</strong> "And somehow we haven't killed each other yet!" 😂</p>
+                        <p><strong>Our story:</strong> Two friends who thought "Hey, let's start a visual merchandising agency!" Now we help brands look amazing in retail spaces worldwide.</p>
+                        <p><strong>What we've learned:</strong> Business is 20% strategy, 30% execution, and 50% making sure everyone has enough snacks.</p>
+                        <p><strong>Company motto:</strong> "If it doesn't make people stop and stare, we're not done yet!"</p>
+                        <p><em>Fun fact: We still flip a coin for major decisions. It's gotten us this far! 🪙</em></p>
+                    `,
+          },
+        },
+        akhil: {
+          name: "Akhil",
+          position: [-30, 30],
+          department: "GM",
+          color: 0xf44336,
+          mesh: null,
+          chat: {
+            title: "⚡ Akhil - The Operations Tornado",
+            content: `
+                        <p><strong>"Operations running smoothly? That's my middle name!"</strong></p>
+                        <p>I keep this beautiful chaos organized! From vendor negotiations to team coordination, I make sure everything runs like a well-oiled machine.</p>
+                        <p><strong>Daily routine:</strong> 47 meetings, 83 decisions, 2 cups of coffee, and somehow still find time to check if everyone's happy!</p>
+                        <p><strong>Management philosophy:</strong> "A happy team creates amazing work. An amazing team creates legendary work!"</p>
+                        <p><strong>Secret skill:</strong> I can solve any problem with a whiteboard and 15 minutes of intense thinking! 🤔</p>
+                        <p><em>Remember: If you're not having fun, you're doing it wrong!</em></p>
+                    `,
+          },
+        },
+        jofin: {
+          name: "Jofin",
+          position: [30, 30],
+          department: "HR",
+          color: 0x4caf50,
+          mesh: null,
+          chat: {
+            title: "🤝 Jofin - The People Person",
+            content: `
+                        <p><strong>"People are our greatest asset - and I'm their biggest fan!"</strong></p>
+                        <p>I make sure everyone here feels valued, heard, and occasionally fed (pizza Fridays are sacred!). From hiring rockstars to resolving office drama, I've got it covered.</p>
+                        <p><strong>HR Superpowers:</strong> Reading between the lines in performance reviews, organizing epic team events, and making sure no one works too late (yes, I'm looking at you, Projects team!).</p>
+                        <p><strong>Office wisdom:</strong> "A team that laughs together, stays together - and creates incredible work together!"</p>
+                        <p><em>Pro tip: My door is always open, and I always have good snacks! 🍪</em></p>
+                    `,
+          },
+        },
+        anoop: {
+          name: "Anoop",
+          position: [-30, 0],
+          department: "Accounts",
+          color: 0xff9800,
+          mesh: null,
+          chat: {
+            title: "💰 Anoop - The Numbers Ninja",
+            content: `
+                        <p><strong>"Numbers don't lie, but they sure know how to tell interesting stories!"</strong></p>
+                        <p>I keep our finances healthy and our invoices flowing. Think of me as the guardian of company prosperity - with spreadsheets as my weapon of choice!</p>
+                        <p><strong>What I do:</strong> Balance books, chase payments (politely but firmly), budget for dreams, and make sure we can afford that new coffee machine everyone's begging for.</p>
+                        <p><strong>Accounting humor:</strong> "Why did the accountant cross the road? To bore the people on the other side!" 😄</p>
+                        <p><em>Fun fact: I once found a Rs. 50,000 discrepancy in 15 minutes. I felt like a financial detective!</em></p>
+                    `,
+          },
+        },
+        prithvi: {
+          name: "Prithvi",
+          position: [30, 0],
+          department: "BRD",
+          color: 0x009688,
+          mesh: null,
+          chat: {
+            title: "📊 Prithvi - The Requirements Whisperer",
+            content: `
+                        <p><strong>"I translate client dreams into actionable reality!"</strong></p>
+                        <p>BRD = Business Requirements Document, but I like to think of it as "Bringing Really Detailed" plans to life! I bridge the gap between what clients want and what our team can create.</p>
+                        <p><strong>My process:</strong> Listen carefully, ask the right questions, document everything (seriously, EVERYTHING), and make sure nothing falls through the cracks.</p>
+                        <p><strong>Client translation skills:</strong> "Make it pop" = Increase visual impact, "More creative" = Try 5 completely different directions, "Like this but different" = We need to talk! 😅</p>
+                        <p><em>Remember: Good requirements are like GPS for projects - without them, you're just driving around hoping to get somewhere!</em></p>
+                    `,
+          },
+        },
+      };
+
+      // Create human figure geometry
+      function createHumanFigure(color) {
+        const group = new THREE.Group();
+
+        // Body
+        const bodyGeometry = new THREE.CylinderGeometry(0.4, 0.6, 2);
+        const bodyMaterial = new THREE.MeshLambertMaterial({ color: color });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.y = 1;
+        group.add(body);
+
+        // Head
+        const headGeometry = new THREE.SphereGeometry(0.4);
+        const headMaterial = new THREE.MeshLambertMaterial({ color: 0xfdbcb4 });
+        const head = new THREE.Mesh(headGeometry, headMaterial);
+        head.position.y = 2.5;
+        group.add(head);
+
+        // Arms
+        const armGeometry = new THREE.CylinderGeometry(0.15, 0.15, 1.2);
+        const armMaterial = new THREE.MeshLambertMaterial({ color: 0xfdbcb4 });
+
+        const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+        leftArm.position.set(-0.7, 1.2, 0);
+        leftArm.rotation.z = 0.3;
+        group.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+        rightArm.position.set(0.7, 1.2, 0);
+        rightArm.rotation.z = -0.3;
+        group.add(rightArm);
+
+        // Legs
+        const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 1.5);
+        const legMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+
+        const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+        leftLeg.position.set(-0.3, -0.75, 0);
+        group.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+        rightLeg.position.set(0.3, -0.75, 0);
+        group.add(rightLeg);
+
+        group.castShadow = true;
+        return group;
+      }
+
+      // Create character representations
+      function createCharacters() {
+        Object.entries(characters).forEach(([key, char]) => {
+          const figure = createHumanFigure(char.color);
+          figure.position.set(char.position[0], 0, char.position[1]);
+          figure.userData = { type: "character", id: key };
+
+          // Add idle animation
+          figure.userData.idleTime = Math.random() * Math.PI * 2;
+
+          characters[key].mesh = figure;
+          scene.add(figure);
+
+          // Add name label
+          createNameLabel(char.position[0], char.position[1] + 3, char.name);
+        });
+      }
+
+      function createNameLabel(x, z, name) {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = 128;
+        canvas.height = 32;
+
+        context.fillStyle = "rgba(0,0,0,0.8)";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        context.fillStyle = "white";
+        context.font = "bold 16px Arial";
+        context.textAlign = "center";
+        context.fillText(name, canvas.width / 2, canvas.height / 2 + 6);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const labelGeometry = new THREE.PlaneGeometry(4, 1);
+        const labelMaterial = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+        });
+        const label = new THREE.Mesh(labelGeometry, labelMaterial);
+        label.position.set(x, 6, z);
+        scene.add(label);
+      }
+
+      // Animate characters
+      function animateCharacters() {
+        Object.entries(characters).forEach(([key, char]) => {
+          if (char.mesh) {
+            // Idle breathing animation
+            char.mesh.userData.idleTime += 0.02;
+            const breathe = Math.sin(char.mesh.userData.idleTime) * 0.05;
+            char.mesh.children[0].scale.y = 1 + breathe; // Body breathing
+
+            // Occasional head turn
+            if (Math.random() < 0.001) {
+              char.mesh.children[1].rotation.y = (Math.random() - 0.5) * 0.5;
+            }
+
+            // Reset head position occasionally
+            if (Math.random() < 0.0005) {
+              char.mesh.children[1].rotation.y = 0;
+            }
+          }
+        });
+      }
+
+      // Minimap functions
+      function updateMinimap() {
+        minimapCtx.clearRect(0, 0, 200, 200);
+
+        // Draw office outline
+        minimapCtx.strokeStyle = "#ffffff";
+        minimapCtx.lineWidth = 2;
+        minimapCtx.strokeRect(0, 0, 200, 200);
+
+        // Draw department areas
+        const departments = [
+          { pos: [-30, -30], color: "#4285f4" },
+          { pos: [30, -30], color: "#9c27b0" },
+          { pos: [0, 30], color: "#ffd700" },
+          { pos: [-30, 30], color: "#f44336" },
+          { pos: [30, 30], color: "#4caf50" },
+          { pos: [-30, 0], color: "#ff9800" },
+          { pos: [30, 0], color: "#009688" },
+        ];
+
+        departments.forEach((dept) => {
+          const x = (dept.pos[0] + 50) * 2;
+          const y = (50 - dept.pos[1]) * 2;
+
+          minimapCtx.fillStyle = dept.color + "40";
+          minimapCtx.fillRect(x - 20, y - 20, 40, 40);
+          minimapCtx.strokeStyle = dept.color;
+          minimapCtx.strokeRect(x - 20, y - 20, 40, 40);
+        });
+
+        // Draw characters
+        Object.entries(characters).forEach(([key, char]) => {
+          const x = (char.position[0] + 50) * 2;
+          const y = (50 - char.position[1]) * 2;
+
+          minimapCtx.beginPath();
+          minimapCtx.arc(x, y, 4, 0, Math.PI * 2);
+          minimapCtx.fillStyle = "#44FF44";
+          minimapCtx.fill();
+          minimapCtx.strokeStyle = "#ffffff";
+          minimapCtx.lineWidth = 1;
+          minimapCtx.stroke();
+        });
+
+        // Draw player
+        const playerX = (player.position.x + 50) * 2;
+        const playerY = (50 - player.position.z) * 2;
+
+        minimapCtx.beginPath();
+        minimapCtx.arc(playerX, playerY, 6, 0, Math.PI * 2);
+        minimapCtx.fillStyle = "#FF4444";
+        minimapCtx.fill();
+        minimapCtx.strokeStyle = "#ffffff";
+        minimapCtx.lineWidth = 2;
+        minimapCtx.stroke();
+
+        // Draw player direction arrow
+        const arrowLength = 12;
+        const arrowX = playerX + Math.sin(player.rotation) * arrowLength;
+        const arrowY = playerY - Math.cos(player.rotation) * arrowLength;
+
+        minimapCtx.beginPath();
+        minimapCtx.moveTo(playerX, playerY);
+        minimapCtx.lineTo(arrowX, arrowY);
+        minimapCtx.strokeStyle = "#FF4444";
+        minimapCtx.lineWidth = 3;
+        minimapCtx.stroke();
+      }
+
+      // Navigation functions
+      function resetPlayer() {
+        player.position.copy(initialPlayerPosition);
+        player.rotation = 0;
+        camera.position.copy(player.position);
+        camera.rotation.y = player.rotation;
+      }
+
+      function navigateTo(characterId) {
+        if (characters[characterId]) {
+          const char = characters[characterId];
+          // Position player near the character but not on top
+          player.position.set(char.position[0] + 3, 1, char.position[1] + 3);
+          player.rotation = Math.atan2(
+            char.position[0] - player.position.x,
+            char.position[1] - player.position.z
+          );
+          camera.position.copy(player.position);
+          camera.rotation.y = player.rotation;
+        }
+      }
+
+      // Interaction system
+      let nearCharacter = null;
+
+      function checkProximity() {
+        const proximityElement = document.getElementById("proximity");
+        nearCharacter = null;
+
+        Object.entries(characters).forEach(([key, char]) => {
+          const distance = Math.sqrt(
+            Math.pow(player.position.x - char.position[0], 2) +
+              Math.pow(player.position.z - char.position[1], 2)
+          );
+
+          if (distance < 5) {
+            nearCharacter = key;
+          }
+        });
+
+        if (nearCharacter) {
+          proximityElement.style.display = "block";
+        } else {
+          proximityElement.style.display = "none";
+        }
+      }
+
+      function interact() {
+        if (nearCharacter && characters[nearCharacter]) {
+          openChat(characters[nearCharacter]);
+        }
+      }
+
+      function openChat(character) {
+        const modal = document.getElementById("chatModal");
+        const content = document.getElementById("chatContent");
+
+        // Apply department-specific styling
+        const color = `#${character.color.toString(16).padStart(6, "0")}`;
+        modal.style.background = `linear-gradient(135deg, ${color}aa 0%, ${color}dd 100%)`;
+
+        content.innerHTML = `
+                <h3>${character.chat.title}</h3>
+                ${character.chat.content}
+            `;
+
+        modal.style.display = "block";
+      }
+
+      function closeChat() {
+        document.getElementById("chatModal").style.display = "none";
+      }
+
+      // Game loop
+      function updatePlayer() {
+        const moveSpeed = player.speed;
+        const rotSpeed = 0.05;
+
+        // Movement
+        if (keys["KeyW"]) {
+          player.position.x += Math.sin(player.rotation) * moveSpeed;
+          player.position.z += Math.cos(player.rotation) * moveSpeed;
+        }
+        if (keys["KeyS"]) {
+          player.position.x -= Math.sin(player.rotation) * moveSpeed;
+          player.position.z -= Math.cos(player.rotation) * moveSpeed;
+        }
+        if (keys["KeyA"]) {
+          player.position.x += Math.cos(player.rotation) * moveSpeed;
+          player.position.z -= Math.sin(player.rotation) * moveSpeed;
+        }
+        if (keys["KeyD"]) {
+          player.position.x -= Math.cos(player.rotation) * moveSpeed;
+          player.position.z += Math.sin(player.rotation) * moveSpeed;
+        }
+
+        // Rotation
+        if (keys["ArrowLeft"]) player.rotation -= rotSpeed;
+        if (keys["ArrowRight"]) player.rotation += rotSpeed;
+
+        // Interaction
+        if (keys["KeyE"]) {
+          interact();
+          keys["KeyE"] = false; // Prevent spam
+        }
+
+        // Boundary constraints
+        player.position.x = Math.max(-45, Math.min(45, player.position.x));
+        player.position.z = Math.max(-45, Math.min(45, player.position.z));
+
+        // Update camera
+        camera.position.copy(player.position);
+        camera.rotation.y = player.rotation;
+
+        checkProximity();
+        updateMinimap();
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        updatePlayer();
+        animateCharacters();
+        renderer.render(scene, camera);
+      }
+
+      // Window resize handler
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Initialize the office
+      createOffice();
+      createCharacters();
+      animate();
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Escape") closeChat();
+      });
+    </script>
+  </body>
+</html>

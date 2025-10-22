@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Titan MBR Event Management Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        color: #000000;
+        line-height: 1.6;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        color: white;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .event-info {
+        display: flex;
+        gap: 30px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .event-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .event-card h3 {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .event-card p {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .controls {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #eb2627;
+      }
+
+      .controls-row {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: #eb2627;
+        box-shadow: 0 0 0 3px rgba(235, 38, 39, 0.1);
+      }
+
+      .category-tabs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background: #f5f5f5;
+        border: 2px solid #ddd;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .tab.active {
+        background: #eb2627;
+        color: white;
+        border-color: #eb2627;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(235, 38, 39, 0.3);
+      }
+
+      .tab:hover:not(.active) {
+        background: #bc1313;
+        color: white;
+        border-color: #bc1313;
+      }
+
+      .add-company-btn {
+        background: #eb2627;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .add-company-btn:hover {
+        background: #bc1313;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(235, 38, 39, 0.4);
+      }
+
+      .companies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .company-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #eb2627;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .company-header {
+        display: flex;
+        justify-content: between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+
+      .company-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #eb2627;
+        margin-bottom: 5px;
+      }
+
+      .company-category {
+        background: #bc1313;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .company-details {
+        margin-bottom: 15px;
+      }
+
+      .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .detail-icon {
+        color: #bc1313;
+        font-size: 16px;
+      }
+
+      .status-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        transition: border-color 0.3s;
+      }
+
+      .status-select:focus {
+        outline: none;
+        border-color: #eb2627;
+      }
+
+      .status-not-contacted {
+        background: #f8f9fa;
+        color: #6c757d;
+      }
+      .status-in-discussion {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status-quote-requested {
+        background: #cff4fc;
+        color: #0c5460;
+      }
+      .status-quote-received {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+      .status-selected {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        resize: vertical;
+        min-height: 60px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+      }
+
+      .textarea:focus {
+        outline: none;
+        border-color: #eb2627;
+        box-shadow: 0 0 0 3px rgba(235, 38, 39, 0.1);
+      }
+
+      .priority-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .priority-high {
+        background: #dc3545;
+        color: white;
+      }
+      .priority-medium {
+        background: #ffc107;
+        color: #000;
+      }
+      .priority-low {
+        background: #28a745;
+        color: white;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .btn-edit {
+        background: #eb2627;
+        color: white;
+      }
+
+      .btn-edit:hover {
+        background: #bc1313;
+        transform: translateY(-1px);
+      }
+
+      .btn-save {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-save:hover {
+        background: #218838;
+      }
+
+      .btn-cancel {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-cancel:hover {
+        background: #5a6268;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eb2627;
+      }
+
+      .modal-header h2 {
+        color: #eb2627;
+        font-size: 22px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #eb2627;
+        box-shadow: 0 0 0 3px rgba(235, 38, 39, 0.1);
+      }
+
+      .stats-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #eb2627;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 10px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #eb2627;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .companies-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .controls-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .category-tabs {
+          justify-content: center;
+        }
+
+        .event-info {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <h1>🎯 Titan MBR Event Management Dashboard</h1>
+        <div class="event-info">
+          <div class="event-card">
+            <h3>📍 Out Store Event</h3>
+            <p><strong>Date:</strong> 5th December</p>
+            <p><strong>Brand:</strong> Stellar Raga</p>
+            <p><strong>Type:</strong> Focus Pune</p>
+          </div>
+          <div class="event-card">
+            <h3>🏪 In Store Event</h3>
+            <p><strong>Date:</strong> 7th December</p>
+            <p><strong>Brand:</strong> Edge</p>
+            <p><strong>Type:</strong> Store Activation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number" id="totalCompanies">0</span>
+            <div class="stat-label">Total Companies</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="contactedCompanies">0</span>
+            <div class="stat-label">Contacted</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="quotesReceived">0</span>
+            <div class="stat-label">Quotes Received</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="selectedVendors">0</span>
+            <div class="stat-label">Selected</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="pendingFollowUp">0</span>
+            <div class="stat-label">Pending Follow-up</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="category-tabs">
+          <div class="tab active" data-category="All">All Companies</div>
+          <div class="tab" data-category="Catering">Catering</div>
+          <div class="tab" data-category="Venue">Venue</div>
+          <div class="tab" data-category="Show Management">Show Management</div>
+          <div class="tab" data-category="Influencer">Influencer</div>
+          <div class="tab" data-category="Actors">Actors</div>
+          <div class="tab" data-category="Hostesses">Hostesses</div>
+          <div class="tab" data-category="Media & PR">Media & PR</div>
+        </div>
+
+        <div class="controls-row">
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="🔍 Search companies by name, contact, or address..."
+            />
+          </div>
+          <button class="add-company-btn" onclick="showAddModal()">
+            ➕ Add Company
+          </button>
+        </div>
+      </div>
+
+      <div id="companiesContainer" class="companies-grid">
+        <!-- Companies will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Add Company Modal -->
+    <div id="addModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New Company</h2>
+        </div>
+        <form id="addCompanyForm">
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" name="companyName" required />
+          </div>
+          <div class="form-group">
+            <label>Contact *</label>
+            <input type="text" name="contact" required />
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" name="address" />
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select name="category" required>
+              <option value="">Select Category</option>
+              <option value="Catering">Catering</option>
+              <option value="Venue">Venue</option>
+              <option value="Show Management">Show Management</option>
+              <option value="Influencer">Influencer</option>
+              <option value="Actors">Actors</option>
+              <option value="Hostesses">Hostesses</option>
+              <option value="Media & PR">Media & PR</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select name="priority">
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Comments</label>
+            <textarea name="comments" rows="3"></textarea>
+          </div>
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-save">💾 Add Company</button>
+            <button
+              type="button"
+              class="btn btn-cancel"
+              onclick="hideAddModal()"
+            >
+              ❌ Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let companies = [];
+      let filteredCompanies = [];
+      let currentCategory = "All";
+      let editingCompany = null;
+
+      // Status options and their CSS classes
+      const statusOptions = [
+        { value: "Not Contacted", class: "status-not-contacted" },
+        { value: "In Discussion", class: "status-in-discussion" },
+        { value: "Quote Requested", class: "status-quote-requested" },
+        { value: "Quote Received", class: "status-quote-received" },
+        { value: "Selected", class: "status-selected" },
+        { value: "Rejected", class: "status-rejected" },
+      ];
+
+      // Initialize with sample data
+      const sampleData = [
+        {"id": 1, "sno": 1, "companyName": "Total Events – Best Event Management Company in Pune", "contact": "083291 79995", "address": "Address", "category": "Show Management", "status": "Not Contacted", "comments": "Spoke to Sapna - to", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 2, "sno": 2, "companyName": "EVEPRO", "contact": "093701 82537", "address": "​ Dangat Industrial Estate ​ Sr.No 2/3/4 Near Mumbai- Bangalore Highway Bridge ​Beside Dhone Wada Restaurant", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 3, "sno": 3, "companyName": "Foxfire Events & Activations Pvt Ltd.", "contact": "089992 81958", "address": "Aurora Towers, 225,2nd Floor, Sterling Center, MG Road, opposite Hotel", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 4, "sno": 4, "companyName": "Urban Events - Best Event Planners in Pune", "contact": "073504 09292", "address": "C-1 Building, 1st Floor, Office No.2, Bramha Estate, NIBM Rd, Next to Jyoti Hotel", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 5, "sno": 5, "companyName": "Lotus Events and Productions", "contact": "098222 28505", "address": "Chhajed Glory, near Axis Bank", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 6, "sno": 6, "companyName": "Hummingbirds Event Management Pune - Mumbai", "contact": "083085 99001", "address": "Office No-9, Mudra Commercials, Pune - Satara Rd, above PNG Jewellers", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 7, "sno": 7, "companyName": "TUTONS EVENT MANAGEMENT COMPANY", "contact": "092255 22123", "address": "OfficeNo 43, Aditya Shagun Mall, Prashan Road", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 8, "sno": 8, "companyName": "Absolute Concepts Events And Entertainment Pvt. Ltd. - Best Event Company in Pune", "contact": "", "address": "Sai Heritage, Baner - Mahalunge Rd, above Elephant and Company, opposite Kaka Halwai", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 9, "sno": 9, "companyName": "Happy Minds Events | Event Management Company In Pune", "contact": "091300 15801", "address": "Flat no.4 ,3rd Floor, B1/1, Plot No.100, Prabhat Rd, above Ravetkar builder office, near National film archieve of India", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 10, "sno": 10, "companyName": "Event Doors | Best Event management company in pune", "contact": "080809 36285", "address": "13, B - WING 3rd FLOOR NANDAN PRIDE, KARVE CHOWK KOTHRUD", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 11, "sno": 11, "companyName": "Flamingo Events , Pune", "contact": "088062 76961", "address": "first floor, Narmada Niwas, 4110", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 12, "sno": 12, "companyName": "Creature Events Management - Best Event Management in Pune.", "contact": "072761 63121", "address": "Somji Heights, Nirmaan Estrella, Chowk", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 13, "sno": 13, "companyName": "Panamera Events & Productions", "contact": "083800 66719", "address": "Nilkhanth apartment", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 14, "sno": 14, "companyName": "Rasik Events", "contact": "089998 08828", "address": "Nishigandh Bunglow, D/30, Lane No. 8, opp. Maharaja Complex", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 15, "sno": 15, "companyName": "Auspicium Events Pvt. Ltd.", "contact": "099606 55597", "address": "Dhayreshwar temple", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 16, "sno": 16, "companyName": "Parshwa Events", "contact": "084466 24061", "address": "Office No 3, Ground Floor, Shirole House, Peoples Co-operative Bank, near Pune", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 17, "sno": 17, "companyName": "Our Vision Events - Event Management Company in Pune | Corporate Event Planner", "contact": "095031 87188", "address": "Light House", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 18, "sno": 18, "companyName": "Fidato Events Pvt. Ltd.", "contact": "099757 08662", "address": "401, Abhipreet Residency, Pan Card Club Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 19, "sno": 19, "companyName": "Hunarsource Consulting Pvt Ltd - Corporate Event Management Company in Pune", "contact": "", "address": "Office No. 5th Floor, Anubhuti Apartment, 501, Lane 1", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 20, "sno": 20, "companyName": "NIEM The Institute of Event Management", "contact": "097026 04604", "address": "Office No.310, 3rd Floor, City Space, Survey No. 198/1A, opposite FISERV, near Phoenix Mall", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 21, "sno": 21, "companyName": "Happy Moments Event Management I Best Event Management Company in Pune", "contact": "075582 38809", "address": "Main Gate, 202, Mosaik Building, Off FC Rd, above Starbucks", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 22, "sno": 22, "companyName": "Shandarr Events | Best Event Management Company in Pune |", "contact": "094043 90009", "address": "Ganitai Bunglow, Nr New RTO Office Sector.4, Sant Nagar, Spine Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 23, "sno": 23, "companyName": "Eventomaniaa", "contact": "098234 21864", "address": "flat.no 1106,floor. 11, I- wing, Pristine Pacific Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 24, "sno": 24, "companyName": "Kunal Event Management-Event Service in Pune", "contact": "072761 01398", "address": "Kundan Plaza, Bhau Patil Rd, opp. Aundh IT Park", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 25, "sno": 25, "companyName": "Tulza Events - Best Event management company in Kharadi for Birthday Party, Corporate Events, Wedding", "contact": "099229 10513", "address": "Shop no.b/01 nilesh prestiges, kale padal hadapsar, pune-28 Shop no.b/01 nilesh prestiges, 28", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 26, "sno": 26, "companyName": "The Perfect Knock Events", "contact": "093728 22728", "address": "Kusum Niwas, Shree Park, Sr No 135/34,, Chandan nagar bypass chowk, Pune-Nagar road,, Next to Chate School.", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 27, "sno": 27, "companyName": "D Tale CREATRIX | Leading Event Management & Best Wedding Planners in Pune", "contact": "088883 97597", "address": "Camp, Pudumjee Park, Dada Chelaram Path", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 28, "sno": 28, "companyName": "Vijayshree events | Dance Choreographer in Pune | Sangeet Choreographer | virtual event management", "contact": "099217 66690", "address": "Flat No-09, 3rd Floor, Shreeyash Apartment, Appasaheb Kulkarni Path", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 29, "sno": 29, "companyName": "Events of Happiness", "contact": "083060 68866", "address": "32 common seal hall", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 30, "sno": 30, "companyName": "MAD EVENTS PROFESSIONAL BALLOON DECORATORS IN PUNE", "contact": "072491 75011", "address": "322 / 20 mahatma fulle colony, Shankar Sheth Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 31, "sno": 31, "companyName": "Great Events Pune", "contact": "095116 80677", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 32, "sno": 32, "companyName": "Sadguru Event", "contact": "086983 08572", "address": "near Mitra Mandal colony", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 33, "sno": 33, "companyName": "Sphinx Adonis Events | Grand Inauguration Events, Corporate & MICE Events", "contact": "095884 98571", "address": "Sinhgad Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 34, "sno": 34, "companyName": "Sanskruti Event Management", "contact": "", "address": "398", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 35, "sno": 35, "companyName": "AS ART & EVENT", "contact": "083084 07973", "address": "World Of Mother Complex, D-104 Jai Ganesh Vision", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 36, "sno": 36, "companyName": "Dynamo Events", "contact": "070305 78637", "address": "HOUSE NO 150", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 37, "sno": 37, "companyName": "NAK EVENTS", "contact": "098220 72002", "address": "19, Laxminarayan Co-Op Housing Society, Burning Ghat Rd, near Bank Of Maharashtra", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 38, "sno": 38, "companyName": "Sixteen by Sixty-Four Media | Event Management Company in Pune, India | Event Planner", "contact": "098220 39386", "address": "3rd Floor, Office No 11, Kamala Regency, Sheetal, Dnyaneshwar Paduka Chowk, Fergusson College Rd, opp. Bharat Petroleum and Hotel", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 39, "sno": 39, "companyName": "INDIE EVENTS PVT. LTD.", "contact": "080877 20406", "address": "Shakuntal, 19/1 A, opposite Zudio", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 40, "sno": 40, "companyName": "Continuum Advertising & Events", "contact": "097304 13400", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 41, "sno": 41, "companyName": "SAI Events | Balloon Decoration In Pune | Wedding Decoration In Pune", "contact": "084828 21895", "address": "39/25 lane number 9 Shankar Smruti apartment Lane No 9, Prabhat Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 42, "sno": 42, "companyName": "Genesis Inc", "contact": "099602 85741", "address": "govind halwai chowk, 610", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 43, "sno": 43, "companyName": "Prince event management", "contact": "093706 95633", "address": "207, Connaught Place, Bund Garden Road", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 44, "sno": 44, "companyName": "E Factor Event Management", "contact": "091584 20111", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 45, "sno": 45, "companyName": "J&R Events", "contact": "020 2685 5300", "address": "Shop No. 9, Jijai Plaza, near Eklavya College", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 46, "sno": 46, "companyName": "Magickal Moments By Aakshay Parmar", "contact": "090283 20775", "address": "CLOVER HEIGHTS, Salunke Vihar Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 47, "sno": 47, "companyName": "Festora Event | Wedding & Event Planner Pune", "contact": "", "address": "1st floor Next to Morbi Sweet's, 37, opp. to Zambre Palace", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 48, "sno": 48, "companyName": "ColorKnit Events n Production-Event Management Company in Pune", "contact": "092711 14024", "address": "Acra Maruti Kopra, Vinayak Sagar Building, 214, Shukrawar Peth - Mahatma Gandhi Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 49, "sno": 49, "companyName": "Craftworld Events", "contact": "098203 44426", "address": "3rd Flr Flat No. 303, Fortune House, S. No. 6/1/10, Baner - Pashan Link Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 50, "sno": 50, "companyName": "Q Events and Weddings", "contact": "098220 39090", "address": "Chintamani DSK Complex, Shop No.1, 'A Wing, 417, Appa Balwant Chowk, near N.M.V. Junior Highschool", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 51, "sno": 51, "companyName": "SnS Events - One of the top Event Management Companies in Pune", "contact": "078880 10102", "address": "79/80-1, opposite Solitaire Apartments", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 52, "sno": 52, "companyName": "Dream Creations", "contact": "", "address": "Amar Villa, 15/375", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 53, "sno": 53, "companyName": "Divine's events and Decorations", "contact": "077588 90546", "address": "Shop no -13, Sr no -68, shivkamal developers", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 54, "sno": 54, "companyName": "Event Dynamics", "contact": "020 4006 9552", "address": "595, Mahatma Phule Rasta, near S. Gaikwad school", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 55, "sno": 55, "companyName": "Encore Events And Promotions", "contact": "098810 71399", "address": "office no 29-30, Gulmohar Apartments, 2420, East St, opposite Bombay Garage", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 56, "sno": 56, "companyName": "Ivy Events And Management", "contact": "070661 31994", "address": "Gulmohar Court, 2, B Ln", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 57, "sno": 57, "companyName": "Prabandhan Management Services Pvt Ltd", "contact": "095791 35693", "address": "DB's Diamond, 1170-25, Kushabhau Jejurikar Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 58, "sno": 58, "companyName": "Dreams Events & Entertainment - Wedding Planner Pune", "contact": "092702 50500", "address": "Prabandhan Management Services Pvt Ltd, Office No: 422 Amanora Chambers, Mall, behind Amanora", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 59, "sno": 59, "companyName": "Puneri decorations & event management", "contact": "080806 60787", "address": "hop No. 74-G,Ground, Hotel, Sterling Centre, MG Road, opp. Aurora Towers", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 60, "sno": 60, "companyName": "MAHAKAL EVENT'S PUNE", "contact": "", "address": "Office No 24, Mandot Tower, Gangadham - Shatrunjay Rd, opposite to Shri Shanti Nagar Society", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 61, "sno": 61, "companyName": "MAHAKAL EVENT'S PUNE", "contact": "", "address": "Trimurti Datta Mandir, golandas Chowk", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 62, "sno": 62, "companyName": "Payal Events", "contact": "", "address": "Trimurti Datta Mandir, golandas Chowk", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 63, "sno": 63, "companyName": "Siddhivinayak Art & Events", "contact": "084460 02929", "address": "Payal Events, 177", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 64, "sno": 64, "companyName": "Swarajya Events - Best Event Planners in Pune", "contact": "097663 59075", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 65, "sno": 65, "companyName": "Busy Bee Event Promoters", "contact": "099232 59521", "address": "Kranti Park", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 66, "sno": 66, "companyName": "Dynamic Entertainment | Bespoke Wedding Planners & Decors in Pune | Event Management", "contact": "097641 43890", "address": "Popular Heights III, Lane D", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 67, "sno": 67, "companyName": "Vinod Pawar Group & Event", "contact": "084217 77765", "address": "Second floor, Sanas Residency, Lane No. 6", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 68, "sno": 68, "companyName": "Event Management Company", "contact": "080877 42000", "address": "Ghorpadi Gaon Community Hall Complex, Ln no 1sharavati Nagar", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 69, "sno": 69, "companyName": "BLUE DIVINE MEDIA & EVENTS, A TRUSTED EVENT MANAGEMENT COMPANY.", "contact": "095959 10066", "address": "101c, Akshay Complex, Jangali Maharaj Rd, behind Titan", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 70, "sno": 70, "companyName": "JS EVENT DECORATORS PUNE", "contact": "083902 05024", "address": "Traffic Signal, NP Lifestyle, Nirman Greens Building, office Num - 2, Old Mumbai Pune Higway Before Union Bank of India &", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 71, "sno": 71, "companyName": "ROYAL TOUCH EVENTS", "contact": "", "address": "office oop, balasaheb bhamre, 113/5 a, Pune - Satara Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 72, "sno": 72, "companyName": "bubble show pune", "contact": "088060 06552", "address": "New modikhana kumbhar bawdi,Pune .411048", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 73, "sno": 73, "companyName": "Saifan-Shadi ki taiyari-Best Wedding Planners and Destination wedding in pune and lonavala - wedding management", "contact": "090229 56909", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 74, "sno": 74, "companyName": "Entre Nous Experiences Pvt. Ltd.", "contact": "020 2615 4784", "address": "47/A, Satara Rd, near bapkar petrol pump, opp. City Pride", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 75, "sno": 75, "companyName": "Relive Management", "contact": "080871 94011", "address": "Liberty Apartments, Phase 1, Flat B-1, 1st Floor, Noth Main Road, Lane No. 6", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 76, "sno": 76, "companyName": "Pegasus Events and Convention Services", "contact": "020 2613 0339", "address": "Gangotri complex, 927, Synagogue St, near Geeta Society", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 77, "sno": 77, "companyName": "Rainbow Events & Tours -- रेनबो इव्हेंट्स आणि टूर्स", "contact": "089990 83646", "address": "Liberty, E-1, N Main Rd, below Central Bank", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 78, "sno": 78, "companyName": "J.J Event - Dohale Jevan Decorators in Pune| Birthday Party Decorators | Naming Ceremony Decoratord", "contact": "098818 19195", "address": "Flat No-304, Shreyas Clementine, Deccan College Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 79, "sno": 79, "companyName": "Ovi Pro Events - Event Management & Planner Company in Pune", "contact": "", "address": "b29/16", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 80, "sno": 80, "companyName": "Dynamic Entertainment | Bespoke Wedding Planners & Decors in Pune | Event Management", "contact": "", "address": "2nd floor, Kamal Darshan housing Society, Flat no, A-15, Pune-46, behind Khandoba Mandir Road", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 81, "sno": 81, "companyName": "Myra event Decoration Pune", "contact": "087935 66771", "address": "Second floor, Sanas Residency, Koregaon Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 82, "sno": 82, "companyName": "Linkin Minds", "contact": "085509 36006", "address": "8, Bibwewadi Kondhwa Rd, behind 59", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 83, "sno": 83, "companyName": "Ak Events :-Baby shower Decoration in pune | Naming cermony Decoration in pune |Munj Decoration in pune |", "contact": "093702 40791", "address": "3rd Floor,Prem Corner,, Opp Balaji Petrol Pump", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 84, "sno": 84, "companyName": "Yours Truly - Corporate Event Planner in Pune", "contact": "098232 87008", "address": "Lane no 4, Hadapsar", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 85, "sno": 85, "companyName": "S K EVENT AND DECORE", "contact": "075586 03641", "address": "Anand Apartment, Flat No 5, Lane 9, 3", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 86, "sno": 86, "companyName": "Poona Event Management Inc.", "contact": "087935 83134", "address": "Shimpi Ali, 1204, MG Road", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 87, "sno": 87, "companyName": "ECO- The Event Company", "contact": "098222 62521", "address": "Mahibub Manzil, 148/51, Anand Path, opposite Dhanwantri Hospital", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 88, "sno": 88, "companyName": "SR Events management Pune", "contact": "", "address": "The Poona Club Shop,The Poona Club Ltd.6, Bun Garden Road", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 89, "sno": 89, "companyName": "OG EVENTS AND DECORATIONS", "contact": "096996 20925", "address": "12", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 90, "sno": 90, "companyName": "Deeplaxmi Events | Barat on Wheels | Vintage Car", "contact": "086056 22211", "address": "Sr no 51, BT Kawade Rd, opposite shirke company", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 91, "sno": 91, "companyName": "Kadamb Events", "contact": "097620 84165", "address": "435, Moti Chowk, opp. of Railway booking office", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 92, "sno": 92, "companyName": "Eventcreatorpune", "contact": "072628 82622", "address": "Kakasaheb Shingre Sabhagrah, 524, Tapkir Galli", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 93, "sno": 93, "companyName": "Dixita Events", "contact": "", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 94, "sno": 94, "companyName": "Krishita Events", "contact": "092263 65365", "address": "", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 95, "sno": 95, "companyName": "Happy Times Events", "contact": "", "address": "Dhanvarsha market, 1149, Dhanvarsha market, 2nd Floor, Govind Halwai Chowk, near Ranka Jewellers", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 96, "sno": 96, "companyName": "Bold Marketing", "contact": "098907 78000", "address": "Lane No. 7, opp. Clover Dale A", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 97, "sno": 97, "companyName": "Sphinx Adonis Events International", "contact": "095884 98571", "address": "B6/5, 411040 Kubera Park Housing Society Kondhwa Road Lulla Nagar", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 98, "sno": 98, "companyName": "SAHAR EVENTS", "contact": "091755 48974", "address": "Sphinx House, RH 5&6, S Main Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 99, "sno": 99, "companyName": "Event Crafters Pune", "contact": "", "address": "6A, Ramabai Ambedkar Rd, behind Pune", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 100, "sno": 100, "companyName": "Elite Celebrations - Event Management Company In Pune", "contact": "", "address": "7, Koregaon Rd", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 101, "sno": 101, "companyName": "SN Event", "contact": "", "address": "", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 102, "sno": 102, "companyName": "Pune Birthday party Decor Magic show Tattoo Artist Game host popcorn Candy Flos papet show Carecacher All Activities", "contact": "070570 77375", "address": "Lane Number 5", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 103, "sno": 103, "companyName": "Pooja Balloon decoration camp", "contact": "", "address": "goan", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 104, "sno": 104, "companyName": "M S Event Management", "contact": "", "address": "511, Centre St", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 105, "sno": 105, "companyName": "Taj Events And Production", "contact": "096733 98719", "address": "Lane No. 7", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 106, "sno": 106, "companyName": "Ovent | Event Management Company in Pune", "contact": "074991 91810", "address": "Plot No 11A, Sector 24, opp. Axis Bank Branch", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 107, "sno": 107, "companyName": "Birthday Craft Pune", "contact": "099231 59521", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 108, "sno": 108, "companyName": "Hfshanawaz event", "contact": "", "address": "Popular Heights III, Lane D", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 109, "sno": 109, "companyName": "Lovedecoration", "contact": "073918 87977", "address": "411001", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 110, "sno": 110, "companyName": "STAR EVENTS", "contact": "084461 03463", "address": "Sr.no.17, line 7", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 111, "sno": 111, "companyName": "Quadri Decorators", "contact": "098227 99882", "address": "Shop No, 4, Lane No. 6", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 112, "sno": 112, "companyName": "Wonderkraft Events Pune", "contact": "098602 18819", "address": "2064, Jan Mohammed Street", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 113, "sno": 113, "companyName": "United Group of Services", "contact": "098331 04763", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 114, "sno": 114, "companyName": "Maniyar Events & Decorations", "contact": "093710 09092", "address": "1984/210,Sterling house, near choksi School, Pune M. corporation),, Convent St", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 115, "sno": 115, "companyName": "Pushpalata decorators", "contact": "098501 28595", "address": "704, Taboot St", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 116, "sno": 116, "companyName": "kamblebrothers | the balloon story | birthday decoration | first birthday | theme decoration | event planner", "contact": "093590 30024", "address": "537 Ganesh Peth m v corner ghasati pool near Kasturi Chowck pune 411042", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 117, "sno": 117, "companyName": "RedHat Events & Marketing", "contact": "", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 118, "sno": 118, "companyName": "SnS Events & Marketing - Top Event Management and Corporate Gifting Solutions in Pune", "contact": "078880 10102", "address": "845", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 119, "sno": 119, "companyName": "Sai event pune", "contact": "099224 68859", "address": "·", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"},
+        {"id": 120, "sno": 120, "companyName": "Corporate Event Management Company in Pune - Aayojan Ventures", "contact": "098238 87070", "address": "Deep banglow chowk, 16", "category": "Show Management", "status": "Not Contacted", "comments": "", "feedback": "", "priority": "Medium", "lastUpdated": "2025-09-26"}
+      ];
+
+      // Load data on page load
+      window.onload = function () {
+        companies = [...sampleData];
+        filteredCompanies = [...companies];
+        renderCompanies();
+        updateStats();
+        setupEventListeners();
+      };
+
+      function setupEventListeners() {
+        // Search functionality
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", function (e) {
+            filterCompanies(e.target.value);
+          });
+
+        // Category tabs
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.addEventListener("click", function () {
+            document
+              .querySelectorAll(".tab")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+            currentCategory = this.dataset.category;
+            filterCompanies(document.getElementById("searchInput").value);
+          });
+        });
+
+        // Add company form
+        document
+          .getElementById("addCompanyForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            addCompany();
+          });
+      }
+
+      function filterCompanies(searchTerm = "") {
+        let filtered = [...companies];
+
+        // Filter by category
+        if (currentCategory !== "All") {
+          filtered = filtered.filter(
+            (company) => company.category === currentCategory
+          );
+        }
+
+        // Filter by search term
+        if (searchTerm.trim()) {
+          const term = searchTerm.toLowerCase();
+          filtered = filtered.filter(
+            (company) =>
+              company.companyName.toLowerCase().includes(term) ||
+              company.contact.includes(term) ||
+              company.address.toLowerCase().includes(term) ||
+              company.category.toLowerCase().includes(term)
+          );
+        }
+
+        filteredCompanies = filtered;
+        renderCompanies();
+      }
+
+      function renderCompanies() {
+        const container = document.getElementById("companiesContainer");
+
+        if (filteredCompanies.length === 0) {
+          container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                        <h3>No companies found</h3>
+                        <p>Try adjusting your search or add a new company</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = filteredCompanies
+          .map(
+            (company) => `
+                <div class="company-card" data-id="${company.id}">
+                    <div class="priority-badge priority-${company.priority.toLowerCase()}">${
+              company.priority
+            }</div>
+                    
+                    <div class="company-header">
+                        <div>
+                            <div class="company-name">${
+                              company.companyName
+                            }</div>
+                            <div class="company-category">${
+                              company.category
+                            }</div>
+                        </div>
+                    </div>
+
+                    <div class="company-details">
+                        <div class="detail-row">
+                            <span class="detail-icon">📞</span>
+                            <span>${company.contact}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">📍</span>
+                            <span>${
+                              company.address || "Address not provided"
+                            }</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-icon">📅</span>
+                            <span>Updated: ${company.lastUpdated}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select class="status-select ${getStatusClass(
+                          company.status
+                        )}" 
+                                onchange="updateCompanyStatus(${
+                                  company.id
+                                }, this.value)">
+                            ${statusOptions
+                              .map(
+                                (option) =>
+                                  `<option value="${option.value}" ${
+                                    company.status === option.value
+                                      ? "selected"
+                                      : ""
+                                  }>${option.value}</option>`
+                              )
+                              .join("")}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Comments:</label>
+                        <textarea class="textarea" 
+                                  placeholder="Add your comments here..."
+                                  onchange="updateCompanyField(${
+                                    company.id
+                                  }, 'comments', this.value)">${
+              company.comments || ""
+            }</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Feedback:</label>
+                        <textarea class="textarea" 
+                                  placeholder="Add feedback after discussion..."
+                                  onchange="updateCompanyField(${
+                                    company.id
+                                  }, 'feedback', this.value)">${
+              company.feedback || ""
+            }</textarea>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-edit" onclick="editCompany(${
+                          company.id
+                        })">
+                            ✏️ Quick Edit
+                        </button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function getStatusClass(status) {
+        const statusOption = statusOptions.find(
+          (option) => option.value === status
+        );
+        return statusOption ? statusOption.class : "status-not-contacted";
+      }
+
+      function updateCompanyStatus(id, status) {
+        const company = companies.find((c) => c.id === id);
+        if (company) {
+          company.status = status;
+          company.lastUpdated = new Date().toISOString().split("T")[0];
+          saveToLocalStorage();
+          updateStats();
+
+          // Update the select element's class
+          const selectElement = document.querySelector(
+            `[data-id="${id}"] .status-select`
+          );
+          selectElement.className = `status-select ${getStatusClass(status)}`;
+        }
+      }
+
+      function updateCompanyField(id, field, value) {
+        const company = companies.find((c) => c.id === id);
+        if (company) {
+          company[field] = value;
+          company.lastUpdated = new Date().toISOString().split("T")[0];
+          saveToLocalStorage();
+        }
+      }
+
+      function editCompany(id) {
+        const company = companies.find((c) => c.id === id);
+        if (!company) return;
+
+        const newName = prompt("Company Name:", company.companyName);
+        if (newName && newName !== company.companyName) {
+          company.companyName = newName;
+          company.lastUpdated = new Date().toISOString().split("T")[0];
+          saveToLocalStorage();
+          renderCompanies();
+        }
+      }
+
+      function showAddModal() {
+        document.getElementById("addModal").classList.add("show");
+      }
+
+      function hideAddModal() {
+        document.getElementById("addModal").classList.remove("show");
+        document.getElementById("addCompanyForm").reset();
+      }
+
+      function addCompany() {
+        const form = document.getElementById("addCompanyForm");
+        const formData = new FormData(form);
+
+        const newCompany = {
+          id: Math.max(...companies.map((c) => c.id), 0) + 1,
+          sno: companies.length + 1,
+          companyName: formData.get("companyName"),
+          contact: formData.get("contact"),
+          address: formData.get("address") || "",
+          category: formData.get("category"),
+          status: "Not Contacted",
+          comments: formData.get("comments") || "",
+          feedback: "",
+          priority: formData.get("priority") || "Medium",
+          lastUpdated: new Date().toISOString().split("T")[0],
+        };
+
+        companies.push(newCompany);
+        saveToLocalStorage();
+        hideAddModal();
+        filterCompanies(document.getElementById("searchInput").value);
+        updateStats();
+      }
+
+      function updateStats() {
+        const total = companies.length;
+        const contacted = companies.filter(
+          (c) => c.status !== "Not Contacted"
+        ).length;
+        const quotesReceived = companies.filter(
+          (c) => c.status === "Quote Received"
+        ).length;
+        const selected = companies.filter(
+          (c) => c.status === "Selected"
+        ).length;
+        const pending = companies.filter((c) =>
+          ["In Discussion", "Quote Requested"].includes(c.status)
+        ).length;
+
+        document.getElementById("totalCompanies").textContent = total;
+        document.getElementById("contactedCompanies").textContent = contacted;
+        document.getElementById("quotesReceived").textContent = quotesReceived;
+        document.getElementById("selectedVendors").textContent = selected;
+        document.getElementById("pendingFollowUp").textContent = pending;
+      }
+
+      function saveToLocalStorage() {
+        // Note: This would normally save to localStorage, but we'll just keep in memory for this demo
+        console.log("Data would be saved to localStorage here");
+      }
+
+      // Close modal when clicking outside
+      document
+        .getElementById("addModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            hideAddModal();
+          }
+        });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.key === "k") {
+          e.preventDefault();
+          document.getElementById("searchInput").focus();
+        }
+        if (e.key === "Escape") {
+          hideAddModal();
+        }
+      });
+    </script>
+  </body>
+</html>

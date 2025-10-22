@@ -1,0 +1,85 @@
+:root {
+  --headline: "print.VMSD.in";
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+  font-family: "Poppins", "Helvetica Neue", "Helvetica", "Arial Black",
+    sans-serif;
+  background-color: #fff;
+  color: #000;
+}
+
+.headline {
+  position: relative;
+  margin: 0;
+  line-height: 1.01;
+  font-size: 8vh;
+  font-weight: 800;
+  color: #000;
+  animation: ink-bleed 2s infinite linear;
+}
+
+.profession {
+  color: inherit;
+  line-height: 1.4;
+  font-size: 4vh;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.e-mail {
+  color: inherit;
+  font: 600 1.5rem "Zilla Slab", monospace;
+  line-height: 1.6;
+}
+
+@media screen and (max-aspect-ratio: 3/2) and (max-width: 40rem) {
+  .headline {
+    font-size: 18vw;
+  }
+
+  .profession {
+    font-size: 8vw;
+  }
+}
+@media screen and (min-aspect-ratio: 3/2) and (max-height: 40rem) {
+  .headline {
+    font-size: 22vh;
+  }
+
+  .profession {
+    font-size: 11vh;
+  }
+}
+
+@keyframes ink-bleed {
+  0%,
+  100% {
+    text-shadow: -0.1em -0.1em 5px cyan, 0.1em -0.1em 5px magenta,
+      0em 0.1em 5px yellow;
+  }
+  25% {
+    text-shadow: -0.05em -0.05em 3px cyan, 0.05em -0.05em 3px magenta,
+      0em 0.05em 3px yellow;
+  }
+  50% {
+    text-shadow: 0 0 0 cyan, 0 0 0 magenta, 0 0 0 yellow;
+  }
+  75% {
+    text-shadow: 0.05em 0.05em 3px cyan, -0.05em 0.05em 3px magenta,
+      0em -0.05em 3px yellow;
+  }
+}

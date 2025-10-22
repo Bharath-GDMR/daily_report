@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>October 2025 - Office Schedule</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        padding: 20px;
+        min-height: 100vh;
+      }
+
+      .calendar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .calendar-header {
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+      }
+
+      .calendar-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .calendar-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0;
+        background: white;
+      }
+
+      .day-header {
+        background: #bc1313;
+        color: white;
+        padding: 15px 10px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .day-header:last-child {
+        border-right: none;
+      }
+
+      .calendar-day {
+        min-height: 140px;
+        border: 1px solid #e0e0e0;
+        padding: 8px;
+        background: white;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .calendar-day:hover {
+        background: #f9f9f9;
+        transform: scale(1.02);
+        z-index: 1;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .day-number {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .day-content {
+        font-size: 0.8rem;
+        line-height: 1.3;
+      }
+
+      .office-timing {
+        background: #eb2627;
+        color: white;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin: 2px 0;
+        font-size: 0.7rem;
+      }
+
+      .daily-huddle {
+        background: #bc1313;
+        color: white;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin: 2px 0;
+        font-size: 0.7rem;
+      }
+
+      .work-from-home {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 12px;
+        height: 12px;
+        background: #eb2627;
+        border-radius: 50%;
+        opacity: 0.6;
+      }
+
+      .holiday {
+        background: #ffebee !important;
+        border: 2px solid #eb2627;
+      }
+
+      .holiday .day-number {
+        color: #eb2627;
+      }
+
+      .event {
+        background: #fff3e0;
+        color: #bc1313;
+        padding: 2px 4px;
+        border-radius: 3px;
+        margin: 2px 0;
+        font-size: 0.7rem;
+        border-left: 3px solid #eb2627;
+      }
+
+      .sunday {
+        background: #f5f5f5;
+      }
+
+      .sunday .day-number {
+        color: #666;
+      }
+
+      .controls {
+        padding: 20px;
+        text-align: center;
+        background: #f9f9f9;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #eb2627 0%, #bc1313 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(235, 38, 39, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(235, 38, 39, 0.4);
+      }
+
+      .legend {
+        padding: 20px;
+        background: #f9f9f9;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .legend h3 {
+        color: #bc1313;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .legend-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        background: white;
+        border-radius: 5px;
+        border: 1px solid #e0e0e0;
+      }
+
+      .legend-color {
+        width: 20px;
+        height: 15px;
+        border-radius: 3px;
+      }
+
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+        .controls {
+          display: none;
+        }
+        .calendar-day:hover {
+          transform: none;
+          box-shadow: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .calendar-title {
+          font-size: 2rem;
+        }
+        .calendar-day {
+          min-height: 100px;
+          padding: 5px;
+        }
+        .day-content {
+          font-size: 0.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="calendar-title">October 2025</div>
+        <div class="calendar-subtitle">Office Schedule Calendar</div>
+      </div>
+
+      <div class="calendar-grid">
+        <div class="day-header">Sunday</div>
+        <div class="day-header">Monday</div>
+        <div class="day-header">Tuesday</div>
+        <div class="day-header">Wednesday</div>
+        <div class="day-header">Thursday</div>
+        <div class="day-header">Friday</div>
+        <div class="day-header">Saturday</div>
+
+        <!-- Week 1 -->
+        <div class="calendar-day">
+          <div class="day-number"></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number"></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number"></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">1</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">2</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">3</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">4</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="calendar-day sunday">
+          <div class="day-number">5</div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">6</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">7</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">8</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">9</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">10</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">11</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="calendar-day sunday">
+          <div class="day-number">12</div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">13</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">14</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">15</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">16</div>
+          <div class="day-content">
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+          <div class="work-from-home" title="Work from Home"></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">17</div>
+          <div class="day-content">
+            <div class="event">GDMR Annual Event</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+          <div
+            class="work-from-home"
+            title="Work from Home - Family Event"
+          ></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">18</div>
+          <div class="day-content">
+            <div class="event">GDMR Annual Event</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+          <div
+            class="work-from-home"
+            title="Work from Home - Family Event"
+          ></div>
+        </div>
+
+        <!-- Week 4 -->
+        <div class="calendar-day sunday">
+          <div class="day-number">19</div>
+        </div>
+        <div class="calendar-day holiday">
+          <div class="day-number">20</div>
+          <div class="day-content">
+            <div class="event">🪔 Diwali Holiday</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">21</div>
+          <div class="day-content">
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+          <div class="work-from-home" title="Work from Home"></div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">22</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">23</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">24</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">25</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+
+        <!-- Week 5 -->
+        <div class="calendar-day sunday">
+          <div class="day-number">26</div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">27</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">28</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">29</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">30</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number">31</div>
+          <div class="day-content">
+            <div class="office-timing">10 AM - 7 PM</div>
+            <div class="daily-huddle">11-11:45 AM Huddle</div>
+          </div>
+        </div>
+        <div class="calendar-day">
+          <div class="day-number"></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <h3>Legend</h3>
+        <div class="legend-items">
+          <div class="legend-item">
+            <div class="legend-color" style="background: #eb2627"></div>
+            <span>GDMR Office Timing (10 AM - 7 PM)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #bc1313"></div>
+            <span>Daily Huddle (11-11:45 AM)</span>
+          </div>
+          <div class="legend-item">
+            <div
+              class="legend-color"
+              style="
+                background: #eb2627;
+                border-radius: 50%;
+                width: 15px;
+                height: 15px;
+                opacity: 0.6;
+              "
+            ></div>
+            <span>Work from Home (Subtle Indicator)</span>
+          </div>
+          <div class="legend-item">
+            <div
+              class="legend-color"
+              style="background: #fff3e0; border-left: 3px solid #eb2627"
+            ></div>
+            <span>Special Events</span>
+          </div>
+          <div class="legend-item">
+            <div
+              class="legend-color"
+              style="background: #ffebee; border: 2px solid #eb2627"
+            ></div>
+            <span>Holidays</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #f5f5f5"></div>
+            <span>Sunday (Weekend)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" onclick="printCalendar()">🖨️ Print Calendar</button>
+        <button class="btn" onclick="downloadAsHTML()">💾 Download HTML</button>
+      </div>
+    </div>
+
+    <script>
+      function printCalendar() {
+        window.print();
+      }
+
+      function downloadAsHTML() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "October_2025_Office_Calendar.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Add hover effects and tooltips
+      document.addEventListener("DOMContentLoaded", function () {
+        const workFromHomeElements =
+          document.querySelectorAll(".work-from-home");
+        workFromHomeElements.forEach((element) => {
+          element.style.cursor = "help";
+        });
+      });
+    </script>
+  </body>
+</html>

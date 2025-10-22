@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Configuration
 $to_email = 'bharath@vmsd.in';
-$from_email = 'noreply@vmsd.in'; // Replace with your domain email
-$site_name = 'VMSD.in'; // Replace with your site name
-$whatsappNumber = '910000000000'; // IMPORTANT: Replace with your WhatsApp number including country code
+$from_email = 'junaid@bossco.in'; // Replace with your domain email
+$site_name = 'bossco.in'; // Replace with your site name
+$whatsappNumber = '918787545171'; // IMPORTANT: Replace with your WhatsApp number including country code
 
 // Validate and sanitize input
 function sanitizeInput($data) {
